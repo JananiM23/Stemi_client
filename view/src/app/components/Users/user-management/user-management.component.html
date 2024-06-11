@@ -1,0 +1,309 @@
+<div class="row no-margin">
+   <div class="nav-container">
+      <nav aria-label="breadcrumb">
+         <ol class="breadcrumb pink lighten-2">
+            <li class="breadcrumb-item">
+               <a class="page-title">Home</a>
+            </li>
+            <li class="breadcrumb-item active">
+               <i class="fa fa-angle-right fa-6" aria-hidden="true"></i>
+               <a class="page-title">User-Records</a>
+            </li>
+         </ol>
+      </nav>
+      <span class="head-notify view-all-entries">All Records</span>
+   </div>
+</div>
+   
+<section>
+   <div class="card">
+      <!-- <div class="card-header">
+         All
+      </div> -->
+      <div class="card-block">
+         <div class="tabpane-title">
+            <h5 class="section-title">User Management</h5>
+            <a class="create-button-btn animated fadeInDown" (click)="CreateUser()">Create New</a>
+            <a class="create-icon-btn animated fadeInDown" (click)="CreateUser()">
+                  <i class="fa fa-plus"></i>
+               </a>
+         </div>
+         
+         <div class="row no-margin">
+            <div class="col-sm-12 col-md-2">
+               <div class="table-entries-and-sortby">                     
+                  <label>Limits
+                     <mat-form-field class="full-width tbl-limits" [floatLabel]="'never'" appearance="fill">
+                        <mat-select [(ngModel)]="LimitCount" (ngModelChange)="Pagination_Action(1)">
+                           <mat-option [value]="5">5</mat-option>
+                           <mat-option [value]="10">10</mat-option>
+                           <mat-option [value]="25">25</mat-option>
+                           <mat-option [value]="50">50</mat-option>
+                           <mat-option [value]="100">100</mat-option>
+                        </mat-select>
+                     </mat-form-field>
+                  </label>
+               </div>                  
+            </div>
+            <div class="col-sm-12 col-sm-12 col-md-10">
+               <div class="">
+                  <div class="table-filter">
+                     <div class="filter-icon" (click)="openFilterModal(template)"  matTooltip="Filter"><span><i class="fa fa-filter" aria-hidden="true"></i></span></div>
+                     <div class="filter-parent">
+                        <ng-container *ngFor="let Filter of FiltersArray; let i=index" >
+                           <div *ngIf="Filter.Active" class="filter-result">
+                              <div class="filter-info">
+                                 <span class="label"> {{Filter.DisplayName}} </span>
+                                 <span *ngIf="Filter.Type !== 'Object' && Filter.Type !== 'Boolean' && Filter.Key !== 'HospitalName'" class="value"> {{ (Filter.Value.length > 25) ? (Filter.Value | slice:0:25) + '..' : (Filter.Value) }} </span>
+                                 <span *ngIf="Filter.Type === 'Object' && Filter.Key === 'Location'" class="value"> {{ Filter.Value.Location_Name }} </span>
+                                 <span *ngIf="Filter.Type === 'Object' && Filter.Key === 'ClusterName'" class="value"> {{ Filter.Value.Cluster_Name }} </span>
+                                 <span *ngIf="Filter.Type === 'Object' && Filter.Key === 'HospitalName'" class="value"> {{ Filter.Value.Hospital_Name }} </span>
+                                 <span *ngIf="Filter.Type === 'Boolean' && Filter.Key === 'onlyViewAccess'" class="value"> {{ Filter.Value === 'true' ? 'View only' : 'View and Edit' }} </span>
+                              </div>
+                              <span class="Filter-close">
+                                 <i class="fa fa-close" (click)="RemoveFilter(i)"></i>
+                              </span>
+                           </div>
+                        </ng-container>
+                     </div>
+                  </div>
+               </div>
+               
+            </div>
+         </div>            
+         <div class="col-md-12">
+            <div class="table-responsive">
+               <table #TableSection class="tbl-stemi-default tbl-location-mgmnt" cellpadding="0" cellspacing="0" border="0">
+                  <thead #TableHeaderSection>
+                     <tr>
+                        <th>S.No</th>
+                        <th *ngFor="let Header of THeaders;let i=index" width="{{Header.Key === 'Address' ? '20%' : '' }}">
+                           <div class="column-title"> {{Header.Name}} 
+                              <span>
+                                 <i class="material-icons" (click)="Short_Change(i)" [ngClass]="{'active': Header.If_Short, 'rotateZ-A': Header.Condition === 'Descending' }">sort</i>
+                              </span>
+                           </div>
+                        </th>
+                        <th><div class="column-title">Actions</div></th>
+                     </tr>
+                  </thead>
+                  <div class="table-up-arrow"><i class="fa fa-arrow-circle-up animated infinite fadeInUp"></i></div>
+                  <tbody #TableBodySection class="tbl-content">
+                     <ng-container *ngIf="UserList.length > 0">                           
+                        <tr *ngFor="let Users of UserList; let i=index;">
+                           <td>{{ SerialNoAddOn+i+1 }}</td>
+                           <td>{{ Users?.User_Name }}</td>
+                           <td>{{ Users?.User_Type }}</td>
+                           <td>
+                              <ng-container *ngIf="Users?.Cluster !== null">
+                                    {{Users?.Cluster.Cluster_Name }}
+                                 </ng-container>
+                                 <ng-container *ngIf="Users?.ClustersArray.length > 0">
+                                    {{Users?.ClustersArray[0].Cluster_Name}}
+                                    {{ Users?.ClustersArray?.length > 1 ?  ' (+' + (Users?.ClustersArray?.length - 1) + ') Others' : '' }}
+                                 </ng-container>
+                                 <ng-container *ngIf="Users?.ClustersArray.length === 0 && Users?.Cluster === null">
+                                    ---
+                                 </ng-container>
+                           </td>
+                           <td>
+                              <ng-container *ngIf="Users?.Hospital !== null">
+                                 {{Users?.Hospital.Hospital_Name }}
+                              </ng-container>
+                              <ng-container *ngIf="Users?.HospitalsArray.length > 0">
+                                 {{Users?.HospitalsArray[0].Hospital_Name}}
+                                 {{ Users?.HospitalsArray?.length > 1 ?  ' (+' + (Users?.HospitalsArray?.length - 1) + ') Others' : '' }}
+                              </ng-container>
+                              <ng-container *ngIf="Users?.HospitalsArray.length === 0 && Users?.Hospital === null">
+                                 ---
+                              </ng-container>
+                           </td>
+                           <td>{{ Users?.Location.Location_Name | titlecase }}</td>                              
+                           <td>
+                              {{ Users.onlyViewAccess === undefined || Users.onlyViewAccess === null || Users.onlyViewAccess === false ? 'View and Edit' : 'View Only'}}
+                           </td>
+                           <td>{{ Users?.Active_Status ? 'Active' : 'Inactive' }}</td>
+                           <td>
+                              <div class="action-icon-parent">
+                                 <ng-container *ngIf="Users?.Hospital?.Active_Status || Users?.HospitalsArray[0]?.Active_Status">
+                                    <span *ngIf="Users?.Active_Status === false" class="col-action-icon bk-clr-success" (click)="UserActive(i)" matTooltip="Click to Activate"><i class="fa fa-check" aria-hidden="true"></i></span>
+                                 </ng-container>
+                                 <span *ngIf="Users?.Active_Status === true" class="col-action-icon bk-clr-danger" (click)="UserInActive(i)" matTooltip="Click to De-Activate"><i class="fa fa-ban" aria-hidden="true"></i></span>
+                                 <span class="col-action-icon bk-clr-warning" (click)="EditUser(i)" matTooltip="Edit"><i class="fa fa fa-pencil" aria-hidden="true" ></i></span>
+                                 <span class="col-action-icon bk-clr-info" (click)="ViewUser(i)" matTooltip="View"><i class="fa fa-eye" aria-hidden="true"></i></span>
+                                 <span class="col-action-icon bk-clr-default" (click)="UserDelete(i)" matTooltip="Delete"><i class="fa fa-trash" aria-hidden="true"></i></span>
+                              </div>
+                           </td>
+                        </tr>                           
+                        <div class="table-down-arrow"><i class="fa fa-arrow-circle-down animated infinite fadeInDown"></i></div>
+                     </ng-container>
+                     <tr *ngIf="UserList.length === 0">
+                        <td colspan="9"> No Records Found.... </td>
+                     </tr>
+                  </tbody>
+                  <div #TableLoaderSection class="tbl-loading-center">
+                     <div id="inTurnFadingTextG">
+                        <div id="inTurnFadingTextG_1" class="inTurnFadingTextG">L</div>
+                        <div id="inTurnFadingTextG_2" class="inTurnFadingTextG">O</div>
+                        <div id="inTurnFadingTextG_3" class="inTurnFadingTextG">A</div>
+                        <div id="inTurnFadingTextG_4" class="inTurnFadingTextG">D</div>
+                        <div id="inTurnFadingTextG_5" class="inTurnFadingTextG">I</div>
+                        <div id="inTurnFadingTextG_6" class="inTurnFadingTextG">N</div>
+                        <div id="inTurnFadingTextG_7" class="inTurnFadingTextG">G</div>
+                        <div id="inTurnFadingTextG_8" class="inTurnFadingTextG">.</div>
+                        <div id="inTurnFadingTextG_9" class="inTurnFadingTextG">.</div>
+                        <div id="inTurnFadingTextG_10" class="inTurnFadingTextG">.</div>
+                     </div>
+                  </div>
+                  <div class="table-down-arrow"><i class="fa fa-arrow-circle-down animated infinite fadeInDown"></i></div>
+               </table>
+            </div> 
+         </div>  
+         <div class="pagination-wrapper">
+            <div class="table-go-page-entries">
+               <label>Go page
+                  <mat-form-field class="width-auto" style="padding: 0px 10px 0px 6px;">
+                     <input matInput type="number" autocomplete="off" class="input-go-entries" min="1" max="{{PagesArray[PagesArray.length - 1]?.Value}}" [(ngModel)]="GoToPage">
+                  </mat-form-field>
+                  <button class="go-search-entries" [disabled]="!(GoToPage > 0 && GoToPage <= PagesArray[PagesArray.length - 1]?.Value)" [ngClass]="{'disabled': !(GoToPage > 0 && GoToPage <= PagesArray[PagesArray.length - 1]?.Value)}" matTooltip="Go to Page" (click)="Pagination_Action(GoToPage)" >GO</button>
+               </label>
+            </div>
+            <div class="page-show-entires">
+               <div class="txt-show-records" [innerHTML]="ShowingText"></div>
+            </div>
+            <div class="page-number">
+               <ul class="pagination hidden-xs">
+                  <li>
+                     <a class="{{PagePrevious['Class']}}" (click)="Pagination_Action(PagePrevious['Value'])" matTooltip="Previous">
+                        <p><i class="fa fa-angle-double-left" aria-hidden="true"></i></p>
+                     </a>
+                  </li>
+                  <li *ngFor="let Page of PagesArray; let i=index" class="{{Page.Class}}" [ngClass]="{'active': Page.Active}" (click)="Pagination_Action(Page.Value)" > 
+                     <a><p>{{Page.Text}}</p></a>
+                  </li> 
+                  <li>
+                     <a class="{{PageNext['Class']}}" (click)="Pagination_Action(PageNext['Value'])" matTooltip="Next">
+                        <p><i class="fa fa-angle-double-right" aria-hidden="true"></i></p>
+                     </a>
+                  </li>
+               </ul>
+               <ul class="pagination visible-xs">
+                  <li><a ><p><i class="fa fa-angle-double-left" aria-hidden="true"></i></p></a></li>
+                  <li><a ><p><i class="fa fa-angle-double-right" aria-hidden="true"></i></p></a></li>
+               </ul>  
+            </div> 
+         </div> 
+         
+      </div>
+   </div>
+</section>
+
+<ng-template #template>
+   <div class="modal-body">
+      <div class="modal-header-title">
+         <h5>User Filters</h5>
+         <span class="modal-container-close" (click)="modalReference.hide();"><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+      </div>   
+      <div class="container modal-content-body">
+         <form [formGroup]="FilterFGroup">
+            <div class="col-sm-12">
+               <div class="row">
+                  <div class="form-group col-lg-6 col-md-12">
+                     <div class="row">
+                        <label class="col-md-12 col-lg-4 col-form-label text-lg-right">User Name</label>
+                        <div class="col-md-12 col-lg-8">
+                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                              <input matInput formControlName="UserName" autocomplete="off" placeholder="User Name">
+                           </mat-form-field>
+                        </div>
+                     </div>
+                  </div>
+                  <!-- <div class="form-group col-lg-6 col-md-12">
+                     <div class="row">
+                        <label class="col-md-12 col-lg-4 col-form-label text-lg-right">Email</label>
+                        <div class="col-md-12 col-lg-8">
+                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                              <input matInput formControlName="Email" autocomplete="off" placeholder="Email">
+                           </mat-form-field>
+                        </div>
+                     </div>
+                  </div> -->
+                  <div class="form-group col-lg-6 col-md-12">
+                     <div class="row">
+                        <label class="col-md-12 col-lg-4 col-form-label text-lg-right">Cluster Name</label>
+                        <div class="col-md-12 col-lg-8">
+                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                              <input matInput formControlName="ClusterName" [matAutocomplete]="ClusterAutocomplete" placeholder="Cluster Name" (blur)="AutocompleteBlur('ClusterName')">
+                              <mat-autocomplete #ClusterAutocomplete="matAutocomplete" [displayWith]="ClusterDisplayName">
+                                 <mat-option *ngFor="let Cluster of filteredClustersList | async" [value]="Cluster"> {{Cluster.Cluster_Name}} </mat-option>
+                              </mat-autocomplete>
+                           </mat-form-field>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="form-group col-lg-6 col-md-12">
+                     <div class="row">
+                        <label class="col-md-12 col-lg-4 col-form-label text-lg-right">User Type</label>
+                        <div class="col-md-12 col-lg-8">
+                           <mat-form-field class="full-width" appearance="fill">
+                              <mat-select formControlName="UserType" placeholder="User Type">
+                                 <mat-option >Select User Type</mat-option>
+                                 <mat-option value="CO">Coordinators</mat-option>
+                                 <mat-option value="D">Doctors</mat-option>
+                                 <mat-option value="PU">Peripheral Users</mat-option>
+                                 <mat-option value="CDA">Cluster Doctors</mat-option>
+                              </mat-select>
+                           </mat-form-field>
+                        </div>
+                     </div>
+                  </div>  
+                  <div class="form-group col-lg-6 col-md-12">
+                     <div class="row">
+                        <label class="col-md-12 col-lg-4 col-form-label text-lg-right">Hospital</label>
+                        <div class="col-md-12 col-lg-8">
+                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                              <input matInput formControlName="HospitalName" [matAutocomplete]="HospitalAutocomplete" placeholder="Hospital" (blur)="AutocompleteBlur('HospitalName')">
+                              <mat-autocomplete #HospitalAutocomplete="matAutocomplete" [displayWith]="HospitalDisplayName">
+                                 <mat-option *ngFor="let Hospital of filteredHospitalsList | async" [value]="Hospital"> {{Hospital.Hospital_Name}} </mat-option>
+                              </mat-autocomplete>
+                           </mat-form-field>
+                        </div>
+                     </div>
+                  </div>                 
+                  <div class="form-group col-lg-6 col-md-12">
+                     <div class="row">
+                        <label class="col-md-12 col-lg-4 col-form-label text-lg-right">Location</label>
+                        <div class="col-md-12 col-lg-8">
+                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                              <input matInput formControlName="Location" [matAutocomplete]="LocationAutocomplete" placeholder="Location" (blur)="AutocompleteBlur('Location')">
+                              <mat-autocomplete #LocationAutocomplete="matAutocomplete" [displayWith]="LocationDisplayName">
+                                 <mat-option *ngFor="let Location of filteredLocationsList | async" [value]="Location"> {{Location.Location_Name}} </mat-option>
+                              </mat-autocomplete>
+                           </mat-form-field>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="form-group col-lg-6 col-md-12">
+                     <div class="row">
+                        <label class="col-md-12 col-lg-4 col-form-label text-lg-right">User Access</label>
+                        <div class="col-md-12 col-lg-8">
+                           <mat-form-field class="full-width" appearance="fill">
+                              <mat-select formControlName="onlyViewAccess" placeholder="User Access Type">
+                                 <mat-option >Select User Access Type</mat-option>
+                                 <mat-option value="true">View only</mat-option>
+                                 <mat-option value="false">View and Edit</mat-option>
+                              </mat-select>
+                           </mat-form-field>
+                        </div>
+                     </div>
+                  </div> 
+               </div>
+            </div>
+         </form>
+      </div>
+      <div class="modal-actions">
+         <button type="button" *ngIf="FilterFGroupStatus" (click)="ResetFilters()" class="modal-confirm btns-modal-action fill-right-to-left" aria-label="">Reset</button>
+         <button type="button" [disabled]="!FilterFGroupStatus" [ngClass]="{'disabled': !FilterFGroupStatus}" (click)="SubmitFilters()" class="modal-confirm btns-modal-action fill-left-to-right" aria-label="">Search</button>
+      </div>
+   </div>
+</ng-template>

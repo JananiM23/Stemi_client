@@ -1,0 +1,108 @@
+<section>
+   <div class="modal-body">
+      <div class="modal-header-title">
+         <h5> ECG Files </h5>
+         <span class="modal-container-close" (click)="bsModalRef.hide();">
+            <i class="fa fa-times-circle" aria-hidden="true"></i>
+         </span>
+      </div>
+      <ng-container *ngIf="!ContentLoading">
+         <div class="container modal-content-body modal-ECG-file">
+            <div class="row no-margin">
+               <div class="col-md-12">
+                  <table class="table" cellpadding="0" cellspacing="0" border="0">
+                     <thead>
+                        <tr>
+                           <th>S.No</th>
+                           <th>ECG File</th>
+                           <th>ECG Date/Time</th>
+                        </tr>
+                     </thead>    
+                     <div class="table-up-arrow"><i class="fa fa-arrow-circle-up animated infinite fadeInUp"></i></div>  
+                     <tbody class="tbl-content">
+                        <ng-container *ngIf="ECGFiles.length > 0" > 
+                           <tr class="odd" *ngFor="let ECGFile of ECGFiles;let i=index">
+                              <td>{{ i + 1 }} </td>
+                              <td (click)="OpenListModel(ListTemplate, i)" style="color: #3991da; cursor: pointer;">{{ECGFile.Name}}  </td>
+                              <td> {{ECGFile.DateTime | date: 'd-MMM-y, HH:mm'}} </td>
+                           </tr>
+                        </ng-container>           
+                     </tbody>
+                  </table>
+               </div>
+            </div>
+         </div>
+      </ng-container>
+      <ng-container *ngIf="ContentLoading">
+         <div class="row">
+            <div  class="tbl-loading-center loader-entry-page" style="min-height: 100px; margin: 0px 15px;">
+               <div  id="inTurnFadingTextG">
+                  <div  class="inTurnFadingTextG" id="inTurnFadingTextG_1">L</div>
+                  <div  class="inTurnFadingTextG" id="inTurnFadingTextG_2">O</div>
+                  <div  class="inTurnFadingTextG" id="inTurnFadingTextG_3">A</div>
+                  <div  class="inTurnFadingTextG" id="inTurnFadingTextG_4">D</div>
+                  <div  class="inTurnFadingTextG" id="inTurnFadingTextG_5">I</div>
+                  <div  class="inTurnFadingTextG" id="inTurnFadingTextG_6">N</div>
+                  <div  class="inTurnFadingTextG" id="inTurnFadingTextG_7">G</div>
+                  <div  class="inTurnFadingTextG" id="inTurnFadingTextG_8">.</div>
+                  <div  class="inTurnFadingTextG" id="inTurnFadingTextG_9">.</div>
+                  <div  class="inTurnFadingTextG" id="inTurnFadingTextG_10">.</div>
+               </div>
+            </div>
+         </div>
+      </ng-container>
+
+      <div class="modal-actions" >
+         <div class="row">
+            <div class="col-md-8">
+               <div class="UploadSection">
+                  <input #fileInput type='file' (change)="onFileChange($event)" style="display:none;" accept=".PNG, .png, JPEG, .jpeg, JPG, .jpg, .GIF, .gif, .pdf, .PDF">
+                  <ng-container *ngIf="PageType === 'Edit'">
+                     <span class="UploadBtn" [ngClass]="{'Uploaded': ECGPreviewAvailable}" (click)="fileInput.click()">
+                        <i class="material-icons"> cloud_upload </i>
+                        <span *ngIf="ECGPreviewAvailable"> Change Selected ECG </span>
+                        <span *ngIf="!ECGPreviewAvailable"> Upload Follow-up ECG </span>
+                     </span>
+                     <span *ngIf="ECGPreviewAvailable" class="UploadViewBtn" (click)="OpenUploadModel(UploadTemplate)"> View Selected ECG </span>
+                  </ng-container>
+               </div>
+            </div>
+            <div class="col-md-4">
+               <button *ngIf="!ECGPreviewAvailable" type="button" class="modal-confirm btns-modal-action fill-left-to-right" (click)="bsModalRef.hide();">
+                  <span> close </span>
+               </button>
+               <button *ngIf="ECGPreviewAvailable && !FormUploading" type="button" class="modal-confirm btns-modal-action fill-left-to-right" (click)="Update_ECG();">
+                  <span> Upload </span>
+               </button>
+               <button *ngIf="FormUploading" type="button" class="modal-confirm btns-modal-action fill-left-to-right uploading">
+                  <i class="fa fa-spinner fa-pulse" aria-hidden="true"></i> <span> Uploading... </span>
+               </button>
+            </div>
+         </div>           
+      </div>
+   </div>
+
+
+   <ng-template #UploadTemplate>
+      <div class="ECGView">
+         <span class="CloseBtn" (click)="bsModalRefOne.hide();"> x </span>
+         <div class="ImgSection">
+            <img [ngStyle]="{'max-height': screenHeight + 'px', 'max-width': screenWidth + 'px' }" src="{{ECGPreview}}" alt="">
+         </div>
+      </div>
+   </ng-template>
+
+
+   <ng-template #ListTemplate>
+      <div class="ECGView">
+         <span class="CloseBtn" (click)="bsModalRefTwo.hide();"> x </span>
+         <div class="ImgSection">
+            <img [ngStyle]="{'max-height': screenHeight + 'px', 'max-width': screenWidth + 'px' }" [src]="ListECGPreview" alt="">
+         </div>
+      </div>
+   </ng-template>
+
+
+
+
+</section>

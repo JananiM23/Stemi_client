@@ -1,0 +1,9 @@
+.section-title{display: inline-block;}
+/* .create-button-btn{border: 1px solid;font-weight: 400;padding: 2px 10px;font-size: 14px;float: right;position: relative;top: -2px;cursor: pointer;border-radius: 20px;background-image: linear-gradient(to right, #00a7e8 0, #0071e4 100%);right: -20px;    text-transform: uppercase;letter-spacing: 1.3px;} */
+.col-location-action{margin:0 10px; font-size: 20px;}
+.col-location-action .fa.fa-check-circle{color: green;}
+.col-location-action .fa.fa-ban{color: red;}
+.col-location-action .fa.fa-pencil{cursor: pointer;color: #2196F3;}
+
+span.col-location-action .fa.fa-trash {cursor: pointer;transition: 0.5s;}
+span.col-location-action .fa.fa-trash:hover {color: red;transition: 0.5s;}

@@ -1,0 +1,202 @@
+<div class="row">
+   <div class="nav-container">
+      <nav aria-label="breadcrumb">
+         <ol class="breadcrumb pink lighten-2">
+            <li class="breadcrumb-item">
+               <a class="page-title">Home</a>
+            </li>
+            <a [routerLink]="['/Patient-Records']" routerLinkActive="active" >
+            <li class="breadcrumb-item active">
+                  <i class="fa fa-angle-right fa-6" aria-hidden="true"></i>
+                  <a class="page-title">Patient-Records</a>
+            </li></a>
+            <a [routerLink]="['/Patient-Manage/Patient-Details']" routerLinkActive="active" >
+               <li class="breadcrumb-item active" *ngIf="UrlParams.Patient === null || UrlParams.Patient === '' ||  UrlParams.Patient === undefined">
+                  <i class="fa fa-angle-right fa-6" aria-hidden="true"></i>
+                  <a class="page-title">Patient-Create</a>
+               </li>
+            </a>
+            <li class="breadcrumb-item active" *ngIf=" UrlParams.Patient !== null && UrlParams.Patient !== '' && RoutesArray[1] !== 'Patient-View' && UrlParams.Patient !== undefined ">
+               <i class="fa fa-angle-right fa-6" aria-hidden="true"></i>
+               <a class="page-title">Patient-Edit</a>
+            </li>
+            <li class="breadcrumb-item active" *ngIf=" UrlParams.Patient !== null && UrlParams.Patient !== '' && RoutesArray[1] === 'Patient-View' && UrlParams.Patient !== undefined">
+               <i class="fa fa-angle-right fa-6" aria-hidden="true"></i>
+               <a class="page-title">Patient-View</a>
+            </li>
+         </ol>
+      </nav>
+      <!-- <span class="head-notify"><b>Create Patient</b> - <span class="patient-spn">Patient Details</span></span> -->
+      <!-- <div class="stages">
+         <span class="txt-step">STEP</span>
+         <div class="icon-down-arrow">
+            <i class="fa fa-angle-down" aria-hidden="true"></i>
+         </div>
+      </div> -->
+   </div>
+</div>
+<ng-container *ngIf="!ContentLoading && !PageLoading">
+   <div class="row">
+      <div class="col-md-12 progressbar-container" style="padding-right: 45px;">
+         <!-- Nav tabs -->
+         <!-- Navigation and stage wiser progress bar -->
+         <div class="progress-container" style="position: relative;">
+            <div class="progress-BK">
+               <div class="progress">
+                  <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="6" [ngStyle]="{'width': ActiveWidth}"  style="width: 7%;"></div>
+               </div>
+               <ul class="nav nav-tabs process-model">
+                  <li *ngIf="checkVisibility('Patient-Details')">
+                     <a [routerLink]="(UrlParams.Patient && UrlParams.Patient !== null && UrlParams.Patient !== '') ? ['/' + RoutesArray[1] + '/Patient-Details', UrlParams.Patient] : ['/' + RoutesArray[1] + '/Patient-Details']"
+                        routerLinkActive="completed" data-toggle="tab" data-step="1">
+                        <!-- <span class="Transportmode">{{Basic?.Transport_History.TransportMode}}</span> -->
+                        <div class="icon" [style.left]="getLeft('Patient-Details')"> <i class="fa fa-circle"></i>
+                           <span class="circle circle-1">
+                              <img src='../../../../assets/images/01-yellow-patient-in-hospital-bed.png' alt="patient-in-hospital-bed" class="clr-yellow">
+                              <img src='../../../../assets/images/01-red-patient-in-hospital-bed.png' alt="patient-in-hospital-bed" class="clr-red">
+                              <span class="stage-title">Patient Details</span>
+                              <p *ngIf="Basic?.Hospital_History[0]?.Hospital?.Hospital_Role !== '' && Basic?.Hospital_History[0]?.Hospital?.Hospital_Role !== null ">
+                                 <span class="docter-D-icon" >{{Basic?.Hospital_History[0]?.Hospital?.Hospital_Role === 'EMS' ? 'E' :  (Basic?.Hospital_History[0]?.Hospital?.Hospital_Role | slice: -2)}}</span>
+                              </p>
+                           </span>
+                        </div>
+                     </a>
+                  </li>
+
+                  <li *ngIf="checkVisibility('Thrombolysis')" [ngClass]="{'disable-action': !(UrlParams.Patient && UrlParams.Patient !== null && UrlParams.Patient !== '')}">
+                     <a [routerLink]="(UrlParams.Patient && UrlParams.Patient !== null && UrlParams.Patient !== '') ? ['/' + RoutesArray[1] + '/Thrombolysis', UrlParams.Patient] : ['/' + RoutesArray[1] + '/Thrombolysis']"
+                        routerLinkActive="completed" data-toggle="tab" data-step="2">
+                        <div class="icon" [style.left]="getLeft('Thrombolysis')"> <i class="fa fa-circle"></i>
+                           <span class="circle circle-2">
+                              <img src='../../../../assets/images/02-yellow-heart-wt-injection.png' alt="patient-in-hospital-bed" class="clr-yellow">
+                              <img src='../../../../assets/images/02-red-heart-wt-injection.png' alt="patient-in-hospital-bed" class="clr-red">
+                              <span class="stage-title">Thrombolysis</span>
+                           <p *ngIf="(Thrombolysis?.Hospital?.Hospital_Role !== '' && Thrombolysis?.Hospital?.Hospital_Role !== null) || IfPostThrombolysis " >
+                              <span *ngIf="!IfPostThrombolysis" class="docter-D-icon" >{{Thrombolysis?.Hospital?.Hospital_Role === 'EMS' ? 'E' :  (Thrombolysis?.Hospital?.Hospital_Role | slice: -2)}}</span>
+                              <span *ngIf="IfPostThrombolysis" class="docter-D-icon" >RF</span>
+                           </p>
+                           </span>
+                        </div>
+                     </a>
+                  </li>
+                  <li *ngIf="checkVisibility('PCI')" [ngClass]="{'disable-action': !(UrlParams.Patient && UrlParams.Patient !== null && UrlParams.Patient !== '')}">
+                     <a [routerLink]="(UrlParams.Patient && UrlParams.Patient !== null && UrlParams.Patient !== '') ? ['/' + RoutesArray[1] + '/PCI', UrlParams.Patient] : ['/' + RoutesArray[1] + '/PCI']"
+                        routerLinkActive="completed" data-toggle="tab" data-step="3">
+                        <div class="icon" [style.left]="getLeft('PCI')"> <i class="fa fa-circle"></i>
+                           <span class="circle circle-3">
+                              <img src='../../../../assets/images/03-yellow-doctor-stethoscope.png' alt="patient-in-hospital-bed" class="clr-yellow">
+                              <img src='../../../../assets/images/03-red-doctor-stethoscope.png' alt="patient-in-hospital-bed" class="clr-red">
+                              <span class="stage-title pci">PCI</span>
+                              <p *ngIf="Pci?.Hospital?.Hospital_Role !== '' && Pci?.Hospital?.Hospital_Role !== null ">
+                                 <span class="docter-D-icon">{{Pci?.Hospital?.Hospital_Role === 'EMS' ? 'E' :  (Pci?.Hospital?.Hospital_Role | slice: -2)}}</span>
+                              </p>
+                           </span>
+                        </div>
+                     </a>
+                  </li>
+                  <li *ngIf="checkVisibility('Hospital-Summary')" [ngClass]="{'disable-action': !(UrlParams.Patient && UrlParams.Patient !== null && UrlParams.Patient !== '')}">
+                     <a [routerLink]="(UrlParams.Patient && UrlParams.Patient !== null && UrlParams.Patient !== '') ? ['/' + RoutesArray[1] + '/Hospital-Summary', UrlParams.Patient] : ['/' + RoutesArray[1] + '/Hospital-Summary']"
+                        routerLinkActive="completed" data-toggle="tab" data-step="4">
+                        <div class="icon" [style.left]="getLeft('Hospital-Summary')"> <i class="fa fa-circle"></i>
+                           <span class="circle circle-4">
+                              <img src='../../../../assets/images/04-yellow-document.png' alt="patient-in-hospital-bed" class="clr-yellow">
+                              <img src='../../../../assets/images/04-red-document.png' alt="patient-in-hospital-bed" class="clr-red">
+                              <span class="stage-title">In Hospital Summary</span>
+                              <p  *ngIf="LabReport?.Hospital?.Hospital_Role !== '' && LabReport?.Hospital?.Hospital_Role !== null ">
+                                 <span class="docter-D-icon">{{LabReport?.Hospital?.Hospital_Role === 'EMS' ? 'E' :  (LabReport?.Hospital?.Hospital_Role | slice: -2)}}</span>
+                              </p>
+                              
+                           </span>
+                        </div>
+                     </a>
+                  </li>
+                  <li *ngIf="checkVisibility('Discharge-Transfer')" [ngClass]="{'disable-action': !(UrlParams.Patient && UrlParams.Patient !== null && UrlParams.Patient !== '')}">
+                     <a [routerLink]="(UrlParams.Patient && UrlParams.Patient !== null && UrlParams.Patient !== '') ? ['/' + RoutesArray[1] + '/Discharge-Transfer', UrlParams.Patient] : ['/' + RoutesArray[1] + '/Discharge-Transfer']"
+                        routerLinkActive="completed" data-toggle="tab" data-step="5">
+                        <div class="icon" [style.left]="getLeft('Discharge-Transfer')"> <i class="fa fa-circle"></i>
+                           <span class="circle circle-5">
+                              <img src='../../../../assets/images/05-yellow-bed-wt-pateint.png' alt="patient" class="clr-yellow">
+                              <img src='../../../../assets/images/05-red-bed-wt-pateint.png' alt="patient" class="clr-red">
+                              <span class="stage-title">Discharge / Transfer</span>
+                              <p  *ngIf="Transfer?.Hospital?.Hospital_Role !== '' && Transfer?.Hospital?.Hospital_Role !== null ">
+                              <span class="docter-D-icon">{{Transfer?.Hospital?.Hospital_Role === 'EMS' ? 'E' :  (Transfer?.Hospital?.Hospital_Role | slice: -2)}}</span>
+                           </p> 
+                           </span>
+                        </div>
+                     </a>
+                  </li>
+                  <li *ngIf="checkVisibility('Follow-Up')" [ngClass]="{'disable-action': !(UrlParams.Patient && UrlParams.Patient !== null && UrlParams.Patient !== '') || DisableFollowUp}">
+                     <a [routerLink]="(UrlParams.Patient && UrlParams.Patient !== null && UrlParams.Patient !== '') ? ['/' + RoutesArray[1] + '/Follow-Up', UrlParams.Patient] : ['/' + RoutesArray[1] + '/Follow-Up']"
+                        routerLinkActive="completed" data-toggle="tab" data-step="6">
+                        <div class="icon" [style.left]="getLeft('Follow-Up')"> <i class="fa fa-circle"></i>
+                           <span class="circle circle-6">
+                              <img src='../../../../assets/images/06-yellow-heart-wt-hand.png' alt="patient" class="clr-yellow">
+                              <img src='../../../../assets/images/06-red-heart-wt-hand.png' alt="patient" class="clr-red">
+                              <span class="stage-title follow-up">Follow Up</span>
+                              <p  *ngIf="FollowUps?.Hospital?.Hospital_Role !== '' && FollowUps?.Hospital?.Hospital_Role !== null ">
+                                 <span class="docter-D-icon" *ngIf="FollowUps?.Hospital?.Hospital_Role !== null || FollowUps?.Hospital?.Hospital_Role !== '' "> {{FollowUps?.Hospital?.Hospital_Role === 'EMS' ? 'E' :  (FollowUps?.Hospital?.Hospital_Role | slice: -2)}}</span>
+                           </p>
+                              </span>
+                        </div>
+                     </a>
+                  </li>
+               </ul>
+            </div>
+         </div>
+         <!-- Navigation and stage wiser progress bar -->
+         <!-- end design process steps-->
+      </div>
+   </div>
+   <!-- step 1 -->
+   <div class="patient-details">
+      <div class="row">
+         <div class="col-md-12 no-padding">
+            <div class="row">
+               <div class="col-md-6">
+                  <div class="patient-name">
+                     <table>
+                        <tbody>
+                           <td>Patient Name </td>
+                           <td>:</td>
+                           <td><span> {{PatientName}} </span></td>
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+               <div class="col-md-6">
+                  <div class="patient-id">
+                     <table>
+                        <tbody>
+                           <td>Patient ID</td>
+                           <td>:</td>
+                           <td><span> {{PatientUnique}} </span></td>
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+            </div>
+         </div> 
+      </div>
+   </div>
+
+   <router-outlet></router-outlet>
+</ng-container>
+
+<ng-container *ngIf="ContentLoading || PageLoading">
+   <div class="row">
+      <div  class="tbl-loading-center loader-entry-page" style="min-height: 500px;">
+         <div  id="inTurnFadingTextG">
+            <div  class="inTurnFadingTextG" id="inTurnFadingTextG_1">L</div>
+            <div  class="inTurnFadingTextG" id="inTurnFadingTextG_2">O</div>
+            <div  class="inTurnFadingTextG" id="inTurnFadingTextG_3">A</div>
+            <div  class="inTurnFadingTextG" id="inTurnFadingTextG_4">D</div>
+            <div  class="inTurnFadingTextG" id="inTurnFadingTextG_5">I</div>
+            <div  class="inTurnFadingTextG" id="inTurnFadingTextG_6">N</div>
+            <div  class="inTurnFadingTextG" id="inTurnFadingTextG_7">G</div>
+            <div  class="inTurnFadingTextG" id="inTurnFadingTextG_8">.</div>
+            <div  class="inTurnFadingTextG" id="inTurnFadingTextG_9">.</div>
+            <div  class="inTurnFadingTextG" id="inTurnFadingTextG_10">.</div>
+         </div>
+      </div>
+   </div>
+</ng-container>

@@ -1,0 +1,285 @@
+<section>
+   <div class="modal-body">
+      <div class="modal-header-title">
+         <h5> BPL Record Update </h5>
+         <span *ngIf="!Uploading" class="modal-container-close" (click)="bsModalRef.hide();">
+            <i class="fa fa-times-circle"aria-hidden="true"></i>
+         </span>
+      </div>
+      <div class="categorySelection" *ngIf="BPLType === ''">
+         <div (click)="BPLTypeUpdate('New')">
+            <p> 0-Minute </p>
+         </div>
+         <div (click)="BPLTypeUpdate('Existing')">
+            <p> Follow-up </p>
+         </div>
+      </div>
+      <div class="existingPatient" *ngIf="BPLType === 'Existing'">
+         <div class="Type-Title"> BPL Details </div>
+         <div class="container modal-content-body">
+            <div class="row">
+               <div class="col-md-6">
+                  <div class="form-group form-group-sm col-md-12">
+                     <div class="row">
+                        <label class="col-sm-12  col-md-5 text-lg-right lbl">Patient ID:</label>
+                        <div class="col-sm-12  col-md-7">
+                           {{Data?.Patient_Id}}
+                        </div>
+                     </div>
+                  </div>
+                  <div class="form-group form-group-sm col-md-12">
+                     <div class="row">
+                        <label class="col-sm-12  col-md-5 text-lg-right lbl">Patient Name:</label>
+                        <div class="col-sm-12  col-md-7">
+                           {{Data?.Patient_Name}}
+                        </div>
+                     </div>
+                  </div>
+                  <div class="form-group form-group-sm col-md-12">
+                     <div class="row">
+                        <label class="col-sm-12  col-md-5 text-lg-right lbl">Patient Age :</label>
+                        <div class="col-sm-12  col-md-7">
+                           {{Data?.Patient_Age}}
+                        </div>
+                     </div>
+                  </div>
+                  <div class="form-group form-group-sm col-md-12">
+                     <div class="row">
+                        <label class="col-sm-12  col-md-5 text-lg-right lbl">Patient Gender :</label>
+                        <div class="col-sm-12  col-md-7">
+                           {{ Data?.Patient_Gender === 'Female_to_Male' ? 'Female to Male' : Data?.Patient_Gender === 'Male_to_Female' ? 'Male to Female' :  Data?.Patient_Gender === 'Male' ? 'Male' :  Data?.Patient_Gender === 'Female' ? 'Female' : ''}}
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-md-6">
+                  <div class="form-group form-group-sm col-md-12">
+                     <div class="row">
+                        <label class="col-sm-12  col-md-5 text-lg-right lbl">Hospital :</label>
+                        <div class="col-sm-12  col-md-7">
+                           {{Data?.Initiated_Hospital?.Hospital_Name }}
+                        </div>
+                     </div>
+                  </div> 
+                  <div class="form-group form-group-sm col-md-12">
+                     <div class="row">
+                        <label class="col-sm-12  col-md-5 text-lg-right lbl"> ECG Taken Time :</label>
+                        <div class="col-sm-12  col-md-7">                              
+                           <span> {{Data?.ECG_Taken_date_time | date: 'd-MMM-y, HH:mm' }}</span>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="form-group form-group-sm col-md-12">
+                     <div class="row">
+                        <label class="col-sm-12  col-md-5 text-lg-right lbl"> ECG File :</label>
+                        <div class="col-sm-12  col-md-7">
+                           <span class="UploadBtn" (click)="EcgView(template)" >
+                              <i class="material-icons"> photo_size_select_actual </i>
+                              <span>View ECG </span>
+                           </span>
+                        </div>
+                     </div>
+                  </div> 
+                </div>
+            </div>
+         </div>
+         <div class="Type-Title"> Search Patient Details </div>
+         <div class="Search-Section">
+            <div class="container modal-content-body">
+               <div class="row">
+                  <div class="col-md-6">
+                     <form [formGroup]="searchForm">
+                        <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                           <input matInput formControlName="searchKey" [matAutocomplete]="PatientAutocomplete" placeholder="Search Patient Name / Patient Code" (blur)="AutocompleteBlur('searchKey')">
+                           <mat-autocomplete #PatientAutocomplete="matAutocomplete" [displayWith]="PatientDisplayName">
+                              <mat-option *ngFor="let patient of filteredPatientsList | async" [value]="patient">
+                                 <b> {{patient.Patient_Name}} </b>- {{patient.Patient_Unique}}
+                              </mat-option>
+                           </mat-autocomplete>
+                        </mat-form-field>
+                     </form>
+                  </div>
+                  <div *ngIf="PatientSelected" class="col-md-6">
+                     <div class="form-group form-group-sm col-md-12">
+                        <div class="row">
+                           <label class="col-sm-12  col-md-5 text-lg-right lbl">Patient Name:</label>
+                           <div class="col-sm-12  col-md-7">
+                              {{SelectedPatient?.Patient_Name}}
+                           </div>
+                        </div>
+                     </div>
+                     <div class="form-group form-group-sm col-md-12">
+                        <div class="row">
+                           <label class="col-sm-12  col-md-5 text-lg-right lbl">Patient Code:</label>
+                           <div class="col-sm-12  col-md-7">
+                              {{SelectedPatient?.Patient_Unique}}
+                           </div>
+                        </div>
+                     </div>
+                     <div class="form-group form-group-sm col-md-12">
+                        <div class="row">
+                           <label class="col-sm-12  col-md-5 text-lg-right lbl">Patient Age :</label>
+                           <div class="col-sm-12  col-md-7">
+                              {{SelectedPatient?.Patient_Age}}
+                           </div>
+                        </div>
+                     </div>
+                     <div class="form-group form-group-sm col-md-12">
+                        <div class="row">
+                           <label class="col-sm-12  col-md-5 text-lg-right lbl">Patient Gender :</label>
+                           <div class="col-sm-12  col-md-7">
+                              {{SelectedPatient?.Patient_Gender}}
+                           </div>
+                        </div>
+                     </div>
+                     <div class="form-group form-group-sm col-md-12">
+                        <div class="row">
+                           <label class="col-sm-12  col-md-5 text-lg-right lbl">Hospital ID:</label>
+                           <div class="col-sm-12  col-md-7">
+                              {{SelectedPatient?.Hospital_Id}}
+                           </div>
+                        </div>
+                     </div>
+                     <div class="form-group form-group-sm col-md-12">
+                        <div class="row">
+                           <label class="col-sm-12  col-md-5 text-lg-right lbl">Hospital:</label>
+                           <div class="col-sm-12  col-md-7">
+                              {{SelectedPatient?.Hospital_Name}}
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="modal-actions">
+            <button *ngIf="!Uploading" type="button" [disabled]="!PatientSelected || searchForm.status !== 'VALID'" [ngClass]="{'disabled': !PatientSelected || searchForm.status !== 'VALID'}" (click)="FollowUpUpdate()" class="modal-confirm btns-modal-action fill-left-to-right" >
+               <span> Update the Follow-up </span>
+            </button>
+            <button *ngIf="Uploading" type="button" class="modal-confirm btns-modal-action fill-left-to-right" >
+               <span > Loading... </span>
+            </button>
+         </div>
+      </div>
+      <form *ngIf="BPLType === 'New'" [formGroup]="Form">
+         <div class="container modal-content-body">
+            <div class="col-sm-12">
+               <div class="row no-margin">
+                  <div class="form-group col-sm-6">
+                     <div class="row">
+                        <label class="col-md-12 col-lg-4 col-form-label text-lg-right">Chest Discomfort</label>
+                        <div class="col-md-12 col-lg-8">
+                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                              <mat-select formControlName="Chest_Discomfort" placeholder="Select">
+                                 <mat-option>Select</mat-option>
+                                 <mat-option *ngFor="let CDiscomfort of ChestDiscomfort" [value]="CDiscomfort.Key">{{CDiscomfort.Name}}</mat-option>
+                              </mat-select>
+                           </mat-form-field>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="form-group col-sm-6">
+                     <div class="row">
+                        <label class="col-md-12 col-lg-4 col-form-label text-lg-right">Location of Pain</label>
+                        <div class="col-md-12 col-lg-8">
+                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                              <mat-select formControlName="Location_of_Pain" placeholder="Select" multiple>
+                                 <mat-option *ngFor="let LocationPain of LocationOfPain" [value]="LocationPain.Key">{{LocationPain.Name}}</mat-option>
+                              </mat-select>
+                           </mat-form-field>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="form-group col-sm-6">
+                     <div class="row">
+                        <label class="col-md-12 col-lg-4 col-form-label text-lg-right">Smoker</label>
+                        <div class="col-md-12 col-lg-8">
+                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                              <mat-select formControlName="Smoker" placeholder="Select">
+                                 <mat-option>Select</mat-option>
+                                 <mat-option *ngFor="let Smoke of Smoker;let i=index" [value]="Smoke.Key">{{Smoke.Name}}</mat-option>
+                              </mat-select>
+                           </mat-form-field>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="form-group col-sm-6">
+                     <div class="row">
+                        <label class="col-md-12 col-lg-4 col-form-label text-lg-right">Diabetes</label>
+                        <div class="col-md-12 col-lg-8">
+                           <div class="YesOrNoButton"  btnRadioGroup formControlName="Diabetes">
+                              <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                              <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="form-group col-sm-6">
+                     <div class="row">
+                        <label class="col-md-12 col-lg-4 col-form-label text-lg-right">Hypertension</label>
+                        <div class="col-md-12 col-lg-8">
+                           <div class="YesOrNoButton"  btnRadioGroup formControlName="Hypertension">
+                              <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                              <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="form-group col-sm-6">
+                     <div class="row">
+                        <label class="col-md-12 col-lg-4 col-form-label text-lg-right">High Cholesterol</label>
+                        <div class="col-md-12 col-lg-8">
+                           <div class="YesOrNoButton"  btnRadioGroup formControlName="High_Cholesterol">
+                              <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                              <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="form-group col-sm-6">
+                     <div class="row">
+                        <label class="col-md-12 col-lg-4 col-form-label text-lg-right">Previous History of IHD</label>
+                        <div class="col-md-12 col-lg-8">
+                           <div class="YesOrNoButton"  btnRadioGroup formControlName="Previous_History_of_IHD">
+                              <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                              <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="form-group col-sm-6">
+                     <div class="row">
+                        <label class="col-md-12 col-lg-4 col-form-label text-lg-right">Family History of IHD</label>
+                        <div class="col-md-12 col-lg-8">
+                           <div class="YesOrNoButton"  btnRadioGroup formControlName="Family_History_of_IHD">
+                              <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                              <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="modal-actions">
+            <button *ngIf="!Uploading" type="button" [disabled]="Form.status !== 'VALID'" (click)="StemiConfirm()" [ngClass]="{'disabled': Form.status !== 'VALID'}" class="modal-confirm btns-modal-action fill-left-to-right" >
+               <span> Stemi Confirm </span>
+            </button>
+            <button *ngIf="!Uploading" type="button" [disabled]="Form.status !== 'VALID'" (click)="AskCardiologist()" [ngClass]="{'disabled': Form.status !== 'VALID'}" class="modal-confirm btns-modal-action fill-left-to-right" >
+               <span >Ask Cardiologist</span>
+            </button>
+            <button *ngIf="Uploading" type="button" class="modal-confirm btns-modal-action fill-left-to-right" >
+               <span > Loading... </span>
+            </button>
+         </div>
+      </form>
+   </div>
+   <ng-template #template>
+      <div class="ECGView">
+         <span class="CloseBtn" (click)="modalReference.hide();"> x </span>
+         <div class="ImgSection">
+            <img [ngStyle]="{'max-height': screenHeight + 'px', 'max-width': screenWidth + 'px' }" src="{{Data?.ECG_File}}" alt="">
+         </div>
+      </div>
+   </ng-template>
+</section>

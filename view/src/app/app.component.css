@@ -1,0 +1,620 @@
+ul li {
+  list-style: none;
+}
+
+.mat-toolbar {
+  padding: 0;
+  background-image: url(./../assets/images/Header-Background.jpg);
+  background-size: 100% 100%;
+  width: 100%;
+  position: fixed;
+  top: 0px;
+  z-index: 1001;
+}
+
+.brand-logo {
+  background: #ffffff;
+  padding: 0;
+  border-bottom: 1px solid #c0c0c052;
+}
+
+.nav-icons {
+  position: absolute;
+  right: 10px;
+}
+
+span.dot {
+  padding: 10px;
+  height: 36px;
+  width: 36px;
+  background-color: #d11c13;
+  border-radius: 50%;
+  display: inline-block;
+  margin: 0 8px;
+  cursor: pointer;
+  transition: 1s;
+  position: relative;
+  top: 5px;
+}
+
+span.dot i.material-icons {
+  color: #ffffff;
+}
+
+/* sidenavbar css */
+span.toggle-sidenav {
+  color: #ffffff;
+  padding: 10px;
+  cursor: pointer;
+}
+
+/*Header Icon Yellow color dot Highlights*/
+span.dot img {
+  width: 33px;
+  top: 1px;
+  left: 2px;
+  position: absolute;
+}
+
+.active span.dot:before {
+  content: "";
+  width: 13px;
+  height: 13px;
+  border-radius: 10px;
+  position: absolute;
+  background-image: radial-gradient(circle, #ffffff, #ffffff, #FFEB3B, #FFEB3B, #FFEB3B);
+  right: 0px;
+  top: -5px;
+}
+
+.dot.blink:before {
+  display: block;
+  animation: blink 1s linear infinite;
+}
+
+@keyframes blink {
+  0% {
+    transform: scale(.50)
+  }
+
+  25% {
+    transform: scale(1)
+  }
+
+  50% {
+    transform: scale(1.1)
+  }
+
+  75% {
+    transform: scale(1)
+  }
+
+  100% {
+    transform: scale(.50)
+  }
+}
+
+/*Header Icon Yellow color dot Highlights*/
+
+.userprofile {
+  padding: 10px 10px;
+  background: #f2f3f5;
+  border-bottom: 2px solid #d1d1d1;
+}
+
+.userprofile span {
+  font-size: 14px;
+  font-weight: 400;
+  color: gray;
+  text-align: left;
+  display: block;
+}
+
+.userprofile span.User {
+  font-weight: 700 !important;
+  font-size: 17px !important;
+  color: #1977d4 !important;
+  text-transform: capitalize;
+  font-family: sans-serif;
+  text-align: center !important;
+}
+
+.stemi-main-menus {
+  margin: 5px;
+  background: #f2f3f4;
+}
+
+.stemi-main-menus ul li {
+  border: none;
+  padding: 5px 10px;
+  border-radius: 40px;
+  font-weight: 300;
+  height: 40px;
+  line-height: 32px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.stemi-main-menus ul li a.active {
+  display: block;
+  border: none;
+  background-image: linear-gradient(to right, #2f81d4 0, #59c5ef 100%);
+  border-radius: 25px;
+}
+
+.stemi-main-menus ul li span {
+  padding-left: 15px;
+  color: #9098ab;
+  letter-spacing: 0.3px;
+}
+
+.stemi-main-menus ul li a.active:hover {
+  color: #ffffff
+}
+
+.stemi-main-menus ul li a.active span {
+  color: #fff;
+}
+
+.stemi-main-menus ul li:hover a {
+  text-decoration: none;
+}
+
+.stemi-main-menus .menu-list img {
+  width: 25px;
+  float: left;
+  top: 3px;
+  left: 5px;
+  position: relative;
+}
+
+.menu-list {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 2px 0;
+}
+
+.menu-list:hover {
+  background: linear-gradient(to right, rgba(47, 129, 212, 0.2) 0, rgba(89, 197, 239) 100%);
+  border-radius: 20px;
+}
+
+.menu-list:hover span {
+  color: #fff !important;
+}
+
+
+
+/* Toaster Notification CSS s:tart */
+.Toastr_Message {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  right: 10px;
+  top: 10px;
+  z-index: 1040;
+  background-color: #ffffff;
+  width: 345px;
+  height: 60px;
+  border-radius: 2px;
+  box-shadow: 0 11px 15px -7px rgba(0, 0, 0, .2), 0 24px 38px 3px rgba(0, 0, 0, .14), 0 9px 46px 8px rgba(0, 0, 0, .12);
+}
+
+.Message_Icon {
+  background-color: #d8d8d8;
+  line-height: 72px;
+  width: 45px;
+  height: 60px;
+  text-align: center;
+  color: #4c6a7a;
+}
+
+.Message_Icon i {
+  font-size: 26px;
+}
+
+.Message {
+  width: 300px;
+  padding: 0px 5px;
+  height: 60px;
+}
+
+.Message .Title {
+  margin: 0px;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+  margin-top: 6px;
+  line-height: 25px;
+}
+
+.Message .body {
+  margin: 0px;
+  font-size: 13px;
+  letter-spacing: 0.1px;
+  font-weight: normal;
+  line-height: 20px;
+}
+
+.Message_Close {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  text-align: center;
+  color: #ffffff;
+  width: 25px;
+  height: 25px;
+  line-height: 33px;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.Message_Close i {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.Toastr_Message.Hidden {
+  display: none;
+}
+
+.Toastr_Message.Warning {
+  background-color: #FDBA29;
+  color: #ffffff;
+}
+
+.Toastr_Message.Success {
+  background-color: #82BD49;
+  color: #ffffff;
+}
+
+.Toastr_Message.Error {
+  background-color: #F03A37;
+  color: #ffffff;
+}
+
+.Toastr_Message.Info {
+  background-color: #21A1F0;
+  color: #ffffff;
+}
+
+.Warning .Message_Icon {
+  background-color: #dea322;
+  color: #ffffff;
+}
+
+.Success .Message_Icon {
+  background-color: #659239;
+  color: #ffffff;
+}
+
+.Error .Message_Icon {
+  background-color: #d03532;
+  color: #ffffff;
+}
+
+.Info .Message_Icon {
+  background-color: #2288c7;
+  color: #ffffff;
+}
+
+.loader {
+  height: 4px;
+  width: 100%;
+  position: absolute;
+  overflow: hidden;
+  /* bottom: -4px; */
+  top: 60px;
+}
+
+.loader:before {
+  display: block;
+  position: absolute;
+  content: "";
+  left: -100%;
+  width: 100%;
+  top: 1px;
+  height: 3px;
+  background-color: transparent;
+  border-top: 2px dashed;
+  animation: loading 3s linear;
+}
+
+.Warning .loader {
+  background-color: #FDBA29;
+}
+
+.Success .loader {
+  background-color: #82BD49;
+}
+
+.Error .loader {
+  background-color: #F03A37;
+}
+
+.Info .loader {
+  background-color: #21A1F0;
+}
+
+.Warning .loader:before {
+  border-color: #af801b;
+}
+
+.Success .loader:before {
+  border-color: #3e6518;
+}
+
+.Error .loader:before {
+  border-color: #8e1a18;
+}
+
+.Info .loader:before {
+  border-color: #1d73a9;
+}
+
+@keyframes loading {
+  from {
+    left: -100%;
+  }
+
+  to {
+    left: 0%;
+  }
+}
+
+/* Toaster Notification CSS end */
+
+
+
+/* User Notification Panel CSS start */
+.notify-panel {
+  background: #fff;
+  position: absolute;
+  top: 50px;
+  right: -30px;
+  width: 300px;
+  height: 300px;
+  border: 1px solid #4bafe6;
+  color: #fff;
+  font-size: 14px;
+  cursor: default;
+  display: block;
+}
+
+.notification-group li {
+  padding: 8px !important;
+}
+
+.notify-header {
+  background: #d3d3d3;
+  padding: 0 10px;
+  position: absolute;
+  width: 100%;
+  background-image: linear-gradient(to left, #2f81d4 0, #59c5ef 100%)
+}
+
+.notify-content-body {
+  max-height: 250px;
+  overflow: auto;
+  color: #000;
+  margin-top: 32px;
+  cursor: default
+}
+
+span.notify-counts {
+  background: #ff5722;
+  padding: 3px;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 12px;
+  margin: 0 10px
+}
+
+.notify-footer {
+  padding: 0 10px;
+  background-image: linear-gradient(to left, #2f81d4 0, #59c5ef 100%);
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+}
+
+ul.notify-list li {
+  padding: 1px;
+  width: 100%;
+  display: block;
+  clear: both;
+  border-bottom: 1px solid #d3d3d3;
+  cursor: pointer;
+  white-space: normal;
+  line-height: normal;
+  position: relative;
+  background: #ffffff;
+}
+
+ul.notify-list li.new-notify,
+ul.notify-list li:hover {
+  background: #e1e1e1;
+}
+
+span.notify-new-dot {
+  background: #007bff;
+  color: #fff;
+  border-radius: 50%;
+  width: 8px;
+  height: 8px;
+}
+
+span.notify-new {
+  background: #097c42;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 400;
+  padding: 3px 5px;
+  border-radius: 11px;
+  width: 10%;
+  position: relative;
+  top: 2px
+}
+
+.arrow-up {
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 15px solid #3991da;
+  position: absolute;
+  z-index: 1;
+  top: -15px;
+  right: 30px
+}
+
+.notify-text-hover {
+  transition: 0.3s
+}
+
+.notify-text-hover:hover {
+  color: #000;
+  cursor: pointer;
+  transition: .5s
+}
+
+.notify-left-content {
+  width: 85%;
+}
+
+.notify-right-content {
+  width: 15%;
+}
+
+.notification-list:after {
+  display: block;
+  clear: both;
+  content: "";
+}
+
+.notify-label {
+  font-size: 16px;
+  color: #4a4a4a;
+  letter-spacing: 0.6px;
+  font-weight: normal;
+}
+
+.notify-title {
+  color: #000000a1;
+}
+
+/* .notify-list.notification_sub_list {white-space: normal;} */
+.notification_sub_list li p {
+   margin-bottom: 8px;
+   color: #576772;
+   font-size: 13px;
+   font-weight: 400;
+   line-height: 1.3;
+   word-spacing: 1px;
+   letter-spacing: 0.4px;
+}
+
+.notify-dateTime {
+   font-size: 11px;
+   color: #9E9E9E;
+   display: flex;
+   justify-content: flex-end;
+   margin-top: -10px;
+   margin-bottom: 0px;
+}
+
+.new-badge {
+  position: absolute;
+  top: 7px;
+  left: 3px;
+  background: #097c42;
+  color: #fff;
+  border-radius: 50%;
+  width: 8px;
+  height: 8px
+}
+
+li.notify-un-read {
+  background: #efefef;
+}
+
+li.notify-un-read p {
+  width: 90%;
+  margin-left: 15px;
+}
+
+li.notify-read p {
+  width: 100%;
+}
+
+.notify-read .new-badge {
+  visibility: hidden;
+}
+
+.notify-msg span {
+  color: #1790ff;
+}
+
+.notify-list,
+.notification_sub_list {
+  animation-name: dropPanel;
+  animation-iteration-count: 1;
+  animation-timing-function: all;
+  animation-duration: .75s
+}
+
+li.notify-un-read.UnClickable.Clickable {
+   pointer-events: auto;
+}
+li.notify-un-read.UnClickable {
+   cursor: default;
+   pointer-events: none;
+}
+
+@keyframes dropPanel {
+  0% {
+    opacity: 0;
+    transform: translateY(-100px) scaleY(0.5);
+  }
+}
+
+/* User Notification Panel CSS end */
+
+
+.stemi-main-menus li a.active .menu-list img.clr-white {
+  display: block;
+  transition: 0.5s;
+}
+
+.stemi-main-menus li a.active .menu-list img.clr-gray {
+  display: none;
+  transition: 0.5s;
+}
+
+.stemi-main-menus li .menu-list img.clr-white {
+  display: none;
+}
+.NotifyCount{
+   right: -10px;
+   text-align: center;
+   background: #1975d4;
+   width: 20px;
+   height: 20px;
+   display: block;
+   border-radius: 25px;
+   position: absolute;
+   font-size: 10px;
+   line-height: 20px;
+   top: -5px;
+   color: #fff;
+}
+p.copyright {
+	position: absolute;
+	bottom: 2px;
+	left: 10px;
+	z-index: 99999;
+	margin: 0;
+	padding: 0;
+	opacity: 0.6;
+}

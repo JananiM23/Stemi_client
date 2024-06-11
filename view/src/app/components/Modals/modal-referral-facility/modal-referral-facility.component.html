@@ -1,0 +1,70 @@
+<section *ngIf="Type && ( Type === 'Create' || Type === 'Edit')">
+   <div class="modal-body">
+      <form [formGroup]="Form" (ngSubmit)="onSubmit()">
+         <div class="modal-header-title">
+            <h5> {{Type}} Referral Facility </h5>
+            <span *ngIf="!Uploading" class="modal-container-close" (click)="bsModalRef.hide();">
+               <i class="fa fa-times-circle"aria-hidden="true"></i>
+            </span>
+         </div>
+         <div class="container modal-content-body">
+            <div class="col-sm-12">
+               <div class="row no-margin">
+                  <div class="form-group col-md-12">
+                     <div class="row">
+                           <label class="col-md-12 col-lg-4 col-form-label text-lg-right">Hospital Name</label>
+                           <div class="col-md-12 col-lg-8">
+                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                              <input matInput formControlName="Hospital_Name" placeholder="Hospital Name">
+                              <mat-error *ngIf="Form.controls['Hospital_Name'].errors && !Form.controls['Hospital_Name'].pristine">
+                                 <span *ngIf="Form.controls['Hospital_Name'].errors.required">Hospital Name is required</span>
+                                 <ng-container *ngIf="!Form.controls['Hospital_Name'].errors.required">
+                                    <span *ngIf="Form.controls['Hospital_Name'].errors.HospitalName_NotAvailable">Hospital Name Already Exist</span>
+                                    <span *ngIf="Form.controls['Hospital_Name'].errors.AlphabetsSpaceHyphenError">Enter the valid Hospital Name</span>
+                                 </ng-container>
+                              </mat-error>
+                           </mat-form-field>
+                        </div>
+                     </div>
+                  </div>
+						<div class="form-group col-md-12">
+                     <div class="row">
+                           <label class="col-md-12 col-lg-4 col-form-label text-lg-right">Hospital Type</label>
+                           <div class="col-md-12 col-lg-8">
+                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+										<mat-select formControlName="Hospital_Type" placeholder="Select Hospital Type">
+											<mat-option *ngFor="let Type of HospitalTypes; let i=index" [value]="Type.Key">{{Type.Name}}</mat-option>                                          
+										</mat-select>
+                              <mat-error *ngIf="Form.controls['Hospital_Type'].errors && !Form.controls['Hospital_Type'].pristine">
+                                 <span *ngIf="Form.controls['Hospital_Type'].errors.required">Hospital Type is required</span>
+                              </mat-error>
+                           </mat-form-field>
+                        </div>
+                     </div>
+                  </div>
+						<div class="form-group col-md-12">
+                     <div class="row">
+                           <label class="col-md-12 col-lg-4 col-form-label text-lg-right">Hospital Address</label>
+                           <div class="col-md-12 col-lg-8">
+                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                              <input matInput formControlName="Hospital_Address" placeholder="Hospital Address">
+                              <mat-error *ngIf="Form.controls['Hospital_Address'].errors && !Form.controls['Hospital_Address'].pristine">
+                                 <span *ngIf="Form.controls['Hospital_Address'].errors.required">Hospital Address is required</span>
+                              </mat-error>
+                           </mat-form-field>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="modal-actions">
+            <button type="submit" [disabled]="Form.status !== 'VALID' || Uploading" class="modal-confirm btns-modal-action fill-left-to-right" >
+               <span *ngIf="Type === 'Create' && !Uploading">Submit</span>
+               <span *ngIf="Type === 'Edit' && !Uploading">Update</span>
+               <span *ngIf="Uploading"> Loading... </span>
+            </button>
+         </div>
+      </form>
+   </div>
+</section>

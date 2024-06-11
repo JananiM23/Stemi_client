@@ -1,0 +1,933 @@
+<div class="row" *ngIf="PageAccess !== 'Open'">
+   <div class="nav-container">
+      <nav aria-label="breadcrumb">
+         <ol class="breadcrumb pink lighten-2">
+            <li class="breadcrumb-item">
+               <a class="page-title">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+               <i class="fa fa-angle-right fa-6" aria-hidden="true"></i>
+               <a [routerLink]="['/Hospital-Management']" class="page-title">Hospital</a>
+            </li>
+            <li class="breadcrumb-item active">
+               <i class="fa fa-angle-right fa-6" aria-hidden="true"></i>
+               <a class="page-title">{{PageType}} Hospital</a>
+            </li>
+         </ol>
+      </nav>
+      <span class="head-notify view-all-entries">{{PageType}} Hospital</span>
+   </div>
+</div>
+
+<section>
+   <div class="row">
+      <div class="col-md-12 tab-pane-container">
+         <div class="padding-top-10">
+
+            <div *ngIf="PageAccess === 'Open'" class="public-header">
+               <div class="container-fluid">
+                  <div class="colored-header text-center" style="background: #ffffff;">
+                     <img height="100px" [routerLink]="['/Login']" src="assets/stemi-logo.jpg" class="animated fadeInRight">
+                  </div>
+                  <div class="container public-header-desc">
+                     <br>
+                     <p> Lorem ipsum dolor sit amet consectetur, adipisicing elit. Unde mollitia veniam soluta quaerat voluptatum fugit perferendis consequatur quis commodi vitae veritatis possimus autem consequuntur molestias, explicabo earum illum id vero! Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque minus quidem quo suscipit eum consectetur. Adipisci fuga esse enim voluptatum consequuntur. Quaerat, qui repellat? Debitis harum suscipit nulla saepe non.</p>
+                  </div>
+               </div>
+            </div>
+
+            <div class="portlet-tab-panelbody" *ngIf="PageLoaded">
+                  <form class="form-horizontal" [formGroup]="HospitalManageForm">
+                     <!-- Hospital Details -->
+                     <div class="hospital-details">
+                        <div class="tabpane-title">
+                           <h5>Hospital Details</h5>
+                        </div>
+                        <div class="container-fluid">
+                           <div class="row hospital-create-parent">
+                              <div  class="form-group col-md-12 col-lg-6 text-box-column">
+                                 <div class="row">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">Hospital Type</label>
+                                    <div class="col-lg-7 col-md-12">
+                                       <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                          <mat-select formControlName="Hospital_Type" (selectionChange)="HospitalTypeChange($event.value)" placeholder='Select Hospital Type'>
+                                             <mat-option >Select Hospital Type</mat-option>
+                                             <mat-option *ngFor="let HType of HospitalType; let i=index" [value]="HType.Key">{{HType.Name}}</mat-option>                                          
+                                          </mat-select>
+                                          <mat-error [innerHTML]="GetFormControlErrorMessage('Hospital_Type')"></mat-error>
+                                       </mat-form-field>
+                                    </div>
+                                 </div>
+                                 <div *ngIf="HospitalManageForm.controls['Hospital_Type'].value === 'private' && EMS"  class="row">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">Does state owned ambulance drop patients here?</label>
+                                    <div class="col-lg-5 col-md-12">
+                                       <div class="YesOrNoButton" btnRadioGroup formControlName="Owned_Ambulance_Drop">
+                                          <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                          <label class=" hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                          <mat-error class="mat-error-full margin-top0" [innerHTML]="GetFormControlErrorMessage('Owned_Ambulance_Drop')"> </mat-error>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <div *ngIf="HospitalManageForm.controls['Hospital_Type'].value === 'government'" class="row">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">Ministry/Dept. of administration</label>
+                                    <div class="col-lg-7 col-md-12">
+                                       <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                          <input  matInput formControlName="Department_of_Administration" placeholder="Ministry/Department of administration">      
+                                          <mat-error [innerHTML]="GetFormControlErrorMessage('Department_of_Administration')"></mat-error>
+                                       </mat-form-field>
+                                    </div>
+                                 </div>
+                                 <div class="row">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">
+                                       <ng-container *ngIf="!EMS"> Name of the Associated Hospital </ng-container>
+                                       <ng-container *ngIf="EMS"> Name of the hospital </ng-container>
+                                    </label>
+                                    <div class="col-lg-7 col-md-12">
+                                       <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                          <input  matInput formControlName="Hospital_Name" placeholder="Hospital Name">      
+                                          <mat-error [innerHTML]="GetFormControlErrorMessage('Hospital_Name')"></mat-error>
+                                       </mat-form-field>
+                                    </div>
+                                 </div>
+                                 <div class="row">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">Hospital Address</label>
+                                    <div class="col-lg-7 col-md-12">
+                                       <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                          <textarea matInput formControlName="Address" placeholder="Hospital Address"></textarea>
+                                          <mat-error [innerHTML]="GetFormControlErrorMessage('Address')"></mat-error>
+                                       </mat-form-field>
+                                    </div>
+                                 </div>
+                                 <div class="row">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">Country</label>
+                                    <div class="col-lg-7 col-md-12">
+                                       <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                          <input matInput placeholder="Country" [matAutocomplete]="CountryAutocomplete" formControlName="Country" autocomplete="off" (blur)="AutocompleteBlur('Country')">
+                                          <mat-autocomplete #CountryAutocomplete="matAutocomplete" [displayWith]="CountryDisplayName">
+                                             <mat-option *ngFor="let Country of filteredCountriesList | async" [value]="Country"> {{Country.Country_Name}} </mat-option>
+                                          </mat-autocomplete>
+                                          <mat-error [innerHTML]="GetFormControlErrorMessage('Country')"></mat-error>
+                                       </mat-form-field>
+                                    </div>
+                                 </div>
+                                 <div class="row">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">State</label>
+                                    <div class="col-lg-7 col-md-12">
+                                       <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                          <input matInput placeholder="State" [matAutocomplete]="StateAutocomplete" formControlName="State" autocomplete="off" (blur)="AutocompleteBlur('State')">
+                                          <mat-autocomplete #StateAutocomplete="matAutocomplete" [displayWith]="StateDisplayName">
+                                             <mat-option *ngFor="let State of filteredStatesList | async" [value]="State"> {{State.State_Name}} </mat-option>
+                                          </mat-autocomplete>
+                                          <mat-error [innerHTML]="GetFormControlErrorMessage('State')"></mat-error>
+                                       </mat-form-field>
+                                    </div>
+                                 </div>
+                                 <div class="row">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">City</label>
+                                    <div class="col-lg-7 col-md-12">
+                                       <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                          <input matInput placeholder="City" [matAutocomplete]="CityAutocomplete" formControlName="City" autocomplete="off" (blur)="AutocompleteBlur('City')">
+                                          <mat-autocomplete #CityAutocomplete="matAutocomplete" [displayWith]="CityDisplayName">
+                                             <mat-option *ngFor="let City of filteredCitiesList | async" [value]="City"> {{City.City_Name}} </mat-option>
+                                          </mat-autocomplete>
+                                          <mat-error [innerHTML]="GetFormControlErrorMessage('City')"></mat-error>
+                                       </mat-form-field>
+                                    </div>
+                                 </div>
+                                 <div class="row">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">Zip code</label>
+                                    <div class="col-lg-7 col-md-12">
+                                       <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                          <input formControlName="Pin_Code" matInput placeholder="Zip code">      
+                                          <mat-error [innerHTML]="GetFormControlErrorMessage('Pin_Code')"></mat-error>
+                                       </mat-form-field>
+                                    </div>
+                                 </div>
+                                 <div class="row">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">Location</label>
+                                    <div class="col-lg-7 col-md-12">
+                                       <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                          <input matInput placeholder="Location" [matAutocomplete]="LocationAutocomplete" autocomplete="off" formControlName="Location" (blur)="AutocompleteBlur('Location')">
+                                          <mat-autocomplete #LocationAutocomplete="matAutocomplete" [displayWith]="LocationDisplayName">
+                                             <mat-option *ngFor="let Location of filteredLocationsList | async" [value]="Location"> {{Location.Location_Name}} </mat-option>
+                                          </mat-autocomplete>
+                                          <mat-error [innerHTML]="GetFormControlErrorMessage('Location')"></mat-error>
+                                       </mat-form-field>
+                                    </div>
+                                 </div>
+                                 <div class="row">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">Latitude</label>
+                                    <div class="col-lg-7 col-md-12">
+                                       <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                          <input formControlName="Latitude" matInput placeholder="Latitude">      
+                                          <mat-error [innerHTML]="GetFormControlErrorMessage('Latitude')"></mat-error>
+                                       </mat-form-field>
+                                    </div>
+                                 </div>
+                                 <div class="row">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">Longitude</label>
+                                    <div class="col-lg-7 col-md-12">
+                                       <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                          <input formControlName="Longitude" matInput placeholder="Longitude">      
+                                          <mat-error [innerHTML]="GetFormControlErrorMessage('Longitude')"></mat-error>
+                                       </mat-form-field>
+                                    </div>
+                                 </div>
+                                 <div class="row">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">Phone</label>
+                                    <div class="col-lg-7 col-md-12">
+                                       <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                          <input  formControlName="Phone" matInput placeholder="Phone Number">      
+                                          <mat-error [innerHTML]="GetFormControlErrorMessage('Phone')"></mat-error>
+                                       </mat-form-field>
+                                    </div>
+                                 </div>
+                                 <div class="row">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right">Mobile</label>
+                                    <div class="col-lg-7 col-md-12">
+                                       <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                          <input  formControlName="Mobile" matInput placeholder="Mobile Number">      
+                                          <mat-error [innerHTML]="GetFormControlErrorMessage('Mobile')"></mat-error>
+                                       </mat-form-field>
+                                    </div>
+                                 </div>                           
+                                 <div class="row">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right">This Unit is Ambulance</label>
+                                    <div class="col-lg-7 col-md-12 col-form-label">
+                                       <mat-checkbox formControlName="Is_EMS" (change)="checkEMS($event.checked)"></mat-checkbox>
+                                    </div>
+                                 </div>
+                                 <ng-container *ngIf="EMS">
+                                    <div class="row">
+                                       <label class="col-lg-5 col-md-12 col-form-label text-lg-right">Which mobile phone network has best coverage in the hospital?</label>
+                                       <div class="col-lg-7 col-md-12">
+                                          <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                             <input  formControlName="Best_Mobile_Network" matInput placeholder="Best Mobile Network">      
+                                             <!-- <mat-error class="" [innerHTML]=""></mat-error> -->
+                                          </mat-form-field>
+                                       </div>
+                                    </div>
+                                    <div class="row">
+                                       <label class="col-lg-5 col-md-12 col-form-label text-lg-right">Do you have WiFi connectivity?</label>
+                                       <div class="col-lg-5 col-md-12">
+                                          <div class="YesOrNoButton" btnRadioGroup formControlName="Wifi_Availability">
+                                             <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                             <label class=" hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                             <mat-error class="mat-error-full margin-top0" [innerHTML]="GetFormControlErrorMessage('Wifi_Availability')"> </mat-error>
+                                          </div>
+                                       </div>
+                                    </div>
+                                    <div class="row" >
+                                       <label class="col-lg-5 col-md-12 col-form-label text-lg-right">Most popular FM channel in the region</label>
+                                       <div class="col-lg-7 col-md-12">
+                                          <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                             <input  formControlName="Popular_FM_Channel" matInput placeholder="">      
+                                             <mat-error [innerHTML]="GetFormControlErrorMessage('Popular_FM_Channel')"></mat-error>
+                                          </mat-form-field>
+                                       </div>
+                                    </div>
+                                    <div class="row">
+                                       <label class="col-lg-5 col-md-12 col-form-label text-lg-right">Most widely read print newspaper in the region</label>
+                                       <div class="col-lg-7 col-md-12">
+                                          <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                             <input  formControlName="Popular_Newspaper" matInput placeholder="">      
+                                             <mat-error [innerHTML]="GetFormControlErrorMessage('Popular_Newspaper')"></mat-error>
+                                          </mat-form-field>
+                                       </div>
+                                    </div>
+                                    <div class="row">
+                                       <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">Do you have an ECG machine in your hospital?</label>
+                                       <div class="col-lg-3 col-md-12">
+                                          <div class="YesOrNoButton" btnRadioGroup formControlName="ECG_Availability" (click)="checkECGAvailability($event.target.innerText)" >
+                                          <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                          <label class=" hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                          <mat-error class="mat-error-full margin-top0" [innerHTML]="GetFormControlErrorMessage('ECG_Availability')"> </mat-error>
+                                          </div>
+                                       </div>
+                                    </div>
+                                    <div class="row">
+                                       <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">Do you have defibrillator in your hospital?</label>
+                                       <div class="col-lg-3 col-md-12">
+                                          <div class="YesOrNoButton" btnRadioGroup formControlName="Defibrillator">
+                                             <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                             <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                             <mat-error class="mat-error-full margin-top0" [innerHTML]="GetFormControlErrorMessage('Defibrillator')"> </mat-error>
+                                          </div>
+                                       </div>
+                                    </div>
+                                    <div class="row" *ngIf="HospitalManageForm.controls['ECG_Availability'].value === 'Yes'" >
+                                       <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">Where is the ECG machine located?</label>
+                                       <div class="col-lg-7 col-md-12">
+                                          <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                             <mat-select formControlName="ECG_Location">
+                                                <mat-option value="">Select ECG Location</mat-option>
+                                                <mat-option *ngFor="let ECGLocation of ECGLocation; let i=index" [value]="ECGLocation.Key">{{ECGLocation.Name}}</mat-option>                                          
+                                             </mat-select>                                     
+                                             <mat-error [innerHTML]="GetFormControlErrorMessage('ECG_Location')"></mat-error>
+                                          </mat-form-field>
+                                       </div>
+                                    </div>
+                                    <div class="row" *ngIf="HospitalManageForm.controls['ECG_Availability'].value === 'Yes'">
+                                       <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">Brand and model of ECG machine</label>
+                                       <div class="col-lg-7 col-md-12">
+                                          <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                             <input matInput formControlName="ECG_Brand_And_Model" placeholder="">      
+                                             <mat-error [innerHTML]="GetFormControlErrorMessage('ECG_Brand_And_Model')"></mat-error>
+                                          </mat-form-field>
+                                       </div>
+                                    </div> 
+                                    <div class="row" *ngIf="HospitalManageForm.controls['ECG_Availability'].value === 'Yes'">
+                                       <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">Are patch or bulb electrode used?</label>
+                                       <div class="col-lg-7 col-md-12">
+                                          <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                             <mat-select formControlName="Patch_Or_BulbElectrode">
+                                                <mat-option value="">Select Electrode</mat-option>
+                                                <mat-option *ngFor="let electrode of PatchOrBulbElectrode; let i=index" [value]="electrode.Key">{{electrode.Name}}</mat-option>                                          
+                                             </mat-select>                                     
+                                             <mat-error class="" [innerHTML]="GetFormControlErrorMessage('Patch_Or_BulbElectrode')"></mat-error>
+                                          </mat-form-field>
+                                       </div>
+                                    </div> 
+                                    <div class="row" *ngIf="HospitalManageForm.controls['ECG_Availability'].value === 'Yes'">
+                                       <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">How many ECG are recorded per month</label>
+                                       <div class="col-lg-7 col-md-12">
+                                          <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                             <input  matInput formControlName="NoOf_ECG_PerMonth" placeholder="">      
+                                             <mat-error [innerHTML]="GetFormControlErrorMessage('NoOf_ECG_PerMonth')"></mat-error>
+                                          </mat-form-field>
+                                       </div>
+                                    </div>
+                                    <div class="row">
+                                       <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">No.of cardiology beds</label>
+                                       <div class="col-lg-7 col-md-12">
+                                          <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                             <input matInput formControlName="NoOf_Cardiology_Beds" placeholder="">      
+                                             <mat-error [innerHTML]="GetFormControlErrorMessage('NoOf_Cardiology_Beds')"></mat-error>
+                                          </mat-form-field>
+                                       </div>
+                                    </div>
+                                    <div class="row">
+                                       <label class="col-lg-5 col-md-12 col-form-label text-lg-right">How many ambulances does the hospital own?</label>
+                                       <div class="col-lg-7 col-md-12">
+                                          <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                             <input formControlName="NoOf_Own_Ambulances" matInput placeholder="No.Of Own Ambulances">      
+                                             <mat-error [innerHTML]="GetFormControlErrorMessage('NoOf_Own_Ambulances')"></mat-error>
+                                          </mat-form-field>
+                                       </div>
+                                    </div>
+                                    <div *ngIf="HospitalManageForm.value.NoOf_Own_Ambulances > 0" class="row">
+                                       <label class="col-lg-5 col-md-12 col-form-label text-lg-right">How many BLS/ALS Ambulance?</label>
+                                       <div class="col-lg-7 col-md-12">
+                                          <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                             <input  formControlName="BLS_ALS_Ambulance" matInput placeholder="No.Of BLS/ALS Ambulance">      
+                                             <mat-error [innerHTML]="GetFormControlErrorMessage('BLS_ALS_Ambulance')"></mat-error>
+                                          </mat-form-field>
+                                       </div>
+                                    </div>
+                                    <div class="row">
+                                       <label class="col-lg-5 col-md-12 col-form-label text-lg-right">Are there doctors 24X7 in the Emergency Room?</label>
+                                       <div class="col-lg-3 col-md-12">
+                                          <div class="YesOrNoButton" btnRadioGroup formControlName="Doctors_24in7_EmergencyRoom">
+                                             <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                             <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                             <!-- <mat-error class="mat-error-full" [innerHTML]=""> </mat-error> -->
+                                          </div>
+                                       </div>
+                                    </div>
+                                    <div class="row">
+                                       <label class="col-lg-5 col-md-12 col-form-label text-lg-right">Are there doctors 24X7 in the CCU?</label>
+                                       <div class="col-lg-3 col-md-12">
+                                          <div class="YesOrNoButton" btnRadioGroup formControlName="Doctors_24in7_CCU">
+                                             <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                             <label class=" hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                             <!-- <mat-error class="mat-error-full" [innerHTML]=""> </mat-error> -->
+                                          </div>
+                                       </div>
+                                    </div>
+                                    <div class="row">
+                                       <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">Head of the Department</label>
+                                       <div class="col-lg-7 col-md-12">
+                                          <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                             <input  matInput formControlName="Cardiology_Department_Head" placeholder="">      
+                                             <mat-error [innerHTML]="GetFormControlErrorMessage('Cardiology_Department_Head')"></mat-error>
+                                          </mat-form-field>
+                                       </div>
+                                    </div>
+                                    <div class="row">
+                                       <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">Number of Cardiologists</label>
+                                       <div class="col-lg-7 col-md-12">
+                                          <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                             <input matInput formControlName="NoOf_Cardiologists" (input)="CardiologistsCount($event.target.value)" placeholder="">      
+                                             <mat-error [innerHTML]="GetFormControlErrorMessage('NoOf_Cardiologists')"></mat-error>
+                                          </mat-form-field>
+                                       </div>
+                                    </div>
+                                    <div class="row">
+                                       <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">Total Number of General Physicians</label>
+                                       <div class="col-lg-7 col-md-12">
+                                          <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                             <input  matInput formControlName="NoOf_GeneralPhysicians" (input)="GeneralPhysiciansCount($event.target.value)" placeholder="">      
+                                             <mat-error [innerHTML]="GetFormControlErrorMessage('NoOf_GeneralPhysicians')"></mat-error>
+                                          </mat-form-field>
+                                       </div>
+                                    </div>
+                                    <div class="row" *ngIf="HospitalManageForm.controls['Country'].value?._id === '5b3f0552a4ed1e0474018ef6'">
+                                       <label class="col-lg-5 col-md-12 col-form-label text-lg-right">Are you sign up with PMJAY?</label>
+                                       <div class="col-lg-3 col-md-12">
+                                          <div class="YesOrNoButton" btnRadioGroup formControlName="PMJAY_Availability">
+                                             <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                             <label class=" hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                             <!-- <mat-error class="mat-error-full" [innerHTML]=""> </mat-error> -->
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </ng-container>
+                              </div>                           
+                              <div class="form-group col-md-12 col-lg-6 map-box-column">
+                                 <div class="row">
+                                    <label class="col-md-2 col-form-label text-lg-right">Search</label>
+                                    <div class="col-md-10">
+                                       <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                          <input #search [formControl]="searchControl" autocorrect="off" autocapitalize="off" spellcheck="off" matInput formControlName="searchAddress" placeholder="Search for Location">      
+                                       </mat-form-field>
+                                    </div>
+                                 </div>
+                                 <div class="map-canvas">
+                                    <agm-map #AgmMap [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" [mapTypeControl]="true" [fullscreenControl]="true" [fitBounds]="true">
+                                       <agm-marker [latitude]="latitude" [longitude]="longitude" [markerDraggable]="true" (dragEnd)="markerDragEvent($event)" [agmFitBounds]="true"></agm-marker>
+                                    </agm-map>
+                                 </div>                                      
+                              </div>
+                              </div>
+                           </div>
+
+                           <!-- Treatment Details -->
+                           <div class="treatment-details margin-bottom-20" *ngIf="EMS">
+                              <div class="tabpane-title">
+                                 <h5>Treatment Details</h5>
+                              </div>
+                              <div class="container">
+                                 <div class="row">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">Do you have cath lab in your hospital?</label>
+                                    <div class="col-lg-3 col-md-12">
+                                       <div class="YesOrNoButton" btnRadioGroup formControlName="CathLab_Availability" (click)="checkCathLabAvailability($event.target.innerText)" >
+                                          <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                          <label class=" hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                          <mat-error class="mat-error-full margin-top0" [innerHTML]="GetFormControlErrorMessage('CathLab_Availability')"> </mat-error>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <div class="row" *ngIf="HospitalManageForm.controls['CathLab_Availability'].value === 'No'">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">Closest hospital with a cath lab</label>
+                                    <div class="col-lg-5 col-md-12">
+                                    <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                       <input matInput formControlName="ClosestHospitals_with_CathLab" placeholder="">      
+                                       <mat-error [innerHTML]="GetFormControlErrorMessage('ClosestHospitals_with_CathLab')"></mat-error>
+                                    </mat-form-field>
+                                 </div>
+                                 </div>
+                                 <div class="row" *ngIf="HospitalManageForm.controls['CathLab_Availability'].value === 'Yes'">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">Is Cath Lab 24x7</label>
+                                    <div class="col-lg-3 col-md-12">
+                                       <div class="YesOrNoButton" btnRadioGroup formControlName="CathLab_24_7">
+                                          <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                          <label class=" hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                          <mat-error class="mat-error-full margin-top0" [innerHTML]="GetFormControlErrorMessage('CathLab_24_7')"> </mat-error>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <div class="row">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">Cardiac / ICU Beds </label>
+                                    <div class="col-lg-5 col-md-12">
+                                       <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                          <input  matInput formControlName="NoOf_ICU_Or_CCU_Beds" placeholder="">      
+                                          <mat-error [innerHTML]="GetFormControlErrorMessage('NoOf_ICU_Or_CCU_Beds')"></mat-error>
+                                       </mat-form-field>
+                                    </div>
+                                 </div>
+                                 <div class="row" *ngIf="HospitalManageForm.controls['CathLab_Availability'].value === 'Yes'">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">How many PCI done per month</label>
+                                    <div class="col-lg-5 col-md-12">
+                                       <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                          <input  matInput formControlName="NoOf_PCI_Done_PerMonth" placeholder="">      
+                                          <mat-error [innerHTML]="GetFormControlErrorMessage('NoOf_PCI_Done_PerMonth')"></mat-error>
+                                       </mat-form-field>
+                                    </div>
+                                 </div>
+                                 <div class="row" *ngIf="HospitalManageForm.controls['CathLab_Availability'].value === 'Yes'">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">Do you do Primary PCI?</label>
+                                    <div class="col-lg-3 col-md-12">
+                                       <div class="YesOrNoButton" btnRadioGroup formControlName="PCI_Availability" (click)="checkPCIAvailability($event.target.innerText)" >
+                                          <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                          <label class=" hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                          <mat-error class="mat-error-full margin-top0" [innerHTML]="GetFormControlErrorMessage('PCI_Availability')"> </mat-error>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <div class="row" *ngIf="HospitalManageForm.controls['PCI_Availability'].value === 'Yes'">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">No.of Primary PCI done per month</label>
+                                    <div class="col-lg-5 col-md-12">
+                                       <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                          <input  matInput formControlName="NoOf_PrimaryPCI_Done_PerMonth" placeholder="">      
+                                          <mat-error [innerHTML]="GetFormControlErrorMessage('NoOf_PrimaryPCI_Done_PerMonth')"></mat-error>
+                                       </mat-form-field>
+                                    </div>
+                                 </div>                                 
+                                 <div class="row">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">CCU Staff </label>
+                                    <div class="col-lg-5 col-md-12">
+                                       <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                          <input matInput formControlName="NoOf_CCUNurses" placeholder="">      
+                                          <mat-error [innerHTML]="GetFormControlErrorMessage('NoOf_CCUNurses')"></mat-error>
+                                       </mat-form-field>
+                                    </div>
+                                 </div>
+                                 <div class="row">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">Do you do thrombolysis</label>
+                                    <div class="col-lg-3 col-md-12">
+                                       <div class="YesOrNoButton" btnRadioGroup formControlName="Thrombolysis_Availability" (click)="checkThrombolysisAvailability($event.target.innerText)">
+                                          <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                          <label class=" hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                          <mat-error class="mat-error-full margin-top0" [innerHTML]="GetFormControlErrorMessage('Thrombolysis_Availability')"> </mat-error>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <div class="row" *ngIf="HospitalManageForm.controls['Thrombolysis_Availability'].value === 'Yes'">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">Type of Thrombolytic used</label>
+                                    <div class="col-lg-5 col-md-12">
+                                    <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                       <mat-select formControlName="TypeOf_Thrombolytic" (selectionChange)="ThrombolyticTypeChange($event.value)" multiple>
+                                          <mat-select-trigger> {{ HospitalManageForm.value.TypeOf_Thrombolytic ? HospitalManageForm.value.TypeOf_Thrombolytic[0] : ''}}
+                                             <span *ngIf="HospitalManageForm.value.TypeOf_Thrombolytic?.length > 1" class="example-additional-selection"> (+{{HospitalManageForm.value.TypeOf_Thrombolytic.length - 1}} {{HospitalManageForm.value.TypeOf_Thrombolytic?.length === 2 ? 'other' : 'others'}}) </span>
+                                          </mat-select-trigger>
+                                          <mat-option *ngFor="let ThrombolyticType of ThrombolyticType; let i=index" [value]="ThrombolyticType.Key">{{ThrombolyticType.Name}}</mat-option>                                          
+                                       </mat-select>
+                                       <mat-error class="" [innerHTML]="GetFormControlErrorMessage('TypeOf_Thrombolytic')"> </mat-error>
+                                    </mat-form-field>
+                                    </div>
+                                 </div>                                
+                                 <div class="row" *ngIf="HospitalManageForm.controls['Thrombolysis_Availability'].value === 'Yes'">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">How many thrombolysis done per month?</label>
+                                    <div class="col-lg-5 col-md-12">
+                                       <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                          <input  matInput formControlName="NoOf_Thrombolysed_patients_PerMonth" placeholder="">      
+                                          <mat-error [innerHTML]="GetFormControlErrorMessage('NoOf_Thrombolysed_patients_PerMonth')"></mat-error>
+                                       </mat-form-field>
+                                    </div>
+                                 </div>
+                                 <div class="row" *ngIf="ThrombolyticTypeCheck('streptokinase')">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">What % of patients are given streptokinase?</label>
+                                    <div class="col-lg-5 col-md-12">
+                                       <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                          <input  matInput formControlName="PercentageOf_Streptokinase_patients" placeholder="">      
+                                          <mat-error [innerHTML]="GetFormControlErrorMessage('PercentageOf_Streptokinase_patients')"></mat-error>
+                                       </mat-form-field>
+                                    </div>
+                                 </div>
+                                 <div class="row" *ngIf="ThrombolyticTypeCheck('tenecteplase')">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">What % of patients are given tenecteplase?</label>
+                                    <div class="col-lg-5 col-md-12">
+                                       <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                          <input  matInput formControlName="PercentageOf_Tenecteplase_patients" placeholder="">      
+                                          <mat-error [innerHTML]="GetFormControlErrorMessage('PercentageOf_Tenecteplase_patients')"></mat-error>
+                                       </mat-form-field>
+                                    </div>
+                                 </div>
+                                 <div class="row" *ngIf="ThrombolyticTypeCheck('reteplase')">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">What % of patients are given reteplase?</label>
+                                    <div class="col-lg-5 col-md-12">
+                                       <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                          <input  matInput formControlName="PercentageOf_Reteplase_patients" placeholder="">      
+                                          <mat-error [innerHTML]="GetFormControlErrorMessage('PercentageOf_Reteplase_patients')"></mat-error>
+                                       </mat-form-field>
+                                    </div>
+                                 </div>
+                                 <div class="row" *ngIf="ThrombolyticTypeCheck('others')">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">Others</label>
+                                    <div class="col-lg-5 col-md-12">
+                                       <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                          <input  matInput formControlName="Thrombolytic_Other" placeholder="">      
+                                          <mat-error [innerHTML]="GetFormControlErrorMessage('Thrombolytic_Other')"></mat-error>
+                                       </mat-form-field>
+                                    </div>
+                                 </div>
+                                 <div class="row" *ngIf="HospitalManageForm.controls['CathLab_Availability'].value === 'Yes'">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">Is Pharmaco-Invasive therapy given for patients referred here after thrombolysis?</label>
+                                    <div class="col-lg-3 col-md-12">
+                                       <div class="YesOrNoButton" btnRadioGroup formControlName="If_PharmacoInvasive_Therapy" (click)="checkPharmacoInvasive($event.target.innerText)">
+                                          <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                          <label class=" hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                          <mat-error class="mat-error-full margin-top0" [innerHTML]="GetFormControlErrorMessage('If_PharmacoInvasive_Therapy')"> </mat-error>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <div class="row" *ngIf="HospitalManageForm.controls['If_PharmacoInvasive_Therapy'].value === 'Yes'">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">No.of cases treated with Pharmaco-Invasive therapy per month</label>
+                                    <div class="col-lg-5 col-md-12">
+                                       <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                          <input  matInput formControlName="NoOf_PharmacoInvasive_PerMonth" placeholder="">      
+                                          <mat-error [innerHTML]="GetFormControlErrorMessage('NoOf_PharmacoInvasive_PerMonth')"></mat-error>
+                                       </mat-form-field>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+
+                           <!-- STEMI Feedback -->
+                           <div class="stemi-feedback margin-bottom-20" *ngIf="EMS">
+                              <div class="tabpane-title">
+                                 <h5>STEMI Feedback</h5>
+                              </div>
+                              <div class="container">
+                                 <div class="row">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">Have you heard about STEMI Project</label>
+                                    <div class="col-lg-3 col-md-12">
+                                       <div class="YesOrNoButton" btnRadioGroup formControlName="Heard_About_Project" >
+                                          <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                          <label class=" hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                          <mat-error class="mat-error-full margin-top0" [innerHTML]="GetFormControlErrorMessage('Heard_About_Project')"> </mat-error>
+                                       </div>
+                                    </div>
+                                 </div>
+
+                                 <div class="row">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right lbl-required">Are you willing to help STEMI patients receive timely care through this project?</label>
+                                    <div class="col-lg-3 col-md-12">
+                                       <div class="YesOrNoButton" btnRadioGroup formControlName="Help_Timely_Care_ToPatients" >
+                                          <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                          <label class=" hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                          <mat-error class="mat-error-full margin-top0" [innerHTML]="GetFormControlErrorMessage('Help_Timely_Care_ToPatients')"> </mat-error>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <div class="row">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right">Additional Remarks</label>
+                                    <div class="col-lg-3 col-md-12">
+                                       <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                          <textarea matInput formControlName="Feedback_Remarks" placeholder=""></textarea>  
+                                           <!-- <mat-error class="" [innerHTML]=""></mat-error> -->
+                                       </mat-form-field>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+
+
+                           <!-- Cardiologist Contact Details -->
+                           <div class="cardiologist-contact-details margin-bottom-20" *ngIf="EMS">
+                              <div class="tabpane-title">
+                                 <h5>Cardiologist Contact Details</h5>
+                              </div>
+                              <div class="container-fluid overflow-auto">
+                                 <table class="table-stemi tbl-cardiologist">
+                                    <thead>
+                                       <tr>
+                                          <th>Name</th>
+                                          <th>Phone</th>
+                                          <th>Email Address</th>
+                                          <th width="150px">Preferred Contact</th>
+                                          <!-- <th>Action</th> -->
+                                       </tr>
+                                    </thead>
+                                    <tbody>
+                                       <ng-container formArrayName="CardiologistArray" >
+                                          <tr *ngFor="let CardiologistArray of GetFormArray('CardiologistArray'); let i=index" [formGroupName]="i">
+                                             <td>
+                                                <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                   <input matInput formControlName="Cardiologist_Name" placeholder="">
+                                                   <mat-error class="mat-error-full margin-top0" [innerHTML]="GetFormArrayControlErrorMessage('CardiologistArray', i, 'Cardiologist_Name')"> </mat-error>
+                                                </mat-form-field>
+                                             </td>
+                                             <td>
+                                                <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                   <input matInput formControlName="Cardiologist_Phone" placeholder="">
+                                                   <mat-error class="mat-error-full margin-top0" [innerHTML]="GetFormArrayControlErrorMessage('CardiologistArray', i, 'Cardiologist_Phone')"> </mat-error>
+                                                </mat-form-field>
+                                             </td>
+                                             <td>
+                                                <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                   <input matInput formControlName="Cardiologist_Email" placeholder="">
+                                                   <mat-error class="mat-error-full margin-top0" [innerHTML]="GetFormArrayControlErrorMessage('CardiologistArray', i, 'Cardiologist_Email')"> </mat-error>
+                                                </mat-form-field>
+                                             </td>
+                                             <td>
+                                                <mat-checkbox formControlName="Cardiologist_Preferred_Contact"></mat-checkbox>
+                                             </td>
+                                             <!-- <td>
+                                                <span *ngIf="HospitalManageForm.controls['CardiologistArray'].controls.length === i + 1" class="btn-add-plus" (click)="addCardiologistItem()"><i class="fa fa-plus"></i></span>
+                                                <span *ngIf="HospitalManageForm.controls['CardiologistArray'].controls.length > 1" class="btn-remove-minus" (click)="removeCardiologistItem(i)"><i class="fa fa-minus"></i></span>
+                                             </td> -->
+                                          </tr> 
+                                       </ng-container>
+                                    </tbody>
+                                 </table>
+                              </div>
+                           </div>
+
+                           <!-- General Physicians Contact Details -->
+                           <div class="general-physicians-contact-details margin-bottom-20" *ngIf="EMS">
+                              <div class="tabpane-title">
+                                 <h5>General Physicians Contact Details</h5>
+                              </div>
+                              <div class="container-fluid overflow-auto">
+                                 <table class="table-stemi tbl-general-physicians">
+                                    <thead>
+                                       <tr>
+                                          <th>Name</th>
+                                          <th>Phone</th>
+                                          <th>Email Address</th>
+                                          <th width="150px">Preferred Contact</th>
+                                          <!-- <th>Action</th> -->
+                                       </tr>
+                                    </thead>
+                                    <tbody>
+                                       <ng-container formArrayName="GeneralPhysicianArray" >
+                                          <tr *ngFor="let GeneralPhysicianArray of GetFormArray('GeneralPhysicianArray');  let i=index" [formGroupName]="i">
+                                             <td>
+                                                <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                   <input  matInput formControlName="GeneralPhysician_Name" placeholder="">
+                                                   <mat-error class="mat-error-full margin-top0" [innerHTML]="GetFormArrayControlErrorMessage('GeneralPhysicianArray', i, 'GeneralPhysician_Name')"> </mat-error>
+                                                </mat-form-field>
+                                             </td>
+                                             <td>
+                                                <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                   <input  matInput formControlName="GeneralPhysician_Phone" placeholder="">
+                                                   <mat-error class="mat-error-full margin-top0" [innerHTML]="GetFormArrayControlErrorMessage('GeneralPhysicianArray', i, 'GeneralPhysician_Phone')"> </mat-error>
+                                                </mat-form-field>
+                                             </td>
+                                             <td>
+                                                <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                   <input  matInput formControlName="GeneralPhysician_Email" placeholder="">
+                                                   <mat-error class="mat-error-full margin-top0" [innerHTML]="GetFormArrayControlErrorMessage('GeneralPhysicianArray', i, 'GeneralPhysician_Email')"> </mat-error>
+                                                </mat-form-field>
+                                             </td>
+                                             <td>
+                                                <mat-checkbox formControlName="GeneralPhysician_Preferred_Contact"></mat-checkbox>
+                                             </td>
+                                             <!-- <td>
+                                                <span *ngIf="HospitalManageForm.controls['GeneralPhysicianArray'].controls.length === i + 1" class="btn-add-plus" (click)="addGeneralPhysicianItem()"><i class="fa fa-plus"></i></span>
+                                                <span *ngIf="HospitalManageForm.controls['GeneralPhysicianArray'].controls.length > 1"  class="btn-remove-minus" (click)="removeGeneralPhysicianItem(i)"><i class="fa fa-minus"></i></span>
+                                             </td> -->
+                                          </tr>
+                                       </ng-container>
+                                    </tbody>
+                                 </table>
+                              </div>
+                           </div>
+
+                           <!-- Co-Ordinators Contact Details -->
+                           <div class="co-ordinators margin-bottom-20" *ngIf="EMS">
+                              <div class="tabpane-title">
+                                 <h5>Hospital Administrator Contact Details</h5>
+                              </div>
+                              <div class="container-fluid overflow-auto">
+                                 <table class="table-stemi tbl-co-ordinators">
+                                    <thead>
+                                       <tr>
+                                          <th>Name</th>
+                                          <th>Phone</th>
+                                          <th>Email Address</th>
+                                          <th>Preferred Contact</th>
+                                          <th>Action</th>
+                                       </tr>
+                                    </thead>
+                                    <tbody>
+                                       <ng-container formArrayName="CoOrdinatorsArray">
+                                          <tr *ngFor="let CoOrdinatorsArray of GetFormArray('CoOrdinatorsArray'); let i=index" [formGroupName]="i">
+                                             <td>
+                                                <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                   <input  matInput formControlName="CoOrdinators_Name" placeholder="">
+                                                   <mat-error class="mat-error-full margin-top0" [innerHTML]="GetFormArrayControlErrorMessage('CoOrdinatorsArray', i, 'CoOrdinators_Name')"> </mat-error>
+                                                </mat-form-field>
+                                             </td>
+                                             <td>
+                                                <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                   <input  matInput formControlName="CoOrdinators_Phone" placeholder="">
+                                                   <mat-error class="mat-error-full margin-top0" [innerHTML]="GetFormArrayControlErrorMessage('CoOrdinatorsArray', i, 'CoOrdinators_Phone')"> </mat-error>
+                                                </mat-form-field>
+                                             </td>
+                                             <td>
+                                                <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                   <input matInput formControlName="CoOrdinators_Email" placeholder="">
+                                                   <mat-error class="mat-error-full margin-top0" [innerHTML]="GetFormArrayControlErrorMessage('CoOrdinatorsArray', i, 'CoOrdinators_Email')"> </mat-error>
+                                                </mat-form-field>
+                                             </td>
+                                             <td>
+                                                <mat-checkbox formControlName="CoOrdinators_Preferred_Contact"></mat-checkbox>
+                                             </td>
+                                             <td>
+                                                <span *ngIf="GetFormArray('CoOrdinatorsArray').length === i + 1" class="btn-add-plus" (click)="addCoOrdinatorsItem()"><i class="fa fa-plus"></i></span>                                               
+                                                <span *ngIf="GetFormArray('CoOrdinatorsArray').length > 1" class="btn-remove-minus" (click)="removeCoOrdinatorsItem(i)"><i class="fa fa-minus"></i></span>
+                                             </td>
+                                          </tr>
+                                       </ng-container>
+                                    </tbody>
+                                 </table>
+                              </div>
+                           </div>
+
+                           <!-- Patient Count Analysis -->
+                           <div class="patient-count margin-bottom-20" *ngIf="EMS">
+                              <div class="tabpane-title">
+                                 <h5>Patient Count Analysis</h5>
+                              </div>
+                              <div class="container-fluid">
+                                 <div class="row">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right">No.of STEMI Patients received per month</label>
+                                    <div class="col-lg-5 col-md-12">
+                                       <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                          <input  matInput formControlName="NoOf_STEMI_Patients_PerMonth" placeholder="">      
+                                          <mat-error [innerHTML]="GetFormControlErrorMessage('NoOf_STEMI_Patients_PerMonth')"></mat-error>
+                                       </mat-form-field>
+                                    </div>
+                                 </div>
+                                 <div class="row">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right">No.of Direct Admission per month</label>
+                                    <div class="col-lg-5 col-md-12">
+                                       <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                          <input  matInput formControlName="NoOf_Direct_STEMI_Patients_PerMonth" placeholder="">      
+                                          <mat-error [innerHTML]="GetFormControlErrorMessage('NoOf_Direct_STEMI_Patients_PerMonth')"></mat-error>
+                                       </mat-form-field>
+                                    </div>
+                                 </div>
+                                 <div class="row">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right">No.of STEMI Referral patients received per month</label>
+                                    <div class="col-lg-5 col-md-12">
+                                       <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                          <input  matInput formControlName="NoOf_Referral_STEMI_Patients_PerMonth" placeholder="">      
+                                          <mat-error [innerHTML]="GetFormControlErrorMessage('NoOf_Referral_STEMI_Patients_PerMonth')"></mat-error>
+                                       </mat-form-field>
+                                    </div>
+                                 </div>
+                                 <div class="row">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right">No.of STEMI cases per month referred from here to another hospital</label>
+                                    <div class="col-lg-5 col-md-12">
+                                       <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                          <input  matInput formControlName="NoOf_STEMI_Cases_ReferredTo_PerMonth" placeholder="">      
+                                          <mat-error [innerHTML]="GetFormControlErrorMessage('NoOf_STEMI_Cases_ReferredTo_PerMonth')"></mat-error>
+                                       </mat-form-field>
+                                    </div>
+                                 </div>
+                                 <!-- <div class="row">
+                                    <label class="col-lg-5 col-md-12 col-form-label text-lg-right">No.of STEMI patients referred here from another hospital per month </label>
+                                    <div class="col-lg-5 col-md-12">
+                                       <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                          <input  matInput formControlName="NoOf_STEMI_Cases_ReferredFrom_PerMonth" placeholder="">      
+                                          <mat-error [innerHTML]="GetFormControlErrorMessage('NoOf_STEMI_Cases_ReferredFrom_PerMonth')"></mat-error>
+                                       </mat-form-field>
+                                    </div>
+                                 </div> -->
+                              </div>
+                           </div>
+                           <!-- Which Are The Hospitals Referring To This Centre? -->
+                           <div class="hospitals-referring margin-bottom-20" *ngIf="EMS">
+                              <div class="tabpane-title">
+                                 <h5>Which Are The Hospitals Referring To This Centre?</h5>
+                              </div>
+                              <div class="container-fluid overflow-auto">
+                                 <table class="table-stemi tbl-hospitals-referring "> 
+                                    <thead>
+                                       <tr>
+                                          <th>Hospital Name</th>
+                                          <th>Is there a cath lab in this hospital?</th>
+                                          <th>Which ambulance service used?</th>
+                                          <th>Remarks</th>
+                                          <th>Action</th>
+                                       </tr>
+                                    </thead>
+                                    <tbody>
+                                       <ng-container formArrayName="HospitalReferringArray" >
+                                          <tr *ngFor="let HospitalReferringArray of GetFormArray('HospitalReferringArray'); let i=index" [formGroupName]="i">
+                                             <td>
+                                                <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                   <input  matInput formControlName="Referring_Hospital_Name" placeholder="">
+                                                   <mat-error class="mat-error-full margin-top0" [innerHTML]="GetFormArrayControlErrorMessage('HospitalReferringArray', i, 'Referring_Hospital_Name')"> </mat-error>
+                                                </mat-form-field>
+                                             </td>
+                                             <td>
+                                                <div class="YesOrNoButton" btnRadioGroup formControlName="Is_Cath_Lab" >
+                                                   <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                   <label class=" hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                </div>
+                                             </td>
+                                             <td>
+                                                <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                   <input  matInput formControlName="Ambulance_Service" placeholder="">
+                                                </mat-form-field>
+                                             </td>
+                                             <td>
+                                                <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                   <input  matInput formControlName="Remarks" placeholder="">
+                                                </mat-form-field>
+                                             </td>
+                                             <td>
+                                                <span *ngIf="GetFormArray('HospitalReferringArray').length === i + 1" class="btn-add-plus" (click)="addHospitalReferringItem()"><i class="fa fa-plus"></i></span>                                               
+                                                <span *ngIf="GetFormArray('HospitalReferringArray').length > 1" class="btn-remove-minus" (click)="removeHospitalReferringItem(i)"><i class="fa fa-minus"></i></span>
+                                             </td>
+                                          </tr>
+                                       </ng-container>
+                                    </tbody>
+                                 </table>
+                              </div>
+                           </div>
+                           <!-- Closest Hospital Doing PCI With Distance And Preference To Be Link -->
+                           <div class="hospitals-referring margin-bottom-20" *ngIf="EMS">
+                              <div class="tabpane-title">
+                                 <h5>Closest Hospital Doing PCI With Distance And Preference To Be Link</h5>
+                              </div>
+                              <div class="container-fluid overflow-auto">
+                                 <table class="table-stemi tbl-closest-hospital ">
+                                    <thead>
+                                       <tr>
+                                          <th>Hospital Name</th>
+                                          <th>Address</th>
+                                          <th>Preference</th>
+                                          <th>Action</th>
+                                       </tr>
+                                    </thead>
+                                    <tbody>
+                                       <ng-container formArrayName="ClosetHospitalArray">
+                                          <tr *ngFor="let ClosetHospitalArray of GetFormArray('ClosetHospitalArray'); let i=index" [formGroupName]="i">
+                                             <td>
+                                                <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                   <input  matInput formControlName="Closest_Hospital_Name" placeholder="">
+                                                   <mat-error class="mat-error-full margin-top0" [innerHTML]="GetFormArrayControlErrorMessage('ClosetHospitalArray', i, 'Closest_Hospital_Name')"> </mat-error>
+                                                </mat-form-field>
+                                             </td>
+                                             <td>
+                                                <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                   <input  matInput formControlName="Closest_Hospital_Address" placeholder="">
+                                                </mat-form-field>
+                                             </td>
+                                             <td>
+                                                <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                   <input  matInput formControlName="Closest_Hospital_Preference" placeholder="">
+                                                </mat-form-field>
+                                             </td>
+                                             <td>
+                                                <span *ngIf="GetFormArray('ClosetHospitalArray').length === i + 1" class="btn-add-plus" (click)="addClosetHospitalItem()"><i class="fa fa-plus"></i></span>                                               
+                                                <span *ngIf="GetFormArray('ClosetHospitalArray').length > 1" class="btn-remove-minus" (click)="removeClosetHospitalItem(i)"><i class="fa fa-minus"></i></span>                                             </td>
+                                          </tr>
+                                       </ng-container>
+                                    </tbody>
+                                 </table>
+                              </div>
+                           </div>
+                        </div>
+                        <!-- Submit the Form -->
+                        <div class="row">
+                           <div class="col-sm-12">
+                              <button type="button" *ngIf="PageType === 'Create'" (click)="onSubmit()" class="btn btn-outline-primary float-right save">
+                                 <!-- <span class="btn-save-loader"><i class="fa fa-refresh fa-spin"></i></span> -->
+                                 Save & Continue
+                              </button>
+                              <button type="button" *ngIf="PageType === 'Edit'" (click)="onUpdate()" class="btn btn-outline-primary float-right save">Update & Continue</button>
+                           </div>
+                        </div>
+                     </form>
+                  </div>
+                 
+               </div>
+            </div>
+         </div>
+</section>

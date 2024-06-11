@@ -1,0 +1,848 @@
+<section>
+   <div class="row">
+      <ng-container *ngIf="!ContentLoading">
+         <div class="col-md-12 tab-pane-container">
+            <div class="row">
+               <mat-tab-group class="full-width" [selectedIndex]="CurrentTabIndex" (selectedIndexChange)="TabChangeEvent($event)">
+                  <!-- 1st Tab Medication Prior To Thrombolysis -->
+                  <mat-tab label="Medication prior to Thrombolysis" class="full-width" [disabled]="CheckSubCategoryVisibility('Medication_Prior_to_Thrombolysis')">
+                     <div class="portlet-tab">
+                        <form *ngIf="CurrentTabIndex === 0 && FormLoaded" class="form-horizontal" [formGroup]="DynamicFGroup">
+                           <div class="portlet-tab-panelbody">
+                              <div class="row">
+                                 <div class="col-md-12">
+                                    <!-- Medication Prior To Thrombolysis -->
+                                    <div class="medication-prior-to-thrombolysis"  *ngIf="CheckSubJuniorCategoryVisibility('Medication_Prior_to_Thrombolysis')">
+                                          <div class="tabpane-title">
+                                                <h5>Medication Prior To Thrombolysis</h5>
+                                             </div>
+                                             <div class="container">
+                                                <div class="row">
+                                                   <div class="col-md-12">
+                                                         <div class="row" *ngIf="CheckVisibility('Medication_Prior_to_Thrombolysis_Aspirin')">
+                                                               <div class="form-group form-group-sm col-lg-4 col-sm-12">
+                                                                  <div class="row">
+                                                                     <label [ngClass]="{'lbl-required': CheckMandatory('Medication_Prior_to_Thrombolysis_Aspirin')}" class="col-lg-6 col-md-4 col-sm-5 col-form-label text-lg-right">Aspirin (mg)</label>
+                                                                     <div class="col-sm-7 col-md-5">
+                                                                        <div class="YesOrNoButton" [ngClass]="{'disabled': CheckDisable('Medication_Prior_to_Thrombolysis_Aspirin')}"  btnRadioGroup formControlName="Medication_Prior_to_Thrombolysis_Aspirin">
+                                                                           <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                                           <label class=" hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                                           <mat-error [innerHTML]="GetFormControlErrorMessage('Medication_Prior_to_Thrombolysis_Aspirin')"></mat-error>
+                                                                        </div>
+                                                                     </div>
+                                                                  </div>
+                                                               </div>
+                                                               <div class="form-group form-group-sm col-lg-8 col-sm-12">
+                                                                  <ng-container *ngIf="DynamicFGroup.get('Medication_Prior_to_Thrombolysis_Aspirin').value === 'Yes'">
+                                                                     <div class="row">
+																								<div class="col-sm-3" *ngIf="CheckVisibility('Medication_Prior_to_Thrombolysis_Aspirin_Dosage')">
+																									<mat-form-field class="full-width" [floatLabel]="'auto'" appearance="fill">
+																										<mat-label>Dosage</mat-label>
+																										<input matInput formControlName="Medication_Prior_to_Thrombolysis_Aspirin_Dosage" placeholder="Dosage:"  [required]="CheckMandatory('Medication_Prior_to_Thrombolysis_Aspirin_Dosage') ? '' : null">
+																										<mat-error [innerHTML]="GetFormControlErrorMessage('Medication_Prior_to_Thrombolysis_Aspirin_Dosage')"> </mat-error>
+																									</mat-form-field>
+																								</div>
+																								<div class="col-sm-3" *ngIf="CheckVisibility('Medication_Prior_to_Thrombolysis_Aspirin_Dosage_Units')">
+																									<mat-form-field class="full-width"  [floatLabel]="'never'" appearance="fill">
+																										<mat-label>Dosage Units</mat-label>
+																										<mat-select formControlName="Medication_Prior_to_Thrombolysis_Aspirin_Dosage_Units"  [required]="CheckMandatory('Medication_Prior_to_Thrombolysis_Aspirin_Dosage_Units') ? '' : null" placeholder="Select Units"> 
+																											<mat-option option="">Select Units</mat-option>                                                           
+																											<mat-option *ngFor="let Unfraction_Units of DosageUnitsOne;let i=index" [value]="Unfraction_Units.Key">{{Unfraction_Units.Name}}</mat-option>
+																										</mat-select>
+																										<mat-error [innerHTML]="GetFormControlErrorMessage('Medication_Prior_to_Thrombolysis_Aspirin_Dosage_Units')"> </mat-error>
+																									</mat-form-field>
+																								</div>
+																								<div class="col-sm-3" *ngIf="CheckVisibility('Aspirin_Date_Time')">
+																										<mat-form-field class="full-width" [floatLabel]="'auto'" appearance="fill">
+																											<mat-label>Date</mat-label>
+																											<input matInput formControlName="Aspirin_Date_Time" (click)="aspirin_datepicker.open()" [max] = "noFutureDate"  [matDatepicker] ="aspirin_datepicker" (keypress)="NotAllow()" (keydown)="ClearInput($event)" [required]="CheckMandatory('Aspirin_Date_Time') ? '' : null" placeholder="Date">
+																											<mat-icon (click)="aspirin_datepicker.open()" matSuffix>event</mat-icon>
+																											<mat-datepicker touchUi #aspirin_datepicker> </mat-datepicker>                                                      
+																										</mat-form-field>
+																								</div>
+																								<div class="col-sm-3" *ngIf="CheckVisibility('Aspirin_Date_Time')">
+																									<mat-form-field [ngClass]="{'mat-form-field-invalid': CheckTimeRelatedDateErrorStatus('Aspirin_Date_Time', 'Aspirin_Time')}" class="full-width" [floatLabel]="'auto'" appearance="fill"  >
+																										<mat-label>Time</mat-label>
+																										<input matInput formControlName="Aspirin_Time" [ngxTimepicker]="aspirin_timepicker" [format]="24" (keypress)="NotAllow()" (keydown)="ClearInput($event)" placeholder="Time">
+																										<mat-icon matSuffix (click)="aspirin_timepicker.open()">access_time</mat-icon>
+																										<ngx-material-timepicker [defaultTime]="DefaultTime('Aspirin_Time')" (opened)="MaxTime('Aspirin_Time', 'Aspirin_Date_Time')" #aspirin_timepicker> </ngx-material-timepicker>                                                      
+																									</mat-form-field>
+																								</div>
+																							</div>
+																							<div class="row">
+																								<div class="col-sm-offset-6 col-sm-16">
+																									<mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Aspirin_Date_Time')"></mat-error>
+																								</div>
+                                                                     </div>
+                                                                  </ng-container>
+                                                               </div>
+                                                         </div>
+
+                                                         <div class="row" *ngIf="CheckVisibility('Medication_Prior_to_Thrombolysis_Clopidogrel')">
+                                                               <div class="form-group form-group-sm col-lg-4 col-sm-12">
+                                                                  <div class="row">
+                                                                     <label [ngClass]="{'lbl-required': CheckMandatory('Medication_Prior_to_Thrombolysis_Clopidogrel')}" class="col-lg-6 col-md-4 col-sm-5 col-form-label text-lg-right">Clopidogrel (mg)</label>
+                                                                     <div class="col-sm-7 col-md-5">
+                                                                        <div class="YesOrNoButton" [ngClass]="{'disabled': CheckDisable('Medication_Prior_to_Thrombolysis_Clopidogrel')}" btnRadioGroup formControlName="Medication_Prior_to_Thrombolysis_Clopidogrel">
+                                                                           <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                                           <label class=" hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                                           <mat-error [innerHTML]="GetFormControlErrorMessage('Medication_Prior_to_Thrombolysis_Clopidogrel')"> </mat-error>
+                                                                        </div>
+                                                                     </div>
+                                                                  </div>
+                                                               </div>
+                                                               <div class="form-group form-group-sm col-lg-8 col-sm-12">
+                                                                  <ng-container *ngIf="DynamicFGroup.get('Medication_Prior_to_Thrombolysis_Clopidogrel').value === 'Yes'">
+                                                                     <div class="row">
+																								<div class="col-sm-3" *ngIf="CheckVisibility('Medication_Prior_to_Thrombolysis_Clopidogrel_Dosage')">
+																									<mat-form-field class="full-width" [floatLabel]="'auto'" appearance="fill">
+																										<mat-label>Dosage</mat-label>
+																										<input matInput formControlName="Medication_Prior_to_Thrombolysis_Clopidogrel_Dosage" placeholder="Dosage:"  [required]="CheckMandatory('Medication_Prior_to_Thrombolysis_Clopidogrel_Dosage') ? '' : null">
+																										<mat-error [innerHTML]="GetFormControlErrorMessage('Medication_Prior_to_Thrombolysis_Clopidogrel_Dosage')"> </mat-error>
+																									</mat-form-field>
+																								</div>
+																								<div class="col-sm-3" *ngIf="CheckVisibility('Medication_Prior_to_Thrombolysis_Clopidogrel_Dosage_Units')">
+																									<mat-form-field class="full-width"  [floatLabel]="'never'" appearance="fill">
+																										<mat-label>Dosage Units</mat-label>
+																										<mat-select formControlName="Medication_Prior_to_Thrombolysis_Clopidogrel_Dosage_Units"  [required]="CheckMandatory('Medication_Prior_to_Thrombolysis_Clopidogrel_Dosage_Units') ? '' : null" placeholder="Select Units"> 
+																											<mat-option option="">Select Units</mat-option>                                                           
+																											<mat-option *ngFor="let Unfraction_Units of DosageUnitsOne;let i=index" [value]="Unfraction_Units.Key">{{Unfraction_Units.Name}}</mat-option>
+																										</mat-select>
+																										<mat-error [innerHTML]="GetFormControlErrorMessage('Medication_Prior_to_Thrombolysis_Clopidogrel_Dosage_Units')"> </mat-error>
+																									</mat-form-field> 
+																								</div>
+																								<div class="col-sm-3" *ngIf="CheckVisibility('Medication_Prior_to_Thrombolysis_Clopidogrel_Dosage_Date_Time')">
+																									<mat-form-field class="full-width" [floatLabel]="'auto'" appearance="fill">
+																										<mat-label>Date</mat-label>
+																										<input matInput (click)="clopidogrel_datepicker.open()" formControlName="Medication_Prior_to_Thrombolysis_Clopidogrel_Dosage_Date_Time" (keypress)="NotAllow()" (keydown)="ClearInput($event)" [max] = "noFutureDate"  [matDatepicker] ="clopidogrel_datepicker" [required]="CheckMandatory('Medication_Prior_to_Thrombolysis_Clopidogrel_Dosage_Date_Time') ? '' : null" placeholder="Date">
+																										<mat-icon (click)="clopidogrel_datepicker.open()" matSuffix>event</mat-icon>
+																										<mat-datepicker touchUi #clopidogrel_datepicker> </mat-datepicker>                                                      
+																									</mat-form-field>
+																								</div>
+																								<div class="col-sm-3" *ngIf="CheckVisibility('Medication_Prior_to_Thrombolysis_Clopidogrel_Dosage_Date_Time')">
+																									<mat-form-field [ngClass]="{'mat-form-field-invalid': CheckTimeRelatedDateErrorStatus('Medication_Prior_to_Thrombolysis_Clopidogrel_Dosage_Date_Time', 'Medication_Prior_to_Thrombolysis_Clopidogrel_Dosage_Time')}" class="full-width" [floatLabel]="'auto'" appearance="fill"  >
+																										<mat-label>Time</mat-label>
+																										<input matInput formControlName="Medication_Prior_to_Thrombolysis_Clopidogrel_Dosage_Time" [ngxTimepicker]="clopidogrel_timepicker" [format]="24" (keypress)="NotAllow()" (keydown)="ClearInput($event)" [required]="CheckMandatory('Medication_Prior_to_Thrombolysis_Clopidogrel_Dosage_Date_Time') ? '' : null" placeholder="Time">
+																										<mat-icon matSuffix (click)="clopidogrel_timepicker.open()">access_time</mat-icon>
+																										<ngx-material-timepicker [defaultTime]="DefaultTime('Medication_Prior_to_Thrombolysis_Clopidogrel_Dosage_Time')" (opened)="MaxTime('Medication_Prior_to_Thrombolysis_Clopidogrel_Dosage_Time', 'Medication_Prior_to_Thrombolysis_Clopidogrel_Dosage_Date_Time')" #clopidogrel_timepicker> </ngx-material-timepicker>                                                      
+																									</mat-form-field>
+																								</div>
+																							</div>
+																							<div class="row">
+																								<div class="col-sm-offset-6 col-sm-6">
+																									<mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Medication_Prior_to_Thrombolysis_Clopidogrel_Dosage_Date_Time')"></mat-error>
+																								</div>
+																							</div>
+                                                                  </ng-container>
+                                                               </div>
+                                                         </div>
+
+                                                         <div class="row" *ngIf="CheckVisibility('Unfractionated_Heparin')">
+                                                            <div class="form-group form-group-sm col-lg-4 col-sm-12">
+                                                               <div class="row">
+                                                                  <label [ngClass]="{'lbl-required': CheckMandatory('Unfractionated_Heparin')}" class="col-lg-6 col-md-4 col-sm-5 col-form-label text-lg-right">Unfractionated Heparin (Units) </label>
+                                                                  <div class="col-sm-7 col-md-5">
+                                                                     <div class="YesOrNoButton" [ngClass]="{'disabled': CheckDisable('Unfractionated_Heparin')}" btnRadioGroup formControlName="Unfractionated_Heparin">
+                                                                        <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                                        <label class=" hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                                        <mat-error [innerHTML]="GetFormControlErrorMessage('Unfractionated_Heparin')"> </mat-error>
+                                                                     </div>
+                                                                  </div>
+                                                               </div>
+                                                            </div>
+                                                            <div class="form-group form-group-sm col-lg-8 col-sm-12">
+                                                               <ng-container *ngIf="DynamicFGroup.get('Unfractionated_Heparin').value === 'Yes'">
+                                                                  <div class="row">
+																							<div class="col-sm-3" *ngIf="CheckVisibility('Unfractionated_Heparin_Dosage')">
+																								<mat-form-field class="full-width" [floatLabel]="'auto'" appearance="fill">
+																									<mat-label>Dosage</mat-label>
+																									<input matInput formControlName="Unfractionated_Heparin_Dosage" placeholder="Dosage:"  [required]="CheckMandatory('Unfractionated_Heparin_Dosage') ? '' : null">
+																									<mat-error [innerHTML]="GetFormControlErrorMessage('Unfractionated_Heparin_Dosage')"> </mat-error>
+																								</mat-form-field>
+																							</div>
+																							<div class="col-sm-3" *ngIf="CheckVisibility('Unfractionated_Heparin_Dosage_Units')">
+																								<mat-form-field class="full-width"  [floatLabel]="'auto'" appearance="fill">
+																									<mat-label>Dosage Units</mat-label>
+																									<mat-select formControlName="Unfractionated_Heparin_Dosage_Units"  [required]="CheckMandatory('Unfractionated_Heparin_Dosage_Units') ? '' : null" placeholder="Select Units">                                                            
+																										<mat-option option="">Select Units</mat-option>  
+																										<mat-option *ngFor="let Unfraction_Units of DosageUnitsOne;let i=index" [value]="Unfraction_Units.Key">{{Unfraction_Units.Name}}</mat-option>
+																									</mat-select>
+																									<mat-error [innerHTML]="GetFormControlErrorMessage('Unfractionated_Heparin_Dosage_Units')"> </mat-error>
+																								</mat-form-field>         
+																							</div>
+																							<div class="col-sm-3" *ngIf="CheckVisibility('Unfractionated_Heparin_Dosage_Date_Time')">
+																								<mat-form-field class="full-width" [floatLabel]="'auto'" appearance="fill">
+																									<mat-label>Date</mat-label>
+																									<input (click)="unfractionated_heparin_datepicker.open()" matInput formControlName="Unfractionated_Heparin_Dosage_Date_Time" (keypress)="NotAllow()" (keydown)="ClearInput($event)" [max] = "noFutureDate"  [matDatepicker] ="unfractionated_heparin_datepicker" [required]="CheckMandatory('Unfractionated_Heparin_Dosage_Date_Time') ? '' : null" placeholder="Date">
+																									<mat-icon (click)="unfractionated_heparin_datepicker.open()" matSuffix>event</mat-icon>
+																									<mat-datepicker touchUi #unfractionated_heparin_datepicker> </mat-datepicker>                                                   
+																								</mat-form-field>
+																							</div>
+																							<div class="col-sm-3" *ngIf="CheckVisibility('Unfractionated_Heparin_Dosage_Date_Time')">
+																								<mat-form-field [ngClass]="{'mat-form-field-invalid': CheckTimeRelatedDateErrorStatus('Unfractionated_Heparin_Dosage_Date_Time', 'Unfractionated_Heparin_Dosage_Time')}" class="full-width" [floatLabel]="'auto'" appearance="fill"  >
+																									<mat-label>Time</mat-label>
+																									<input  matInput formControlName="Unfractionated_Heparin_Dosage_Time" [ngxTimepicker]="unfractionated_heparin_timepicker" [format]="24" (keypress)="NotAllow()" (keydown)="ClearInput($event)" [required]="CheckMandatory('Unfractionated_Heparin_Dosage_Date_Time') ? '' : null" placeholder="Time">
+																									<mat-icon matSuffix (click)="unfractionated_heparin_timepicker.open()">access_time</mat-icon>
+																									<ngx-material-timepicker [defaultTime]="DefaultTime('Unfractionated_Heparin_Dosage_Time')" (opened)="MaxTime('Unfractionated_Heparin_Dosage_Time', 'Unfractionated_Heparin_Dosage_Date_Time')" #unfractionated_heparin_timepicker> </ngx-material-timepicker>                                                   
+																								</mat-form-field>
+																							</div>
+																						</div>
+																						<div class="row">
+																							<div class="col-sm-offset-6 col-sm-6">
+																								<mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Unfractionated_Heparin_Dosage_Date_Time')"></mat-error>
+																							</div>
+																						</div>
+                                                               </ng-container>
+                                                            </div>
+                                                         </div>
+
+                                                         <div class="row" *ngIf="CheckVisibility('Medication_Prior_to_Thrombolysis_LMW_Heparin')">
+                                                               <div class="form-group form-group-sm col-lg-4 col-sm-12">
+                                                                  <div class="row">
+                                                                     <label [ngClass]="{'lbl-required': CheckMandatory('Medication_Prior_to_Thrombolysis_LMW_Heparin')}" class="col-lg-6 col-md-4 col-sm-5 col-form-label text-lg-right">LMW Heparin</label>
+                                                                     <div class="col-sm-7 col-md-5">
+                                                                        <div class="YesOrNoButton" [ngClass]="{'disabled': CheckDisable('Medication_Prior_to_Thrombolysis_LMW_Heparin')}" btnRadioGroup formControlName="Medication_Prior_to_Thrombolysis_LMW_Heparin">
+                                                                           <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                                           <label class=" hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                                           <mat-error [innerHTML]="GetFormControlErrorMessage('Medication_Prior_to_Thrombolysis_LMW_Heparin')"> </mat-error>
+                                                                        </div>
+                                                                     </div>
+                                                                  </div>
+                                                               </div>
+                                                               <div class="form-group form-group-sm col-lg-8 col-sm-12">
+                                                                  <ng-container *ngIf="DynamicFGroup.get('Medication_Prior_to_Thrombolysis_LMW_Heparin').value === 'Yes'">
+                                                                     <div class="row">
+																								<div class="col-sm-3" *ngIf="CheckVisibility('Medication_Prior_to_Thrombolysis_LMW_Heparin_Dosage')">
+																									<mat-form-field class="full-width" [floatLabel]="'auto'" appearance="fill">
+																										<mat-label>Dosage</mat-label>
+																										<input matInput formControlName="Medication_Prior_to_Thrombolysis_LMW_Heparin_Dosage" placeholder="Dosage:"  [required]="CheckMandatory('Medication_Prior_to_Thrombolysis_LMW_Heparin_Dosage') ? '' : null">
+																										<mat-error [innerHTML]="GetFormControlErrorMessage('Medication_Prior_to_Thrombolysis_LMW_Heparin_Dosage')"> </mat-error>
+																									</mat-form-field>
+																								</div>
+																								<div class="col-sm-3" *ngIf="CheckVisibility('Medication_Prior_to_Thrombolysis_LMW_Heparin_Dosage_Units')">
+																									<mat-form-field class="full-width"  [floatLabel]="'auto'" appearance="fill">
+																										<mat-label>Dosage Units</mat-label>
+																										<mat-select formControlName="Medication_Prior_to_Thrombolysis_LMW_Heparin_Dosage_Units"  [required]="CheckMandatory('Medication_Prior_to_Thrombolysis_LMW_Heparin_Dosage_Units') ? '' : null" placeholder="Select Units">                                                            
+																											<mat-option option="">Select Units</mat-option>  
+																											<mat-option *ngFor="let Unfraction_Units of DosageUnitsOne;let i=index" [value]="Unfraction_Units.Key">{{Unfraction_Units.Name}}</mat-option>
+																										</mat-select>
+																										<mat-error [innerHTML]="GetFormControlErrorMessage('Medication_Prior_to_Thrombolysis_LMW_Heparin_Dosage_Units')"> </mat-error>
+																									</mat-form-field>
+																								</div>
+																								<div class="col-sm-3" *ngIf="CheckVisibility('Medication_Prior_to_Thrombolysis_LMW_Heparin_Dosage_Date_Time')">
+																									<mat-form-field class="full-width" [floatLabel]="'auto'" appearance="fill">
+																										<mat-label>Date</mat-label>
+																										<input (click)="lmw_heparin_datepicker.open()" matInput formControlName="Medication_Prior_to_Thrombolysis_LMW_Heparin_Dosage_Date_Time" (keypress)="NotAllow()" (keydown)="ClearInput($event)" [max] = "noFutureDate"  [matDatepicker] ="lmw_heparin_datepicker" [required]="CheckMandatory('Medication_Prior_to_Thrombolysis_LMW_Heparin_Dosage_Date_Time') ? '' : null" placeholder="Date">
+																										<mat-icon (click)="lmw_heparin_datepicker.open()" matSuffix>event</mat-icon>
+																										<mat-datepicker touchUi #lmw_heparin_datepicker> </mat-datepicker>                                                   
+																									</mat-form-field>
+																								</div>
+																								<div class="col-sm-3" *ngIf="CheckVisibility('Medication_Prior_to_Thrombolysis_LMW_Heparin_Dosage_Date_Time')">
+																									<mat-form-field [ngClass]="{'mat-form-field-invalid': CheckTimeRelatedDateErrorStatus('Medication_Prior_to_Thrombolysis_LMW_Heparin_Dosage_Date_Time', 'Medication_Prior_to_Thrombolysis_LMW_Heparin_Dosage_Time')}" class="full-width" [floatLabel]="'auto'" appearance="fill"  >
+																										<mat-label>Time</mat-label>
+																										<input  matInput formControlName="Medication_Prior_to_Thrombolysis_LMW_Heparin_Dosage_Time" [ngxTimepicker]="lmw_heparin_timepicker" [format]="24" (keypress)="NotAllow()" (keydown)="ClearInput($event)" [required]="CheckMandatory('Medication_Prior_to_Thrombolysis_LMW_Heparin_Dosage_Date_Time') ? '' : null" placeholder="Time">
+																										<mat-icon matSuffix (click)="lmw_heparin_timepicker.open()">access_time</mat-icon>
+																										<ngx-material-timepicker [defaultTime]="DefaultTime('Medication_Prior_to_Thrombolysis_LMW_Heparin_Dosage_Time')" (opened)="MaxTime('Medication_Prior_to_Thrombolysis_LMW_Heparin_Dosage_Time', 'Medication_Prior_to_Thrombolysis_LMW_Heparin_Dosage_Date_Time')" #lmw_heparin_timepicker> </ngx-material-timepicker>                                                   
+																									</mat-form-field>
+																								</div>
+																							</div>
+																							<div class="row">
+																								<div class="col-sm-offset-6 col-sm-6">
+																									<mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Medication_Prior_to_Thrombolysis_LMW_Heparin_Dosage_Date_Time')"></mat-error>
+																								</div>
+																							</div>
+                                                                  </ng-container>
+                                                               </div>
+                                                         </div>
+
+                                                         <div class="row" *ngIf="CheckVisibility('Medication_Prior_to_Thrombolysis_Ticagrelor')">
+                                                               <div class="form-group col-lg-4 col-sm-12">
+                                                                  <div class="row">
+                                                                     <label [ngClass]="{'lbl-required': CheckMandatory('Medication_Prior_to_Thrombolysis_Ticagrelor')}" class="col-lg-6 col-md-4 col-sm-5 col-form-label text-lg-right">Ticagrelor</label>
+                                                                     <div class="col-sm-7 col-md-5">
+                                                                        <div class="YesOrNoButton" [ngClass]="{'disabled': CheckDisable('Medication_Prior_to_Thrombolysis_Ticagrelor')}" btnRadioGroup formControlName="Medication_Prior_to_Thrombolysis_Ticagrelor">
+                                                                           <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                                           <label class=" hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                                           <mat-error [innerHTML]="GetFormControlErrorMessage('Medication_Prior_to_Thrombolysis_Ticagrelor')"> </mat-error>
+                                                                        </div>
+                                                                     </div>
+                                                                  </div>
+                                                               </div>
+                                                               <div class="form-group col-lg-8 col-sm-12">
+                                                                  <ng-container *ngIf="DynamicFGroup.get('Medication_Prior_to_Thrombolysis_Ticagrelor').value === 'Yes'">
+                                                                     <div class="row">
+																								<div class="col-sm-3" *ngIf="CheckVisibility('Medication_Prior_to_Thrombolysis_Ticagrelor_Dosage')">
+																									<mat-form-field class="full-width" [floatLabel]="'auto'" appearance="fill">
+																										<mat-label>Dosage</mat-label>
+																										<input matInput formControlName="Medication_Prior_to_Thrombolysis_Ticagrelor_Dosage" placeholder="Dosage:"  [required]="CheckMandatory('Medication_Prior_to_Thrombolysis_Ticagrelor_Dosage') ? '' : null">
+																										<mat-error [innerHTML]="GetFormControlErrorMessage('Medication_Prior_to_Thrombolysis_Ticagrelor_Dosage')"> </mat-error>
+																									</mat-form-field>
+																								</div>
+																								<div class="col-sm-3" *ngIf="CheckVisibility('Medication_Prior_to_Thrombolysis_Ticagrelor_Dosage_Units')">
+																									<mat-form-field class="full-width"  [floatLabel]="'auto'" appearance="fill">
+																										<mat-label>Dosage Units</mat-label>
+																										<mat-select formControlName="Medication_Prior_to_Thrombolysis_Ticagrelor_Dosage_Units"  [required]="CheckMandatory('Medication_Prior_to_Thrombolysis_Ticagrelor_Dosage_Units') ? '' : null" placeholder="Select Units"> 
+																											<mat-option option="">Select Units</mat-option>                                                           
+																											<mat-option *ngFor="let Unfraction_Units of DosageUnitsOne;let i=index" [value]="Unfraction_Units.Key">{{Unfraction_Units.Name}}</mat-option>
+																										</mat-select>
+																										<mat-error [innerHTML]="GetFormControlErrorMessage('Medication_Prior_to_Thrombolysis_Ticagrelor_Dosage_Units')"> </mat-error>
+																									</mat-form-field>
+																								</div>
+																								<div class="col-sm-3" *ngIf="CheckVisibility('Medication_Prior_to_Thrombolysis_Ticagrelor_Dosage_Units_Date_Time')">
+																									<mat-form-field class="full-width" [floatLabel]="'auto'" appearance="fill">
+																										<mat-label>Date</mat-label>
+																										<input (click)="ticagrelor_datepicker.open()" matInput formControlName="Medication_Prior_to_Thrombolysis_Ticagrelor_Dosage_Units_Date_Time" (keypress)="NotAllow()" (keydown)="ClearInput($event)" [max] = "noFutureDate"  [matDatepicker] ="ticagrelor_datepicker" [required]="CheckMandatory('Medication_Prior_to_Thrombolysis_Ticagrelor_Dosage_Units_Date_Time') ? '' : null" placeholder="Date">
+																										<mat-icon (click)="ticagrelor_datepicker.open()" matSuffix>event</mat-icon>
+																										<mat-datepicker touchUi #ticagrelor_datepicker> </mat-datepicker>                                                      
+																									</mat-form-field>
+																								</div>
+																								<div class="col-sm-3" *ngIf="CheckVisibility('Medication_Prior_to_Thrombolysis_Ticagrelor_Dosage_Units_Date_Time')">
+																									<mat-form-field [ngClass]="{'mat-form-field-invalid': CheckTimeRelatedDateErrorStatus('Medication_Prior_to_Thrombolysis_Ticagrelor_Dosage_Units_Date_Time', 'Medication_Prior_to_Thrombolysis_Ticagrelor_Dosage_Units_Time')}" class="full-width" [floatLabel]="'auto'" appearance="fill">
+																										<mat-label>Time</mat-label>
+																										<input matInput formControlName="Medication_Prior_to_Thrombolysis_Ticagrelor_Dosage_Units_Time"  [ngxTimepicker]="ticagrelor_timepicker" [format]="24" (keypress)="NotAllow()" (keydown)="ClearInput($event)" [required]="CheckMandatory('Medication_Prior_to_Thrombolysis_Ticagrelor_Dosage_Units_Date_Time') ? '' : null" placeholder="Time">
+																										<mat-icon matSuffix (click)="ticagrelor_timepicker.open()">access_time</mat-icon>
+																										<ngx-material-timepicker [defaultTime]="DefaultTime('Medication_Prior_to_Thrombolysis_Ticagrelor_Dosage_Units_Time')" (opened)="MaxTime('Medication_Prior_to_Thrombolysis_Ticagrelor_Dosage_Units_Time', 'Medication_Prior_to_Thrombolysis_Ticagrelor_Dosage_Units_Date_Time')" #ticagrelor_timepicker> </ngx-material-timepicker>                                                      
+																									</mat-form-field>
+																								</div>
+																							</div>
+																							<div class="row">
+																								<div class="col-sm-offset-6 col-sm-6">
+																									<mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Medication_Prior_to_Thrombolysis_Ticagrelor_Dosage_Units_Date_Time')"></mat-error>
+																								</div>
+																							</div>
+                                                                  </ng-container>
+                                                               </div>
+                                                         </div>
+
+
+																			<div class="row" *ngIf="CheckVisibility('Medication_Prior_to_Thrombolysis_Enoxaparin')">
+																				<div class="form-group col-lg-4 col-sm-12">
+																					<div class="row">
+																						<label [ngClass]="{'lbl-required': CheckMandatory('Medication_Prior_to_Thrombolysis_Enoxaparin')}" class="col-lg-6 col-md-4 col-sm-5 col-form-label text-lg-right">Enoxaparin (mg) </label>
+																						<div class="col-sm-7 col-md-5">
+																							<div class="YesOrNoButton" [ngClass]="{'disabled': CheckDisable('Medication_Prior_to_Thrombolysis_Enoxaparin')}" btnRadioGroup formControlName="Medication_Prior_to_Thrombolysis_Enoxaparin">
+																								<label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+																								<label class=" hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+																								<mat-error [innerHTML]="GetFormControlErrorMessage('Medication_Prior_to_Thrombolysis_Enoxaparin')"> </mat-error>
+																							</div>
+																						</div>
+																					</div>
+																				</div>
+																				<div class="form-group col-lg-8 col-sm-12">
+																					<ng-container *ngIf="DynamicFGroup.get('Medication_Prior_to_Thrombolysis_Enoxaparin').value === 'Yes'">
+																						<div class="row">
+																							<div class="col-sm-3" *ngIf="CheckVisibility('Medication_Prior_to_Thrombolysis_Enoxaparin_Dosage')">
+																								<mat-form-field class="full-width" [floatLabel]="'auto'" appearance="fill">
+																									<mat-label>Dosage</mat-label>
+																									<input matInput formControlName="Medication_Prior_to_Thrombolysis_Enoxaparin_Dosage" placeholder="Dosage:"  [required]="CheckMandatory('Medication_Prior_to_Thrombolysis_Enoxaparin_Dosage') ? '' : null">
+																									<mat-error [innerHTML]="GetFormControlErrorMessage('Medication_Prior_to_Thrombolysis_Enoxaparin_Dosage')"> </mat-error>
+																								</mat-form-field>
+																							</div>
+																							<div class="col-sm-3" *ngIf="CheckVisibility('Medication_Prior_to_Thrombolysis_Enoxaparin_Dosage_Units')">
+																								<mat-form-field class="full-width"  [floatLabel]="'auto'" appearance="fill">
+																									<mat-label>Dosage Units</mat-label>
+																									<mat-select formControlName="Medication_Prior_to_Thrombolysis_Enoxaparin_Dosage_Units"  [required]="CheckMandatory('Medication_Prior_to_Thrombolysis_Enoxaparin_Dosage_Units') ? '' : null" placeholder="Select Units"> 
+																										<mat-option option="">Select Units</mat-option>                                                           
+																										<mat-option *ngFor="let Unfraction_Units of DosageUnitsOne;let i=index" [value]="Unfraction_Units.Key">{{Unfraction_Units.Name}}</mat-option>
+																									</mat-select>
+																									<mat-error [innerHTML]="GetFormControlErrorMessage('Medication_Prior_to_Thrombolysis_Enoxaparin_Dosage_Units')"> </mat-error>
+																								</mat-form-field>
+																							</div>
+																							<div class="col-sm-3" *ngIf="CheckVisibility('Medication_Prior_to_Thrombolysis_Enoxaparin_Dosage_Units_Date_Time')">
+																								<mat-form-field class="full-width" [floatLabel]="'auto'" appearance="fill">
+																									<mat-label>Date</mat-label>
+																									<input (click)="Enoxaparin_datepicker.open()" matInput formControlName="Medication_Prior_to_Thrombolysis_Enoxaparin_Dosage_Units_Date_Time" (keypress)="NotAllow()" (keydown)="ClearInput($event)" [max] = "noFutureDate"  [matDatepicker] ="Enoxaparin_datepicker" [required]="CheckMandatory('Medication_Prior_to_Thrombolysis_Enoxaparin_Dosage_Units_Date_Time') ? '' : null" placeholder="Date">
+																									<mat-icon (click)="Enoxaparin_datepicker.open()" matSuffix>event</mat-icon>
+																									<mat-datepicker touchUi #Enoxaparin_datepicker> </mat-datepicker>                                                      
+																								</mat-form-field>
+																							</div>
+																							<div class="col-sm-3" *ngIf="CheckVisibility('Medication_Prior_to_Thrombolysis_Enoxaparin_Dosage_Units_Date_Time')">
+																								<mat-form-field [ngClass]="{'mat-form-field-invalid': CheckTimeRelatedDateErrorStatus('Medication_Prior_to_Thrombolysis_Enoxaparin_Dosage_Units_Date_Time', 'Medication_Prior_to_Thrombolysis_Enoxaparin_Dosage_Units_Time')}" class="full-width" [floatLabel]="'auto'" appearance="fill">
+																									<mat-label>Time</mat-label>
+																									<input matInput formControlName="Medication_Prior_to_Thrombolysis_Enoxaparin_Dosage_Units_Time"  [ngxTimepicker]="Enoxaparin_timepicker" [format]="24" (keypress)="NotAllow()" (keydown)="ClearInput($event)" [required]="CheckMandatory('Medication_Prior_to_Thrombolysis_Enoxaparin_Dosage_Units_Date_Time') ? '' : null" placeholder="Time">
+																									<mat-icon matSuffix (click)="Enoxaparin_timepicker.open()">access_time</mat-icon>
+																									<ngx-material-timepicker [defaultTime]="DefaultTime('Medication_Prior_to_Thrombolysis_Enoxaparin_Dosage_Units_Time')" (opened)="MaxTime('Medication_Prior_to_Thrombolysis_Enoxaparin_Dosage_Units_Time', 'Medication_Prior_to_Thrombolysis_Enoxaparin_Dosage_Units_Date_Time')" #Enoxaparin_timepicker> </ngx-material-timepicker>                                                      
+																								</mat-form-field>
+																							</div>
+																						</div>
+																						<div class="row">
+																							<div class="col-sm-offset-6 col-sm-6">
+																								<mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Medication_Prior_to_Thrombolysis_Enoxaparin_Dosage_Units_Date_Time')"></mat-error>
+																							</div>
+																						</div>
+																					</ng-container>
+																				</div>
+																			</div>
+                                                   </div>
+                                                </div><!--end row div-->
+
+                                                <!-- New Row Dynamically adding -->
+                                                <div *ngIf="!ReadonlyPage && !DisableMedication" class="row">
+                                                   <div class="col-sm-1"> 
+                                                      <div class="form-group form-group-sm col-sm-12">
+                                                         <span class="btn-add-plus" (click)="AddArrayControl()"><i class="fa fa-plus"></i></span>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                                <ng-container formArrayName="OtherMedicationArray" >
+                                                   <div *ngFor="let OtherMedicationArray of GetFormArray('OtherMedicationArray'); let i=index" [formGroupName]="i" class="row">
+                                                         <div *ngIf="CheckVisibility('Medication_Prior_to_Thrombolysis_Other_Medicine')" class="form-group form-group-sm col-lg-8 col-md-12">
+                                                            <div class="row">
+                                                                  <div class="col-sm-4" *ngIf="CheckVisibility('Medication_Prior_to_Thrombolysis_Other_Medicine')">
+                                                                     <mat-form-field class="full-width" [floatLabel]="'auto'" appearance="fill">
+                                                                        <mat-label>Other Medications Details</mat-label>
+                                                                        <input  matInput formControlName="Medication_Prior_to_Thrombolysis_Other_Medicine" [required]="CheckMandatory('Medication_Prior_to_Thrombolysis_Other_Medicine') ? '' : null" placeholder="Other Medications Details">
+                                                                        <mat-error [innerHTML]="GetFormControlErrorMessage('Medication_Prior_to_Thrombolysis_Other_Medicine', i)"> </mat-error>   
+                                                                     </mat-form-field>
+                                                                  </div>                                                               
+                                                                  <div class="col-sm-8" *ngIf="CheckVisibility('Medication_Prior_to_Thrombolysis_Other_Medicine_Dosage')">
+                                                                     <div class="row">
+                                                                        <div class="col-sm-6">
+                                                                           <mat-form-field class="full-width" [floatLabel]="'auto'" appearance="fill">
+                                                                              <mat-label>Dosage</mat-label>
+                                                                              <input matInput formControlName="Medication_Prior_to_Thrombolysis_Other_Medicine_Dosage" placeholder="Dosage:"  [required]="CheckMandatory('Medication_Prior_to_Thrombolysis_Other_Medicine_Dosage') ? '' : null">
+                                                                              <mat-error [innerHTML]="GetFormControlErrorMessage('Medication_Prior_to_Thrombolysis_Other_Medicine_Dosage', i)"> </mat-error>   
+                                                                           </mat-form-field>
+                                                                        </div>
+                                                                        <div class="col-sm-6" *ngIf="CheckVisibility('Medication_Prior_to_Thrombolysis_Other_Medicine_Dosage_Units')">
+                                                                           <mat-form-field class="full-width"  [floatLabel]="'auto'" appearance="fill">
+                                                                              <mat-label>Dosage Units</mat-label>
+                                                                              <mat-select formControlName="Medication_Prior_to_Thrombolysis_Other_Medicine_Dosage_Units"  [required]="CheckMandatory('Medication_Prior_to_Thrombolysis_Other_Medicine_Dosage_Units') ? '' : null" placeholder="Select Units">                                                            
+                                                                                 <mat-option option="">Select Units</mat-option>  
+                                                                                 <mat-option *ngFor="let Unfraction_Units of DosageUnitsOne;let i=index" [value]="Unfraction_Units.Key">{{Unfraction_Units.Name}}</mat-option>
+                                                                              </mat-select>
+                                                                              <mat-error [innerHTML]="GetFormControlErrorMessage('Medication_Prior_to_Thrombolysis_Other_Medicine_Dosage_Units', i)"> </mat-error>
+                                                                           </mat-form-field> 
+                                                                        </div>
+                                                                     </div>
+                                                                  </div>
+                                                            </div>
+                                                         </div>
+                                                         <div *ngIf="CheckVisibility('Medication_Prior_to_Thrombolysis_Other_Medicine_Date_Time')" class="form-group form-group-sm col-lg-4 col-md-12">
+                                                            <div class="row">
+                                                               <div class="col-sm-5">
+                                                                     <mat-form-field class="full-width" [floatLabel]="'auto'" appearance="fill">
+                                                                        <mat-label>Date</mat-label>
+                                                                        <input formControlName="Medication_Prior_to_Thrombolysis_Other_Medicine_Date_Time" (click)="medicine_add_new_datepicker.open()" matInput (keypress)="NotAllow()" (keydown)="ClearInput($event, i)" [max] = "noFutureDate"  [matDatepicker] ="medicine_add_new_datepicker" [required]="CheckMandatory('Medication_Prior_to_Thrombolysis_Other_Medicine_Date_Time') ? '' : null" placeholder="Date">
+                                                                        <mat-icon (click)="medicine_add_new_datepicker.open()" matSuffix>event</mat-icon>
+                                                                        <mat-datepicker touchUi #medicine_add_new_datepicker> </mat-datepicker>                                                      
+                                                                     </mat-form-field>
+                                                                  </div>
+                                                                  <div class="col-sm-5">
+                                                                     <mat-form-field [ngClass]="{'mat-form-field-invalid': CheckTimeRelatedDateErrorStatusInArray('Medication_Prior_to_Thrombolysis_Other_Medicine_Date_Time', i, 'Medication_Prior_to_Thrombolysis_Other_Medicine_Time')}" class="full-width" [floatLabel]="'auto'" appearance="fill">
+                                                                        <mat-label>Time</mat-label>
+                                                                        <input formControlName="Medication_Prior_to_Thrombolysis_Other_Medicine_Time" matInput [ngxTimepicker]="medicine_add_new_timepicker" [format]="24" (keypress)="NotAllow()" (keydown)="ClearInput($event, i)" [required]="CheckMandatory('Medication_Prior_to_Thrombolysis_Other_Medicine_Date_Time') ? '' : null" placeholder="Time">
+                                                                        <mat-icon matSuffix (click)="medicine_add_new_timepicker.open()">access_time</mat-icon>
+                                                                        <ngx-material-timepicker [defaultTime]="DefaultTimeFromArray('OtherMedicationArray', i, 'Medication_Prior_to_Thrombolysis_Other_Medicine_Time')" (opened)="MaxTimeArray('Medication_Prior_to_Thrombolysis_Other_Medicine_Time', 'Medication_Prior_to_Thrombolysis_Other_Medicine_Date_Time', 'OtherMedicationArray', i)" #medicine_add_new_timepicker> </ngx-material-timepicker>                                                      
+                                                                     </mat-form-field>
+                                                                  </div>
+                                                               <div class="col-sm-2">
+                                                                  <span *ngIf="!ReadonlyPage && !DisableMedication" class="btn-remove-minus" (click)="removeArrayControl(i)"><i class="fa fa-minus"></i></span>
+                                                               </div>
+                                                               <div class="col-sm-12">
+                                                                  <mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Medication_Prior_to_Thrombolysis_Other_Medicine_Date_Time', i)"></mat-error>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                   </div>
+                                                </ng-container>
+                                                <!-- New Row Dynamically adding -->
+                                             </div> <!--container end div-->
+                                    </div>
+                                    <!-- Submit the Form -->
+                                    <div *ngIf="!ReadonlyPage" class="row">
+                                       <div *ngIf="!DisableMedication" class="col-md-12">
+                                          <button type="button" *ngIf="MedicationId === null && !FormUploading" (click)="MedicationSubmit()" class="btn btn-outline-primary float-right save">Save & Continue</button>
+                                          <button type="button" *ngIf="MedicationId !== null && !FormUploading"  (click)="MedicationUpdate()" class="btn btn-outline-primary float-right save">Update & Continue</button>
+                                          <button *ngIf="FormUploading" type="button" class="btn btn-outline-primary float-right save uploading">
+                                             <i class="fa fa-spinner fa-pulse" aria-hidden="true"></i> Uploading...
+                                          </button>
+                                       </div>
+                                    </div>                                      
+                                 </div>
+                              </div>
+                           </div>
+                        </form>
+                     </div>
+                  </mat-tab>        
+
+               <!-- 2nd Tab Thrombolysis -->
+               <mat-tab label="Thrombolysis" class="full-width" [disabled]="CheckSubCategoryVisibility('Thrombolysis')">
+                  <div class="portlet-tab">
+                     <form *ngIf="CurrentTabIndex === 1 && FormLoaded" class="form-horizontal" [formGroup]="DynamicFGroup">
+                        <div *ngIf="IfPostThrombolysis">
+                           <p style="color: #0577e7; font-weight: 500; letter-spacing: 0.5px; margin: 0px;text-align: center;">
+                              **** Thrombolysis completed from Referral Facility ****
+                           </p>
+                        </div>
+                        <div class="portlet-tab-panelbody">
+                           <div class="row">
+                              <div class="col-md-12">
+                                 <!--  -->
+                                 <div class="container">
+                                    <div class="row">
+                                       <div *ngIf="CheckVisibility('Thrombolysis')" class="form-group form-group-sm col-sm-12">
+                                          <div class="row">
+                                             <label [ngClass]="{'lbl-required': CheckMandatory('Thrombolysis')}" class="col-sm-12 col-md-3 col-form-label text-lg-right">Was Thrombolysed</label>
+                                             <div class="col-sm-12 col-md-8">
+                                                <div class="YesOrNoButton" [ngClass]="{'disabled': CheckDisable('Thrombolysis')}" formControlName="Thrombolysis" btnRadioGroup >
+                                                      <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button">Yes</label>
+                                                      <label class=" hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button">No</label>
+                                                   <mat-error [innerHTML]="GetFormControlErrorMessage('Thrombolysis')"> </mat-error>
+                                                </div>
+                                             </div>
+                                          </div>
+													</div>
+													<ng-container *ngIf="CheckVisibility('Thrombolysis') && DynamicFGroup.get('Thrombolysis').value === 'No'">
+														<div *ngIf="CheckVisibility('Thrombolysis_MissedSTEMI')" class="form-group form-group-sm col-sm-12">
+															<div class="row">
+																<label [ngClass]="{'lbl-required': CheckMandatory('Thrombolysis_MissedSTEMI')}" class="col-sm-12 col-md-3 col-form-label text-lg-right">Missed STEMI</label>
+																<div class="col-sm-12 col-md-8">
+																	<div class="YesOrNoButton" [ngClass]="{'disabled': CheckDisable('Thrombolysis_MissedSTEMI')}" formControlName="Thrombolysis_MissedSTEMI" btnRadioGroup >
+																			<label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button">Yes</label>
+																			<label class=" hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button">No</label>
+																		<mat-error [innerHTML]="GetFormControlErrorMessage('Thrombolysis_MissedSTEMI')"> </mat-error>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<div *ngIf="CheckVisibility('Thrombolysis_Autoreperfused')" class="form-group form-group-sm col-sm-12">
+															<div class="row">
+																<label [ngClass]="{'lbl-required': CheckMandatory('Thrombolysis_Autoreperfused')}" class="col-sm-12 col-md-3 col-form-label text-lg-right">Autoreperfused (Clinically diagnosed)</label>
+																<div class="col-sm-12 col-md-8">
+																	<div class="YesOrNoButton" [ngClass]="{'disabled': CheckDisable('Thrombolysis_Autoreperfused')}" formControlName="Thrombolysis_Autoreperfused" btnRadioGroup >
+																			<label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button">Yes</label>
+																			<label class=" hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button">No</label>
+																		<mat-error [innerHTML]="GetFormControlErrorMessage('Thrombolysis_Autoreperfused')"> </mat-error>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<div *ngIf="CheckVisibility('Thrombolysis_Others')" class="form-group form-group-sm col-sm-12">
+															<div class="row">
+																<label [ngClass]="{'lbl-required': CheckMandatory('Thrombolysis_Others')}" class="col-sm-12 col-md-3 col-form-label text-lg-right">Others</label>
+																<div class="col-sm-12 col-md-4">
+																	<mat-form-field class="full-width" [floatLabel]="'auto'" appearance="fill">
+																		<textarea matInput formControlName="Thrombolysis_Others"  [required]="CheckMandatory('Thrombolysis_Others') ? '' : null"></textarea>
+																		<mat-error [innerHTML]="GetFormControlErrorMessage('Thrombolysis_Others')"> </mat-error>   
+																	</mat-form-field>
+																</div>
+															</div>
+														</div>
+														<div class="form-group form-group-sm col-sm-12">
+															<div class="row">
+																<div class="col-sm-12 col-md-3 "></div>
+																<div class="col-sm-12 col-md-9">
+																	<p style="color: #0577e7; font-weight: 500; letter-spacing: 0.5px; margin: 0px;">
+																		If Primary PCI, proceed to enter data under PCI section
+																	</p>
+																</div>
+															</div>
+														</div>
+													</ng-container>
+                                       <div *ngIf="CheckVisibility('Reason_to_proceed_for_thrombolysis') && DynamicFGroup.get('Thrombolysis').value === 'Yes' && !IfPostThrombolysis" class="form-group form-group-sm col-sm-12">
+                                          <div class="row">
+                                             <label [ngClass]="{'lbl-required': CheckMandatory('Reason_to_proceed_for_thrombolysis')}" class="col-sm-12 col-md-3 col-form-label text-lg-right">Reason to proceed for thrombolysis despite lysis being contraindicated</label>
+                                             <div class="col-sm-12 col-md-4">
+                                                <mat-form-field class="full-width" [floatLabel]="'auto'" appearance="fill">
+                                                   <textarea matInput formControlName="Reason_to_proceed_for_thrombolysis"  [required]="CheckMandatory('Reason_to_proceed_for_thrombolysis') ? '' : null"></textarea>
+                                                   <mat-error [innerHTML]="GetFormControlErrorMessage('Reason_to_proceed_for_thrombolysis')"> </mat-error>   
+                                                </mat-form-field>
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <!-- Thrombolytic Agent -->   
+                                 <div class="container-thrombolytic-agent" *ngIf="CheckSubJuniorCategoryVisibility('Thrombolytic_Agent') && DynamicFGroup.get('Thrombolysis').value === 'Yes'">
+                                    <div class="tabpane-title">
+                                       <h5>Thrombolytic Agent</h5>
+                                    </div>
+                                    <div class="container">
+                                       <div class="row">
+                                          <div *ngIf="CheckVisibility('Thrombolysis_Agent_Select_any_one')" class="form-group form-group-sm col-sm-12">
+                                             <div class="row">
+                                                <label [ngClass]="{'lbl-required': CheckMandatory('Thrombolysis_Agent_Select_any_one')}" class="col-sm-12 col-md-3 col-form-label text-lg-right">Select any one</label>
+                                                   <div class="col-sm-12 col-md-8">
+                                                      <div class="YesOrNoButton" [ngClass]="{'disabled': CheckDisable('Thrombolysis_Agent_Select_any_one')}" formControlName="Thrombolysis_Agent_Select_any_one" btnRadioGroup >
+                                                            <label class=" hbtn hb-fill-left" btnRadio="Tenecteplase" tabindex="0" role="button">tPa (alteplase) </label>
+                                                            <label class="hbtn hb-fill-right" btnRadio="Reteplase" tabindex="0" role="button"> Tenecteplase (metalyse) </label>
+                                                            <label class="hbtn hb-fill-right" btnRadio="Streptokinase" tabindex="0" role="button">Streptokinase</label>
+                                                         <mat-error [innerHTML]="GetFormControlErrorMessage('Thrombolysis_Agent_Select_any_one')"> </mat-error>
+                                                      </div>
+                                                   </div>
+                                             </div>
+                                          </div>
+                                          <div *ngIf="CheckVisibility('Thrombolysis_Agent_Completed') && !IfPostThrombolysis" class="form-group form-group-sm col-sm-12">
+                                             <div class="row">
+                                                <label [ngClass]="{'lbl-required': CheckMandatory('Thrombolysis_Agent_Completed')}" class="col-sm-12 col-md-3 col-form-label text-lg-right">Thrombolysis Agent Completed</label>
+                                                <div class="col-sm-12 col-md-8">
+                                                   <div class="YesOrNoButton" [ngClass]="{'disabled': CheckDisable('Thrombolysis_Agent_Completed')}" formControlName="Thrombolysis_Agent_Completed" btnRadioGroup >
+                                                         <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button">Yes</label>
+                                                         <label class="hbtn hb-fill-right" btnRadio="No" tabindex="0" role="button">No</label>
+                                                      <mat-error [innerHTML]="GetFormControlErrorMessage('Thrombolysis_Agent_Completed')"> </mat-error>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                          </div>
+                                          <div *ngIf="CheckVisibility('Thrombolysis_Agent_Dosage')" class="form-group form-group-sm col-sm-12">
+                                             <div class="row">
+                                                <label [ngClass]="{'lbl-required': CheckMandatory('Thrombolysis_Agent_Dosage')}" class="col-sm-5 col-md-3 col-form-label text-lg-right">Dosage</label>
+                                                <div class="col-md-6" *ngIf="CheckVisibility('Thrombolysis_Agent_Dosage')">
+                                                      <div class="row">
+                                                         <div class="col-sm-6 col-md-6">
+                                                            <mat-form-field class="full-width" [floatLabel]="'auto'" appearance="fill">
+                                                               <mat-label>Dosage</mat-label>
+                                                               <input matInput formControlName="Thrombolysis_Agent_Dosage" placeholder="Dosage:"  [required]="CheckMandatory('Thrombolysis_Agent_Dosage') ? '' : null">
+                                                               <mat-error [innerHTML]="GetFormControlErrorMessage('Thrombolysis_Agent_Dosage')"> </mat-error>   
+                                                            </mat-form-field>
+                                                         </div>
+                                                         <div class="col-sm-6 col-md-6">
+                                                            <mat-form-field class="full-width"  [floatLabel]="'auto'" appearance="fill">
+                                                               <mat-label>Dosage Units</mat-label>
+                                                               <mat-select formControlName="Thrombolysis_Agent_Dosage_Units"  [required]="CheckMandatory('Thrombolysis_Agent_Dosage_Units') ? '' : null" placeholder="Select Units">                                                              
+                                                                  <mat-option value="">Select Units</mat-option>
+                                                                  <mat-option *ngFor="let Unfraction_Units of DosageUnitsOne;let i=index" [value]="Unfraction_Units.Key">{{Unfraction_Units.Name}}</mat-option>
+                                                               </mat-select>
+                                                               <mat-error [innerHTML]="GetFormControlErrorMessage('Thrombolysis_Agent_Dosage_Units')"> </mat-error>
+                                                            </mat-form-field>
+                                                         </div>
+                                                      </div>
+                                                </div>
+                                             </div>
+                                          </div>
+
+                                          <div *ngIf="CheckVisibility('Thrombolysis_Agent_Dosage_Start_Date_time')" class="form-group form-group-sm col-sm-12">
+                                                <div class="row">
+                                                   <label [ngClass]="{'lbl-required': CheckMandatory('Thrombolysis_Agent_Dosage_Start_Date_time')}" class="col-sm-5 col-md-3 col-form-label text-lg-right">Initiation Date & Time</label>
+                                                   <div class="col-md-6" *ngIf="CheckVisibility('Thrombolysis_Agent_Dosage_Start_Date_time')">
+                                                         <div class="row">
+                                                            <div class="col-sm-6 col-md-6">
+                                                               <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                                  <input matInput formControlName="Thrombolysis_Agent_Dosage_Start_Date_time" (click)="dosage_datepicker.open()" (keypress)="NotAllow()" (keydown)="ClearInput($event)" [max] = "noFutureDate"  [matDatepicker] ="dosage_datepicker" [required]="CheckMandatory('Thrombolysis_Agent_Dosage_Start_Date_time') ? '' : null" placeholder="Date">
+                                                                  <mat-icon (click)="dosage_datepicker.open()" matSuffix >event</mat-icon>
+                                                                  <mat-datepicker touchUi #dosage_datepicker> </mat-datepicker>                                                
+                                                               </mat-form-field>
+                                                            </div>
+                                                            <div class="col-sm-6 col-md-6">
+                                                               <mat-form-field [ngClass]="{'mat-form-field-invalid': CheckTimeRelatedDateErrorStatus('Thrombolysis_Agent_Dosage_Start_Date_time', 'Thrombolysis_Agent_Dosage_Start_time')}" class="full-width" [floatLabel]="'never'" appearance="fill" >
+                                                                  <input formControlName="Thrombolysis_Agent_Dosage_Start_time"  matInput [ngxTimepicker]="dosage_start_timepicker" [format]="24" (keypress)="NotAllow()" (keydown)="ClearInput($event)" [required]="CheckMandatory('Thrombolysis_Agent_Dosage_Start_Date_time') ? '' : null" placeholder="Time">
+                                                                  <mat-icon (click)="dosage_start_timepicker.open()" matSuffix >access_time</mat-icon>
+                                                                  <ngx-material-timepicker [defaultTime]="DefaultTime('Thrombolysis_Agent_Dosage_Start_time')" (opened)="MaxTime('Thrombolysis_Agent_Dosage_Start_time', 'Thrombolysis_Agent_Dosage_Start_Date_time')" #dosage_start_timepicker> </ngx-material-timepicker>                                                
+                                                               </mat-form-field>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                               <mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Thrombolysis_Agent_Dosage_Start_Date_time')"></mat-error>
+                                                            </div>
+                                                         </div>
+                                                   </div>
+                                                </div>
+                                             </div>
+
+                                             <div *ngIf="CheckVisibility('Thrombolysis_Agent_Dosage_End_Date_time')" class="form-group form-group-sm col-sm-12">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Thrombolysis_Agent_Dosage_End_Date_time')}" class="col-sm-5 col-md-3 col-form-label text-lg-right">Completed Date & Time</label>
+                                                      <div class="col-md-6" *ngIf="CheckVisibility('Thrombolysis_Agent_Dosage_End_Date_time')">
+                                                            <div class="row">
+                                                               <div class="col-sm-6 col-md-6">
+                                                                  <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">                                                
+                                                                     <input matInput formControlName="Thrombolysis_Agent_Dosage_End_Date_time" (click)="dosage_end_datepicker.open()" (keypress)="NotAllow()" (keydown)="ClearInput($event)" [max] = "noFutureDate"  [matDatepicker] ="dosage_end_datepicker" [required]="CheckMandatory('Thrombolysis_Agent_Dosage_End_Date_time') ? '' : null" placeholder="Date">
+                                                                     <mat-icon (click)="dosage_end_datepicker.open()" matSuffix>event</mat-icon>
+                                                                     <mat-datepicker touchUi #dosage_end_datepicker> </mat-datepicker>                                                
+                                                                  </mat-form-field>
+                                                               </div>
+                                                               <div class="col-sm-6 col-md-6">
+                                                                  <mat-form-field [ngClass]="{'mat-form-field-invalid': CheckTimeRelatedDateErrorStatus('Thrombolysis_Agent_Dosage_End_Date_time', 'Thrombolysis_Agent_Dosage_End_time')}" class="full-width" [floatLabel]="'never'" appearance="fill">                                                
+                                                                     <input matInput formControlName="Thrombolysis_Agent_Dosage_End_time" [ngxTimepicker]="dosage_timepicker" [format]="24" (keypress)="NotAllow()" (keydown)="ClearInput($event)" [required]="CheckMandatory('Thrombolysis_Agent_Dosage_End_Date_time') ? '' : null" placeholder="Time">
+                                                                     <mat-icon matSuffix (click)="dosage_timepicker.open()">access_time</mat-icon>
+                                                                     <ngx-material-timepicker [defaultTime]="DefaultTime('Thrombolysis_Agent_Dosage_End_time')"  (opened)="MaxTime('Thrombolysis_Agent_Dosage_End_time', 'Thrombolysis_Agent_Dosage_End_Date_time')"  #dosage_timepicker> </ngx-material-timepicker>                                                   
+                                                                  </mat-form-field>
+                                                               </div>
+                                                               <div class="col-sm-12">
+                                                                  <mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Thrombolysis_Agent_Dosage_End_Date_time')"></mat-error>
+                                                               </div>
+                                                            </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                    
+                                       </div>
+                                    </div>
+                                 </div>
+
+                                 <!-- 90 – 120 Min ECG-->
+                                 <div class="container-90-120-min-ECG" *ngIf="CheckSubJuniorCategoryVisibility('90–120_Min_ECG') && DynamicFGroup.get('Thrombolysis').value === 'Yes'">
+                                    <div class="tabpane-title">
+                                       <h5>90 – 120 Min ECG</h5>
+                                    </div>
+                                    <div class="container">
+                                       <div class="row">
+                                          <div *ngIf="CheckVisibility('Thrombolysis_90_120_Min_ECG')" class="form-group form-group-sm col-sm-12">
+                                                <div class="row">
+                                                   <label [ngClass]="{'lbl-required': CheckMandatory('Thrombolysis_90_120_Min_ECG')}" class="col-sm-4 col-md-3 col-form-label text-lg-right">90 – 120 min ECG</label>
+                                                   <div class="col-sm-8 col-md-8">
+                                                      <div class="YesOrNoButton" [ngClass]="{'disabled': CheckDisable('Thrombolysis_90_120_Min_ECG')}" btnRadioGroup formControlName="Thrombolysis_90_120_Min_ECG">
+                                                            <label class="hbtn hb-fill-left" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                            <mat-error [innerHTML]="GetFormControlErrorMessage('Thrombolysis_90_120_Min_ECG')"> </mat-error>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                          </div>
+                                          <ng-container  *ngIf="DynamicFGroup.get('Thrombolysis_90_120_Min_ECG').value === 'Yes'" >
+                                             <div *ngIf="CheckVisibility('Thrombolysis_90_120_Min_ECG')" class="form-group form-group-sm col-sm-12">
+                                                <div class="row">
+                                                   <label [ngClass]="{'lbl-required': CheckMandatory('Thrombolysis_90_120_Min_ECG')}" class="col-sm-5 col-md-3 col-form-label text-lg-right">ECG Date & Time</label>
+                                                   <div class="col-md-6" *ngIf="CheckVisibility('Thrombolysis_90_120_Min_ECG_Date_Time')">
+                                                         <div class="row">
+                                                            <div class="col-sm-6 col-md-6">
+                                                               <mat-form-field class="full-width" [floatLabel]="'auto'" appearance="fill">
+                                                                     <mat-label>ECG Date</mat-label>
+                                                                     <input formControlName="Thrombolysis_90_120_Min_ECG_Date_Time" (click)="clopidogrel_datepicker.open()" (keypress)="NotAllow()" (keydown)="ClearInput($event)" matInput [required]="CheckMandatory('Thrombolysis_90_120_Min_ECG_Date_Time') ? '' : null" [max] = "noFutureDate"  [matDatepicker] ="clopidogrel_datepicker" placeholder="Date">
+                                                                     <mat-icon (click)="clopidogrel_datepicker.open()" matSuffix>event</mat-icon>
+                                                                     <mat-datepicker touchUi #clopidogrel_datepicker> </mat-datepicker>
+                                                               </mat-form-field>
+                                                            </div>
+                                                            <div class="col-sm-6 col-md-6">
+                                                               <mat-form-field [ngClass]="{'mat-form-field-invalid': CheckTimeRelatedDateErrorStatus('Thrombolysis_90_120_Min_ECG_Date_Time', 'Thrombolysis_90_120_Min_ECG_Time')}" class="full-width" [floatLabel]="'auto'" appearance="fill">
+                                                                  <mat-label>ECG Time</mat-label>
+                                                                  <input formControlName="Thrombolysis_90_120_Min_ECG_Time" matInput [required]="CheckMandatory('Thrombolysis_90_120_Min_ECG_Date_Time') ? '' : null" (keypress)="NotAllow()" (keydown)="ClearInput($event)" [ngxTimepicker]="clopidogrel_timepicker" [format]="24" placeholder="Time">
+                                                                  <mat-icon matSuffix (click)="clopidogrel_timepicker.open()">access_time </mat-icon>
+                                                                  <ngx-material-timepicker [defaultTime]="DefaultTime('Thrombolysis_90_120_Min_ECG_Time')" (opened)="MaxTime('Thrombolysis_90_120_Min_ECG_Time', 'Thrombolysis_90_120_Min_ECG_Date_Time')" #clopidogrel_timepicker> </ngx-material-timepicker>
+                                                               </mat-form-field>
+                                                            </div>
+                                                            <div class="col-sm-12">
+                                                               <mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Thrombolysis_90_120_Min_ECG_Date_Time')"></mat-error>
+                                                            </div>
+                                                         </div>
+                                                   </div>
+                                                </div>
+                                             </div>     
+                                          </ng-container>
+                                             <div *ngIf="CheckVisibility('Thrombolysis_Successful_Lysis')" class="form-group form-group-sm col-sm-12">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Thrombolysis_Successful_Lysis')}" class="col-sm-4 col-md-3 col-form-label text-lg-right">Successful Lysis</label>
+                                                      <div class="col-sm-8 col-md-8">
+                                                         <div class="YesOrNoButton" [ngClass]="{'disabled': CheckDisable('Thrombolysis_Successful_Lysis')}" btnRadioGroup formControlName="Thrombolysis_Successful_Lysis">
+                                                               <label class="hbtn hb-fill-left" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                               <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                               <mat-error [innerHTML]="GetFormControlErrorMessage('Thrombolysis_Successful_Lysis')"> </mat-error>
+                                                         </div>
+                                                      </div>
+                                                   </div>                                                      
+                                             </div>
+                                       </div>                                                
+                                    </div>                                          
+                                 </div>
+
+											 <!-- Reperfusion Markers-->
+											 <div class="container-Reperfusion-Markers" *ngIf="CheckSubJuniorCategoryVisibility('Reperfusion_Markers') && DynamicFGroup.get('Thrombolysis').value === 'Yes' && !IfPostThrombolysis">
+                                    <div class="tabpane-title">
+                                       <h5>Reperfusion Markers</h5>
+                                    </div>
+                                    <div class="container">
+                                       <div class="row">
+                                          <div *ngIf="CheckVisibility('Reperfusion_Markers')" class="form-group form-group-sm col-sm-12">
+                                                <div class="row">
+                                                   <label [ngClass]="{'lbl-required': CheckMandatory('Reperfusion_Markers')}" class="col-sm-4 col-md-3 col-form-label text-lg-right">Reperfusion Markers</label>
+                                                   <div class="col-sm-8 col-md-8">
+                                                      <div class="YesOrNoButton" [ngClass]="{'disabled': CheckDisable('Reperfusion_Markers')}" btnRadioGroup formControlName="Reperfusion_Markers">
+                                                            <label class="hbtn hb-fill-left" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                            <mat-error [innerHTML]="GetFormControlErrorMessage('Reperfusion_Markers')"> </mat-error>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                          </div>
+                                          <ng-container  *ngIf="DynamicFGroup.get('Reperfusion_Markers').value === 'Yes'" >
+                                             <div *ngIf="CheckVisibility('Ongoing_pain')" class="form-group form-group-sm col-sm-12">
+																<div class="row">
+																	<label [ngClass]="{'lbl-required': CheckMandatory('Ongoing_pain')}" class="col-sm-4 col-md-3 col-form-label text-lg-right">Chest pain resolution</label>
+																	<div class="col-sm-8 col-md-8">
+																		<div class="YesOrNoButton" [ngClass]="{'disabled': CheckDisable('Ongoing_pain')}" btnRadioGroup formControlName="Ongoing_pain">
+																				<label class="hbtn hb-fill-left" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+																				<label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+																				<mat-error [innerHTML]="GetFormControlErrorMessage('Ongoing_pain')"> </mat-error>
+																		</div>
+																	</div>
+																</div>
+                                             </div>
+															<div *ngIf="CheckVisibility('lessThan50_reduction_ST_elevation')" class="form-group form-group-sm col-sm-12">
+																<div class="row">
+																	<label [ngClass]="{'lbl-required': CheckMandatory('lessThan50_reduction_ST_elevation')}" class="col-sm-4 col-md-3 col-form-label text-lg-right"> ST segment resolution by 50% </label>
+																	<div class="col-sm-8 col-md-8">
+																		<div class="YesOrNoButton" [ngClass]="{'disabled': CheckDisable('lessThan50_reduction_ST_elevation')}" btnRadioGroup formControlName="lessThan50_reduction_ST_elevation">
+																				<label class="hbtn hb-fill-left" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+																				<label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+																				<mat-error [innerHTML]="GetFormControlErrorMessage('lessThan50_reduction_ST_elevation')"> </mat-error>
+																		</div>
+																	</div>
+																</div>
+                                             </div>
+															<div *ngIf="CheckVisibility('Haemodynamic_instability')" class="form-group form-group-sm col-sm-12">
+																<div class="row">
+																	<label [ngClass]="{'lbl-required': CheckMandatory('Haemodynamic_instability')}" class="col-sm-4 col-md-3 col-form-label text-lg-right"> Haemodynamic stability </label>
+																	<div class="col-sm-8 col-md-8">
+																		<div class="YesOrNoButton" [ngClass]="{'disabled': CheckDisable('Haemodynamic_instability')}" btnRadioGroup formControlName="Haemodynamic_instability">
+																				<label class="hbtn hb-fill-left" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+																				<label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+																				<mat-error [innerHTML]="GetFormControlErrorMessage('Haemodynamic_instability')"> </mat-error>
+																		</div>
+																	</div>
+																</div>
+                                             </div>
+															<div *ngIf="CheckVisibility('Electrical_instability')" class="form-group form-group-sm col-sm-12">
+																<div class="row">
+																	<label [ngClass]="{'lbl-required': CheckMandatory('Electrical_instability')}" class="col-sm-4 col-md-3 col-form-label text-lg-right"> Electrical stability </label>
+																	<div class="col-sm-8 col-md-8">
+																		<div class="YesOrNoButton" [ngClass]="{'disabled': CheckDisable('Electrical_instability')}" btnRadioGroup formControlName="Electrical_instability">
+																				<label class="hbtn hb-fill-left" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+																				<label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+																				<mat-error [innerHTML]="GetFormControlErrorMessage('Electrical_instability')"> </mat-error>
+																		</div>
+																	</div>
+																</div>
+                                             </div>
+														</ng-container>
+                                       </div>                                                
+                                    </div>                                          
+                                 </div>
+
+                                 <!-- Submit the Form -->
+                                 <div class="row">
+                                    <div *ngIf="!ReadonlyPage && !IfPostThrombolysis && !DisableThrombolysis" class="col-md-12">
+                                       <button type="button" *ngIf="ThrombolysisId === null && !FormUploading" (click)="ThrombolysisSubmit()" class="btn btn-outline-primary float-right save">Save & Continue</button>
+                                       <button type="button" *ngIf="ThrombolysisId !== null && !FormUploading"  (click)="ThrombolysisUpdate()" class="btn btn-outline-primary float-right save">Update & Continue</button>
+                                       <button *ngIf="FormUploading" type="button" class="btn btn-outline-primary float-right save uploading">
+                                          <i class="fa fa-spinner fa-pulse" aria-hidden="true"></i> Uploading...
+                                       </button>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>                       
+                        </div>
+                     </form>
+                  </div>
+               </mat-tab>
+               </mat-tab-group>
+            </div>
+         </div>
+      </ng-container>
+      <ng-container *ngIf="ContentLoading">
+         <div  class="tbl-loading-center loader-entry-page">
+            <div  id="inTurnFadingTextG">
+               <div  class="inTurnFadingTextG" id="inTurnFadingTextG_1">L</div>
+               <div  class="inTurnFadingTextG" id="inTurnFadingTextG_2">O</div>
+               <div  class="inTurnFadingTextG" id="inTurnFadingTextG_3">A</div>
+               <div  class="inTurnFadingTextG" id="inTurnFadingTextG_4">D</div>
+               <div  class="inTurnFadingTextG" id="inTurnFadingTextG_5">I</div>
+               <div  class="inTurnFadingTextG" id="inTurnFadingTextG_6">N</div>
+               <div  class="inTurnFadingTextG" id="inTurnFadingTextG_7">G</div>
+               <div  class="inTurnFadingTextG" id="inTurnFadingTextG_8">.</div>
+               <div  class="inTurnFadingTextG" id="inTurnFadingTextG_9">.</div>
+               <div  class="inTurnFadingTextG" id="inTurnFadingTextG_10">.</div>
+            </div>
+         </div>
+      </ng-container>
+   </div>
+</section>

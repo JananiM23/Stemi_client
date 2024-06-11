@@ -1,0 +1,42 @@
+.session-username {
+   color: #000000d9;
+}
+.session-title {
+   text-align: center;
+   width: 100%;
+   margin-bottom: 20px;
+   color: #ffffffb5;
+}
+.switch-account-container {
+   width: 100%;
+   text-align: center;
+   margin-bottom: 20px;
+}
+.switch-account-container a {
+   cursor: pointer;
+   color: #ffffffb5;
+   transition: 0.5s;
+}
+.switch-account-container a:hover {
+   color: #222;
+   transition: 0.5s;
+}
+.img-warning {
+   max-width: 20%;
+   margin: 15px;
+}
+
+.bk-clr-gradient {
+   background-image: linear-gradient(to left, #2f81d4 0%, #59c5ef 100%);
+}
+
+.modal-logo{
+   margin: 10px;
+   width: 100%;
+   text-align: center;
+}
+.modal-logo img{
+   /* padding: 10px 30px; */
+   box-shadow: 0px 0px 10px #0000001a;
+   border-radius: 0px;
+}

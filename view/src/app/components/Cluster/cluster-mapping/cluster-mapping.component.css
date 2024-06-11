@@ -1,0 +1,294 @@
+.map-canvas{ 
+   margin-top: 20px;
+   margin-bottom: 20px;
+   border: 1px solid rgba(0,0,0,.03);
+   box-shadow: 0 2px 2px rgba(0,0,0,.24), 0 0 2px rgba(0,0,0,.12);
+   margin: 4px;
+}
+.map-canvas agm-map {
+  width: 100%; 
+  height: 550px;
+}
+
+table.map-root-table tbody tr:first-child{
+   border-top: 1px solid #eee;
+}
+table.map-root-table tbody tr{
+   border-bottom: 1px solid #eee;
+}
+
+table.map-root-table tbody tr td:first-child, table.map-root-table tbody tr td:last-child {
+   width: 50px;
+   vertical-align: middle;
+}
+table.map-root-table tbody tr td:nth-child(2) {
+   width: 100px;
+   vertical-align: middle;
+}
+table.map-root-table tbody tr td:nth-child(2) label {
+   color: #2196F3;
+   text-decoration: underline;
+}
+table.map-root-table tbody tr td:nth-last-child(2) {
+   width: 250px;
+}
+table.map-root-table tbody tr td {
+   padding: 8px;
+   text-align: center;
+}
+table.map-root-table tbody tr td:last-child i.fa.fa-trash{
+   font-size : 20px;
+   cursor: pointer; 
+}
+table.map-root-table tbody tr td:last-child i.fa.fa-trash:hover {
+   color: #fe130f;
+   transition: 0.3s;
+}
+span.ambulence img {
+   width: 45px;
+   margin: 0 10px;
+}
+.ambulence-kms{
+   color: #2196F3;
+}
+
+span.root-title {
+   color: #ff110e;
+   letter-spacing: 0.3px;
+}
+
+
+.custom-info-window {
+   position: relative;
+   margin-bottom: 10px;
+}
+.custom-info-window .HosName {
+   font-size: 15px;
+   letter-spacing: 0.5px;
+   font-weight: 600;
+   color: #3c3e3c;
+   margin: 0px 0px 2px 0px;
+   background-color: #e4e4e4;
+   padding: 4px 60px 4px 4px;
+}
+.custom-info-window .HosName .InfoFullScreen{
+   position: absolute;
+   right: 5px;
+   top: 1px;
+   color: #006cd6;
+   height: 25px;
+   cursor: pointer;
+}
+.custom-info-window .HosAddress {
+   font-size: 13px;
+   font-weight: 400;
+   letter-spacing: 0.2px;
+   color: #717171;
+   margin: 0px;
+   max-width: 400px;
+   padding: 0px 4px;
+}
+.custom-info-window .Hospital-Lists{
+   max-height: 240px;
+   overflow: auto;
+}
+.custom-info-window .centerLink { 
+   margin: 30px 0px 20px 0px;
+   text-align: center;
+}
+.custom-info-window .centerLink span{ 
+   font-size: 14px;
+   font-weight: 600;
+   letter-spacing: 0.3px;
+   background: #fff;
+   background-image: linear-gradient(to right, #2f81d4 0, #59c5ef 100%);
+   color: #fff;
+   padding: 5px;
+   cursor: pointer;
+}
+.custom-info-window .centerLink span.remove{ 
+   background-image: linear-gradient(90deg, #ff1100, #ff9800 100%);
+}
+.custom-info-window .centerLink span:hover{
+   box-shadow: 2px 2px 1px #b1b1b1;
+}
+.custom-info-window .SubMenu {
+   margin: 0px;
+   font-size: 14px;
+   font-weight: 600;
+   color: #08539e;
+   /* line-height: 40px; */
+}
+.custom-info-window .SubMenu .AllRoutes{
+   position: absolute;
+   right: 0px;
+   font-size: 12px;
+   font-weight: 400;
+   cursor: pointer;
+   line-height: 20px;
+}
+.custom-info-window .Hubs {
+    display: grid;
+    grid-template-columns: 30px auto 40px;
+    background-color: #e4e4e4;
+    padding: 5px 10px;
+    align-items: center;
+    box-shadow: 4px 5px #d4d4d4;
+    margin: 0px 10px 10px 4px;
+}
+.custom-info-window .Hubs.Best {
+   background-color: #25b7007a;
+   box-shadow: 4px 5px #02a216b5;
+}
+.custom-info-window .Hubs .HubsSectionTwo .HubName {
+   font-size: 13px;
+   font-weight: 500;
+   letter-spacing: 0.2px;
+   color: #317cc7;
+   margin: 0px;
+}
+.custom-info-window .Hubs .HubsSectionTwo .HubDistance {
+   display: grid;
+   grid-template-columns: auto auto;
+   justify-content: center;
+   align-items: center;
+   grid-gap: 15px;
+}
+.custom-info-window .Hubs .HubsSectionTwo .HubDistance span {
+   display: grid;
+   grid-template-columns: auto auto;
+   align-items: center;
+   color: #828282;
+   font-weight: 500;
+   grid-gap: 5px;
+   font-size: 13px;
+}
+.custom-info-window .Hubs .HubsSectionTwo .HubDistance i {
+   color: #5a5a5a;
+}
+.custom-info-window .Hubs .HubsSectionThree {
+   display: grid;
+   grid-template-columns: auto;
+   justify-content: space-around;
+}
+.custom-info-window .Hubs .HubsSectionThree i{
+   background: #fff;
+   background-image: linear-gradient(to right, #2f81d4 0, #59c5ef 100%);
+   color: #fff;
+   padding: 2px;
+   cursor: pointer;
+}
+.custom-info-window .Hubs .HubsSectionThree i.remove{
+   background-image: linear-gradient(90deg, #ff1100, #ff9800 100%);
+}
+.custom-info-window .Hubs .HubsSectionThree i:hover{
+   box-shadow: 2px 2px 1px #b1b1b1;
+}
+.custom-info-window .MiniConfirmation{
+   position: absolute;
+   top: 0px;
+   background-color: rgb(255, 255, 255);
+   width: 100%;
+   height: 100%;
+}
+.custom-info-window .MiniConfirmation .ModelVerticalCenter{
+   position: absolute;
+   width: 100%;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   background: #efefef70;
+   padding: 10px 0px 0px 0px;
+}
+
+
+/* Hospital Hub modal screen start*/
+#ModalDom{
+   background-color: #ffffff;
+}
+.hospital-hub-list {
+   width: 100%;
+}
+.hospital-hub-list .SubMenu {
+   margin: 0px;
+   padding: 15px 0px 10px 0px;
+   font-size: 14px;
+   font-weight: 600;
+   color: #08539e;
+}
+.hubs {
+   display: grid;
+   grid-template-columns: 40px auto 90px;
+   background-color: #e4e4e4;
+   padding: 5px 10px;
+   align-items: center;
+   box-shadow: 4px 5px #d4d4d4;
+   margin: 0px 4px 10px 4px;
+}
+.hubList-container{
+   padding-top: 10px;
+   padding-bottom: 10px;
+}
+.hospital-address h5{
+   background: #e4e4e4;
+   padding: 10px;
+   text-align: center;
+   display: grid;
+   grid-template-columns: auto 30px 30px;
+}
+.hospital-address i{
+   float: right;
+   cursor: pointer;
+   color: #1e51d1;
+}
+.hospital-address address{
+   padding: 0 10px;
+   text-align: center;
+   margin: 0px;
+}
+.duration-km-time {
+   position: relative;
+   top: -7px;
+   left: 5px;
+   color: #828282;
+   font-weight: 500;
+}
+.hospital-hub-list i.material-icons{
+   color: #5a5a5a;
+}
+
+.close-button-hub {
+   position: absolute;
+   top: -20px;
+   background: #fff;
+   padding: 0px 2px;
+   right: -20px;
+   border-radius: 50%;
+   height: 30px;
+   width: 30px;
+   font-size: 25px;
+   line-height: 34px;
+   border: 1px solid #cacaca;
+   color: red;
+   cursor: pointer;
+   font-weight: 900;
+}
+.hospital-hub-list span.HubName {
+   font-size: 13px;
+   font-weight: 500;
+   letter-spacing: 0.2px;
+   color: #317cc7;
+   margin: 0px;
+}
+.close-button-hub i{
+   font-weight: 900;
+}
+.HubsSectionThree{
+   display: grid;
+}
+.HubsSectionThree .mat-icon{
+   color: #545454;
+}
+/* Hospital Hub modal screen end*/
+
+

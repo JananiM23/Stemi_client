@@ -1,0 +1,1769 @@
+<section>
+   <div class="row">
+      <ng-container *ngIf="!ContentLoading">
+         <div class="col-md-12 tab-pane-container">
+            <div class="row">
+            <mat-tab-group #tabs class="full-width" [selectedIndex]="CurrentTabIndex" (selectedIndexChange)="TabChangeEvent($event)">
+               <mat-tab label="Follow Up Details" class="full-width" [disabled]="CheckSubCategoryVisibility('Follow_Up_Details')">
+                  <div class="portlet-tab">
+                     <div class="portlet-tab-panelbody">
+                        <div class="row">
+                           <div class="col-md-12">
+                              <form *ngIf="CurrentTabIndex === 0 && FollowUpHistoryAvailable && FormLoaded " class="full-width" [formGroup]="HistoryFGroup">
+                                 <ng-container formArrayName="FollowUpArray">
+                                    <ng-container *ngFor="let FGroup of GetHistoryFormArray('FollowUpArray'); let i=index" [formGroupName]="i">
+                                       <div *ngIf="CheckSubJuniorCategoryVisibility('Follow_Up_Details_In_Month')" class="follow-up-details-in-one-one-month" >
+                                          <div class="tabpane-title">
+                                             <h5>Follow Up Details In {{FGroup.controls?.Follow_Up_Date?.value | date:'mediumDate'}} </h5>
+                                          </div>
+                                          <div *ngIf="!ReadonlyPage && !FGroup.controls['EditActivate'].value" class="quarterCircleTopRight" style="float:right">
+                                             <span (click)="EditHistoryArray('FollowUpArray', i)" class="col-action-icon special-icon" matTooltip="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></span>
+                                             <span (click)="deleteFollowUpHistory('FollowUpArray', i)" class="col-action-icon special-icon" matTooltip="Delete"><i class="fa fa-trash" aria-hidden="true"></i></span>
+                                          </div>  
+                                          <div class="container">
+                                             <div class="row">
+                                                <div *ngIf="CheckVisibility('Follow_Up_Date')" class="form-group form-group-sm col-sm-12">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Date')}" class="col-sm-5 col-md-4 col-form-label text-lg-right">Follow Up Date</label>
+                                                      <div class="col-sm-7 col-md-5">
+                                                         <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                            <input matInput (click)="follow_up_datepicker.open()" formControlName="Follow_Up_Date" (keypress)="NotAllow()" (keydown)="ClearInput($event)" [max] = "noFutureDate"  [matDatepicker] ="follow_up_datepicker" placeholder="Date">
+                                                            <mat-icon (click)="follow_up_datepicker.open()" matSuffix>event</mat-icon>
+                                                            <mat-datepicker touchUi #follow_up_datepicker></mat-datepicker>
+                                                            <mat-error  *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('FollowUpArray', i, 'Follow_Up_Date')"> </mat-error>   
+                                                         </mat-form-field>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                                <div *ngIf="CheckVisibility('Mode_Of_Follow_Up')" class="form-group form-group-sm col-sm-12">
+                                                   <div class="row">
+                                                   <label [ngClass]="{'lbl-required': CheckMandatory('Mode_Of_Follow_Up')}" class="col-sm-5 col-md-3 col-lg-4 col-form-label text-lg-right">Mode of Follow Up</label>
+                                                      <div class="col-sm-7 col-md-5">
+                                                         <div class="YesOrNoButton" [ngClass]="{'disabled': CheckDisable('Mode_Of_Follow_Up') || !FGroup.value.EditActivate}" (click)="checkHistoryFollowUpMode($event.target.innerText, i)" btnRadioGroup formControlName="Mode_Of_Follow_Up">
+                                                         <label class="hbtn hb-fill-right" btnRadio="Hospital" tabindex="0" role="button"> Hospital </label>
+                                                         <label class=" hbtn hb-fill-left" btnRadio="Telephonic" tabindex="0" role="button"> Telephonic </label>
+                                                         <label class="hbtn hb-fill-right" btnRadio="Lost_Follow_Up" tabindex="0" role="button"> Lost to Follow Up </label>
+                                                         <!-- <label class=" hbtn hb-fill-left" btnRadio="Residential_Visit" tabindex="0" role="button"> Residential Visit </label> -->
+																			<mat-error  *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('FollowUpArray', i, 'Mode_Of_Follow_Up')"> </mat-error>   
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                                <ng-container *ngIf="FGroup.controls['Mode_Of_Follow_Up'].value !== 'Lost_Follow_Up'">   
+                                                   <ng-container *ngIf="FGroup.controls['Mode_Of_Follow_Up'].value === 'Hospital' || FGroup.controls['Mode_Of_Follow_Up'].value === 'Telephonic' || FGroup.controls['Mode_Of_Follow_Up'].value === 'Residential_Visit'"> 
+                                                      <div *ngIf="CheckVisibility('Type_Of_Follow_Up_Hospital')" class="form-group form-group-sm col-sm-12">
+                                                         <div class="row">
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Type_Of_Follow_Up_Hospital')}" class="col-sm-5 col-md-3 col-lg-4 col-form-label text-lg-right">Hospital visited for follow-up</label>
+                                                            <div class="col-sm-7 col-md-5">
+                                                               <div class="YesOrNoButton" [ngClass]="{'disabled': CheckDisable('Type_Of_Follow_Up_Hospital') || !FGroup.value.EditActivate}" (click)="checkHistoryFollowUpHospital($event.target.innerText, i)" btnRadioGroup formControlName="Type_Of_Follow_Up_Hospital">
+                                                                  <label class="hbtn hb-fill-right" btnRadio="Cluster" tabindex="0" role="button"> Cluster </label>
+                                                                  <label class=" hbtn hb-fill-left" btnRadio="Non_Cluster" tabindex="0" role="button"> Referral Facility </label>
+                                                                  <label class="hbtn hb-fill-right" btnRadio="No_Follow_Up" tabindex="0" role="button"> Hospital not visited </label>
+                                                                  <!-- <mat-error [innerHTML]="GetFormControlErrorMessage('Type_Of_Follow_Up_Hospital')"> </mat-error>    -->
+																						<mat-error  *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('FollowUpArray', i, 'Type_Of_Follow_Up_Hospital')"> </mat-error>   
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                   </ng-container>    
+                                                   <ng-container *ngIf="FGroup.controls['Type_Of_Follow_Up_Hospital'].value === 'Cluster'">
+                                                      <div *ngIf="CheckVisibility('Name_Of_The_Stemi_Follow_Up_Cluster')" class="form-group form-group-sm col-sm-12">
+                                                         <div class="row">
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Name_Of_The_Stemi_Follow_Up_Cluster')}" class="col-sm-5 col-md-4 col-form-label text-lg-right">Name of the Cluster</label>
+                                                            <div class="col-sm-7 col-md-5">
+                                                               <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                                  <!-- <input matInput formControlName="Name_Of_The_Stemi_Follow_Up_Cluster" placeholder=""> -->
+																						<mat-select formControlName="Name_Of_The_Stemi_Follow_Up_Cluster" (selectionChange)="checkHistoryClusterType($event.value, i)" placeholder="Select">
+																							<mat-option value=" ">Select Cluster</mat-option>
+																							<mat-option *ngFor="let Cluster of ClusterList" [value]="Cluster._id"> {{Cluster.Cluster_Name}}</mat-option>
+																						</mat-select>
+																						<mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('FollowUpArray', i, 'Name_Of_The_Stemi_Follow_Up_Cluster')"> </mat-error>   
+                                                               </mat-form-field>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                      <div *ngIf="CheckVisibility('Name_Of_The_Stemi_Follow_Up_Hospital')" class="form-group form-group-sm col-sm-12">
+                                                         <div class="row">
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Name_Of_The_Stemi_Follow_Up_Hospital')}" class="col-sm-5 col-md-4 col-form-label text-lg-right">Name of the Stemi Follow Up Hospital</label>
+                                                            <div class="col-sm-7 col-md-5">
+                                                               <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                                  <!-- <input matInput formControlName="Name_Of_The_Stemi_Follow_Up_Hospital" placeholder=""> -->
+                                                                  <mat-select formControlName="Name_Of_The_Stemi_Follow_Up_Hospital" placeholder="Select" (selectionChange)="HistoryFilterAddress($event.value, i)">
+                                                                  <mat-option value="">Select Hospital</mat-option>
+                                                                  <mat-option *ngFor="let Hospital of HistoryHospitalList[i]" [value]="Hospital._id">{{Hospital.Hospital_Name}}</mat-option>
+                                                                  </mat-select>
+																						<mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('FollowUpArray', i, 'Name_Of_The_Stemi_Follow_Up_Hospital')"> </mat-error>   
+                                                               </mat-form-field>
+                                                            </div>
+                                                         </div>
+                                                      </div> 
+                                                   </ng-container>
+                                                   <ng-container *ngIf="FGroup.controls['Type_Of_Follow_Up_Hospital'].value === 'Non_Cluster'">
+                                                      <div *ngIf="CheckVisibility('Name_Of_The_Non_Stemi_Follow_Up_Hospital')" class="form-group form-group-sm col-sm-12">
+                                                         <div class="row">
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Name_Of_The_Non_Stemi_Follow_Up_Hospital')}" class="col-sm-5 col-md-4 col-form-label text-lg-right">Name of the Referral Facility Follow Up Hospital</label>
+                                                            <div class="col-sm-7 col-md-5">
+                                                               <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                               <input matInput formControlName="Name_Of_The_Non_Stemi_Follow_Up_Hospital" placeholder="">
+                                                               <mat-error  *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('FollowUpArray', i, 'Name_Of_The_Non_Stemi_Follow_Up_Hospital')"> </mat-error>   
+                                                               </mat-form-field>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                   </ng-container>
+                                                   <ng-container *ngIf="FGroup.controls['Type_Of_Follow_Up_Hospital'].value === 'Cluster' || FGroup.controls['Type_Of_Follow_Up_Hospital'].value === 'Non_Cluster'">  
+                                                      <div *ngIf="CheckVisibility('Location_Of_Follow_Up_Hospital')" class="form-group form-group-sm col-sm-12">
+                                                         <div class="row">
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Location_Of_Follow_Up_Hospital')}" class="col-sm-5 col-md-4 col-form-label text-lg-right">Location of Follow Up Hospital</label>
+                                                            <div class="col-sm-7 col-md-5">
+                                                               <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                                  <textarea formControlName="Location_Of_Follow_Up_Hospital" matInput placeholder="Address"></textarea>
+                                                                  <mat-error  *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('FollowUpArray', i, 'Location_Of_Follow_Up_Hospital')"> </mat-error>   
+                                                               </mat-form-field>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                   </ng-container>
+                                                </ng-container>                     
+                                                <ng-container *ngIf="FGroup.controls['Mode_Of_Follow_Up'].value === 'Lost_Follow_Up'">   
+                                                   <div *ngIf="CheckVisibility('Follow_Up_Comments')" class="form-group form-group-sm col-sm-12">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Comments')}" class="col-sm-5 col-md-4 col-form-label text-lg-right">Comments</label>
+                                                      <div class="col-sm-7 col-md-5">
+                                                         <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                         <textarea matInput formControlName="Follow_Up_Comments" placeholder=""></textarea>
+                                                         <mat-error  *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('FollowUpArray', i, 'Follow_Up_Comments')"> </mat-error>   
+                                                         </mat-form-field>
+                                                      </div>
+                                                   </div>
+                                                   </div>
+                                                </ng-container>  
+                                             </div>
+                                          </div>
+                                          <!--  -->
+                                          <div class="container-fluid no-margin ">
+                                             <div class="row">
+                                                <div *ngIf="!ReadonlyPage && FGroup.value.EditActivate" class="col-md-12 btns-flex-end">
+                                                   <button *ngIf="!SecondaryUpdating" type="button" (click)="resetFArrayHistory('FollowUpArray', i)" class="btn btn-outline-secondary cancel float-right save"> Cancel </button>
+                                                   <button *ngIf="!SecondaryUpdating && FGroup.get('_id').value !== null" [ngClass]="{'disabled': FGroup.status !== 'VALID'}" [disabled]="FGroup.status !== 'VALID'" (click)="FollowUpHistoryUpdate(i)" type="button" class="btn btn-outline-primary float-right save"> Update </button>
+                                                   <button *ngIf="SecondaryUpdating" type="button" class="btn btn-outline-primary float-right save uploading">
+                                                      <i class="fa fa-spinner fa-pulse" aria-hidden="true"></i> Uploading...
+                                                   </button>
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </ng-container>
+                                 </ng-container>
+                              </form>
+                              <ng-container *ngIf="!FollowUpReadOnly">
+                                 <form class="form-horizontal" *ngIf="CurrentTabIndex === 0 && FormLoaded" [formGroup]="DynamicFGroup">
+                                    <!--Follow Up Details In 1 Month -->
+                                    <div *ngIf="CheckSubJuniorCategoryVisibility('Follow_Up_Details_In_Month')" class="follow-up-details-in-one-one-month" >
+                                       <div class="tabpane-title">
+                                          <h5>Follow Up Details </h5>
+                                       </div>
+                                       <div class="container">
+                                          <div class="row">
+                                             <!-- <div *ngIf="CheckVisibility('Duration_Of_Follow_Up_Visit')" class="form-group form-group-sm col-sm-12">
+                                                <div class="row">
+                                                   <label [ngClass]="{'lbl-required': CheckMandatory('Duration_Of_Follow_Up_Visit')}" class="col-sm-5 col-md-4 col-form-label text-lg-right">Time interval between discharge and follow-up</label>
+                                                   <div class="col-sm-7 col-md-5">
+                                                      <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                         <mat-select formControlName="Duration_Of_Follow_Up_Visit" placeholder="Select Duration">
+                                                            <mat-option value="">Select Duration</mat-option>
+                                                            <mat-option *ngFor="let Duration of FollowupDuration;let i=index" [value]="Duration.Key">{{Duration.Name}}</mat-option>
+                                                         </mat-select>
+                                                         <mat-error [innerHTML]="GetFormControlErrorMessage('Duration_Of_Follow_Up_Visit')"> </mat-error>   
+                                                      </mat-form-field>
+                                                   </div>
+                                                </div>
+                                             </div> -->
+                                             <div *ngIf="CheckVisibility('Follow_Up_Date')" class="form-group form-group-sm col-sm-12">
+                                                <div class="row">
+                                                   <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Date')}" class="col-sm-5 col-md-4 col-form-label text-lg-right">Follow Up Date</label>
+                                                   <div class="col-sm-7 col-md-5">
+                                                      <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                         <input matInput (click)="follow_up_datepicker.open()" formControlName="Follow_Up_Date" (keypress)="NotAllow()" (keydown)="ClearInput($event)" [max] = "noFutureDate"  [matDatepicker] ="follow_up_datepicker" placeholder="Date">
+                                                         <mat-icon (click)="follow_up_datepicker.open()" matSuffix>event</mat-icon>
+                                                         <mat-datepicker touchUi #follow_up_datepicker></mat-datepicker>
+                                                         <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Date')"> </mat-error>   
+                                                      </mat-form-field>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                             <div *ngIf="CheckVisibility('Mode_Of_Follow_Up')" class="form-group form-group-sm col-sm-12">
+                                                <div class="row">
+                                                <label [ngClass]="{'lbl-required': CheckMandatory('Mode_Of_Follow_Up')}" class="col-sm-5 col-md-3 col-lg-4 col-form-label text-lg-right">Mode of Follow Up</label>
+                                                   <div class="col-sm-7 col-md-5">
+                                                      <div class="YesOrNoButton" btnRadioGroup formControlName="Mode_Of_Follow_Up" (click)="checkFollowUpMode($event.target.innerText)" [ngClass]="{'disabled': CheckDisable('Mode_Of_Follow_Up')}">
+                                                      <label class="hbtn hb-fill-right" btnRadio="Hospital" tabindex="0" role="button"> Hospital </label>
+                                                      <label class=" hbtn hb-fill-left" btnRadio="Telephonic" tabindex="0" role="button"> Telephonic </label>
+                                                      <label class="hbtn hb-fill-right" btnRadio="Lost_Follow_Up" tabindex="0" role="button"> Lost to Follow Up </label>
+                                                      <!-- <label class=" hbtn hb-fill-left" btnRadio="Residential_Visit" tabindex="0" role="button"> Residential Visit </label> -->
+                                                      <mat-error [innerHTML]="GetFormControlErrorMessage('Mode_Of_Follow_Up')"> </mat-error>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                             <ng-container *ngIf="DynamicFGroup.get('Mode_Of_Follow_Up').value !== 'Lost_Follow_Up'">   
+                                                <ng-container *ngIf="DynamicFGroup.get('Mode_Of_Follow_Up').value === 'Hospital' || DynamicFGroup.get('Mode_Of_Follow_Up').value === 'Telephonic' || DynamicFGroup.get('Mode_Of_Follow_Up').value === 'Residential_Visit'"> 
+                                                   <div *ngIf="CheckVisibility('Type_Of_Follow_Up_Hospital')" class="form-group form-group-sm col-sm-12">
+                                                      <div class="row">
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Type_Of_Follow_Up_Hospital')}" class="col-sm-5 col-md-3 col-lg-4 col-form-label text-lg-right">Hospital visited for follow-up</label>
+                                                         <div class="col-sm-7 col-md-5">
+                                                            <div class="YesOrNoButton" btnRadioGroup formControlName="Type_Of_Follow_Up_Hospital" (click)="checkFollowUpHospital($event.target.innerText)" [ngClass]="{'disabled': CheckDisable('Type_Of_Follow_Up_Hospital')}">
+                                                               <label class="hbtn hb-fill-right" btnRadio="Cluster" tabindex="0" role="button"> Cluster </label>
+                                                               <label class=" hbtn hb-fill-left" btnRadio="Non_Cluster" tabindex="0" role="button"> Referral Facility</label>
+                                                               <label class="hbtn hb-fill-right" btnRadio="No_Follow_Up" tabindex="0" role="button"> Hospital not visited </label>
+                                                               <mat-error [innerHTML]="GetFormControlErrorMessage('Type_Of_Follow_Up_Hospital')"> </mat-error>   
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </ng-container>    
+                                                <ng-container *ngIf="DynamicFGroup.get('Type_Of_Follow_Up_Hospital').value === 'Cluster'">
+                                                   <div *ngIf="CheckVisibility('Name_Of_The_Stemi_Follow_Up_Cluster')" class="form-group form-group-sm col-sm-12">
+                                                      <div class="row">
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Name_Of_The_Stemi_Follow_Up_Cluster')}" class="col-sm-5 col-md-4 col-form-label text-lg-right">Name of the Cluster</label>
+                                                         <div class="col-sm-7 col-md-5">
+                                                            <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                            <mat-select formControlName="Name_Of_The_Stemi_Follow_Up_Cluster" placeholder="Select" (selectionChange)="checkClusterType($event.value)">
+                                                               <mat-option value=" ">Select Cluster</mat-option>
+                                                               <mat-option *ngFor="let Cluster of ClusterList" [value]="Cluster._id"> {{Cluster.Cluster_Name}}</mat-option>
+                                                            </mat-select>
+                                                            <mat-error [innerHTML]="GetFormControlErrorMessage('Name_Of_The_Stemi_Follow_Up_Cluster')"> </mat-error>   
+                                                            </mat-form-field>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                   <div *ngIf="CheckVisibility('Name_Of_The_Stemi_Follow_Up_Hospital')" class="form-group form-group-sm col-sm-12">
+                                                      <div class="row">
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Name_Of_The_Stemi_Follow_Up_Hospital')}" class="col-sm-5 col-md-4 col-form-label text-lg-right">Name of the Stemi Follow Up Hospital</label>
+                                                         <div class="col-sm-7 col-md-5">
+                                                            <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                               <mat-select formControlName="Name_Of_The_Stemi_Follow_Up_Hospital" placeholder="Select" (selectionChange)="FilterAddress($event.value)">
+                                                               <mat-option value="" >Select Hospital</mat-option>
+                                                               <mat-option *ngFor="let Hospital of HospitalList" [value]="Hospital._id">{{Hospital.Hospital_Name}}</mat-option>
+                                                               </mat-select>
+                                                               <mat-error [innerHTML]="GetFormControlErrorMessage('Name_Of_The_Stemi_Follow_Up_Hospital')"> </mat-error>   
+                                                            </mat-form-field>
+                                                         </div>
+                                                      </div>
+                                                   </div> 
+                                                </ng-container>
+                                                <ng-container *ngIf="DynamicFGroup.get('Type_Of_Follow_Up_Hospital').value === 'Non_Cluster'">
+                                                   <div *ngIf="CheckVisibility('Name_Of_The_Non_Stemi_Follow_Up_Hospital')" class="form-group form-group-sm col-sm-12">
+                                                      <div class="row">
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Name_Of_The_Non_Stemi_Follow_Up_Hospital')}" class="col-sm-5 col-md-4 col-form-label text-lg-right">Name of the Referral-Facility Follow Up Hospital</label>
+                                                         <div class="col-sm-7 col-md-5">
+                                                            <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                            <input matInput formControlName="Name_Of_The_Non_Stemi_Follow_Up_Hospital" placeholder="">
+                                                            <mat-error [innerHTML]="GetFormControlErrorMessage('Name_Of_The_Non_Stemi_Follow_Up_Hospital')"> </mat-error>   
+                                                            </mat-form-field>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </ng-container>
+                                                <ng-container *ngIf="DynamicFGroup.get('Type_Of_Follow_Up_Hospital').value === 'Cluster' || DynamicFGroup.get('Type_Of_Follow_Up_Hospital').value === 'Non_Cluster'">  
+                                                   <div *ngIf="CheckVisibility('Location_Of_Follow_Up_Hospital')" class="form-group form-group-sm col-sm-12">
+                                                      <div class="row">
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Location_Of_Follow_Up_Hospital')}" class="col-sm-5 col-md-4 col-form-label text-lg-right">Location of Follow Up Hospital</label>
+                                                         <div class="col-sm-7 col-md-5">
+                                                            <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                               <textarea formControlName="Location_Of_Follow_Up_Hospital" matInput placeholder="Address"></textarea>
+                                                               <mat-error [innerHTML]="GetFormControlErrorMessage('Location_Of_Follow_Up_Hospital')"> </mat-error>   
+                                                            </mat-form-field>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </ng-container> 
+                                             </ng-container>                     
+                                             <ng-container *ngIf="DynamicFGroup.get('Mode_Of_Follow_Up').value === 'Lost_Follow_Up'">   
+                                                <div *ngIf="CheckVisibility('Follow_Up_Comments')" class="form-group form-group-sm col-sm-12">
+                                                <div class="row">
+                                                   <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Comments')}" class="col-sm-5 col-md-4 col-form-label text-lg-right">Comments</label>
+                                                   <div class="col-sm-7 col-md-5">
+                                                      <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                      <textarea matInput formControlName="Follow_Up_Comments" placeholder=""></textarea>
+                                                      <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Comments')"> </mat-error>   
+                                                      </mat-form-field>
+                                                   </div>
+                                                </div>
+                                                </div>
+                                             </ng-container>  
+                                          </div>
+                                       </div>
+                                    </div>                                  
+                                    <!-- Submit the Form -->
+                                    <div class="row">
+                                       <div *ngIf="!ReadonlyPage" class="col-md-12">
+                                       <!-- <button type="button" *ngIf="FollowupId === null && !FormUploading" (click)="FollowUpSubmit()" class="btn btn-outline-primary float-right save">Save & Continue</button> -->
+                                       <button class="btn btn-outline-primary float-right save" (click)="FollowUpSubmit()">
+                                          {{ isEditMode? 'Update & Continue' : 'Save & Continue' }}
+                                        </button>
+                                       <button type="button" *ngIf="FollowupId !== null && !FormUploading" (click)="FollowUpUpdate()" class="btn btn-outline-primary float-right save">Update & Continue</button>
+                                       <button *ngIf="FormUploading" type="button" class="btn btn-outline-primary float-right save uploading">
+                                          <i class="fa fa-spinner fa-pulse" aria-hidden="true"></i> Uploading...
+                                       </button>
+                                    </div>
+                                    </div>    
+                                 </form>
+                              </ng-container>
+                           </div>
+                        </div>                         
+                     </div>
+                  </div>
+               </mat-tab>
+               
+               <mat-tab label="Medication" class="full-width" [disabled]="CheckSubCategoryVisibility('Medication')">
+                  <div class="portlet-tab">
+                     <div class="portlet-tab-panelbody">
+                        <div class="row">
+                           <div class="col-md-12">
+                              <!-- Read Only Form -->
+                              <form *ngIf="CurrentTabIndex === 1 && FollowUpHistoryAvailable && FormLoaded" class="full-width" [formGroup]="HistoryFGroup">
+                                 <ng-container formArrayName="MedicationArray">
+                                    <ng-container *ngFor="let FGroup of GetHistoryFormArray('MedicationArray'); let i=index" [formGroupName]="i">
+                                       <div *ngIf="CheckSubJuniorCategoryVisibility('Medication_In_Month')" class="medication-in-one-month">
+                                          <div class="tabpane-title">
+                                             <h5>Medication In {{FGroup.controls?.Follow_Up_Date?.value | date:'mediumDate'}} </h5>
+                                          </div>
+                                          <div *ngIf="!ReadonlyPage && !FGroup.controls['EditActivate'].value" class="quarterCircleTopRight" style="float:right">
+                                             <span (click)="EditHistoryArray('MedicationArray', i)" class="col-action-icon special-icon" matTooltip="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></span>
+                                             <span (click)="deleteMedicationHistory('MedicationArray', i)" class="col-action-icon special-icon" matTooltip="Delete"><i class="fa fa-trash" aria-hidden="true"></i></span>
+                                          </div>
+                                          <div class="container">
+                                             <div class="row">
+                                                <div *ngIf="CheckVisibility('Follow_Up_Medication_Aspirin')" class="form-group form-group-sm col-sm-6">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Medication_Aspirin')}" class="col-lg-3 col-md-4 col-sm-6 col-form-label text-lg-right">Aspirin</label>
+                                                      <div class="col-lg-9 col-md-8 col-sm-6">
+                                                         <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Follow_Up_Medication_Aspirin">
+                                                            <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                            <mat-error  *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('MedicationArray', i, 'Follow_Up_Medication_Aspirin')"> </mat-error>   
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                                <div *ngIf="CheckVisibility('Follow_Up_Medication_Clopidogrel')"  class="form-group form-group-sm col-sm-6">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Medication_Clopidogrel')}" class="col-lg-3 col-md-4 col-sm-6 col-form-label text-lg-right">Clopidogrel</label>
+                                                      <div class="col-lg-9 col-md-8 col-sm-6">
+                                                         <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Follow_Up_Medication_Clopidogrel">
+                                                            <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                            <mat-error  *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('MedicationArray', i, 'Follow_Up_Medication_Clopidogrel')"> </mat-error>   
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                                <div *ngIf="CheckVisibility('Follow_Up_Medication_Prasugral')"  class="form-group form-group-sm col-sm-6">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Medication_Prasugral')}" class="col-lg-3 col-md-4 col-sm-6 col-form-label text-lg-right">Prasugrel</label>
+                                                      <div class="col-lg-9 col-md-8 col-sm-6">
+                                                         <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Follow_Up_Medication_Prasugral">
+                                                            <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                            <mat-error  *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('MedicationArray', i, 'Follow_Up_Medication_Prasugral')"> </mat-error>   
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                                <div *ngIf="CheckVisibility('Follow_Up_Medication_Nitrate')"  class="form-group form-group-sm col-sm-6">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Medication_Nitrate')}" class="col-lg-3 col-md-4 col-sm-6 col-form-label text-lg-right">Nitrate</label>
+                                                      <div class="col-lg-9 col-md-8 col-sm-6">
+                                                         <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Follow_Up_Medication_Nitrate">
+                                                            <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                            <mat-error  *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('MedicationArray', i, 'Follow_Up_Medication_Nitrate')"> </mat-error>   
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                                <div *ngIf="CheckVisibility('Follow_Up_Medication_Betablocker')"  class="form-group form-group-sm col-sm-6">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Medication_Betablocker')}" class="col-lg-3 col-md-4 col-sm-6 col-form-label text-lg-right">Betablocker</label>
+                                                      <div class="col-lg-9 col-md-8 col-sm-6">
+                                                         <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Follow_Up_Medication_Betablocker">
+                                                            <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                            <mat-error  *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('MedicationArray', i, 'Follow_Up_Medication_Betablocker')"> </mat-error>   
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                                <div *ngIf="CheckVisibility('Follow_Up_Medication_ACEI')"  class="form-group form-group-sm col-sm-6">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Medication_ACEI')}" class="col-lg-3 col-md-4 col-sm-6 col-form-label text-lg-right">ACEI</label>
+                                                      <div class="col-lg-9 col-md-8 col-sm-6">
+                                                         <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Follow_Up_Medication_ACEI">
+                                                            <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                            <mat-error  *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('MedicationArray', i, 'Follow_Up_Medication_ACEI')"> </mat-error>   
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                                <div *ngIf="CheckVisibility('Follow_Up_Medication_ARB')"  class="form-group form-group-sm col-sm-6">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Medication_ARB')}" class="col-lg-3 col-md-4 col-sm-6 col-form-label text-lg-right">ARB</label>
+                                                      <div class="col-lg-9 col-md-8 col-sm-6">
+                                                         <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Follow_Up_Medication_ARB">
+                                                            <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                            <mat-error  *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('MedicationArray', i, 'Follow_Up_Medication_ARB')"> </mat-error>   
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                                <div *ngIf="CheckVisibility('Follow_Up_Medication_Statins')"  class="form-group form-group-sm col-sm-6">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Medication_Statins')}" class="col-lg-3 col-md-4 col-sm-6 col-form-label text-lg-right">Statins</label>
+                                                      <div class="col-lg-9 col-md-8 col-sm-6">
+                                                         <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Follow_Up_Medication_Statins">
+                                                            <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                            <mat-error  *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('MedicationArray', i, 'Follow_Up_Medication_Statins')"> </mat-error>   
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                                <div *ngIf="CheckVisibility('Follow_Up_Medication_OHA')"  class="form-group form-group-sm col-sm-6">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Medication_OHA')}" class="col-lg-3 col-md-4 col-sm-6 col-form-label text-lg-right">OHA</label>
+                                                      <div class="col-lg-9 col-md-8 col-sm-6">
+                                                         <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Follow_Up_Medication_OHA">
+                                                            <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                            <mat-error  *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('MedicationArray', i, 'Follow_Up_Medication_OHA')"> </mat-error>   
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                                <div *ngIf="CheckVisibility('Follow_Up_Medication_Insulin')"  class="form-group form-group-sm col-sm-6">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Medication_Insulin')}" class="col-lg-3 col-md-4 col-sm-6 col-form-label text-lg-right">Insulin</label>
+                                                      <div class="col-lg-9 col-md-8 col-sm-6">
+                                                         <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Follow_Up_Medication_Insulin">
+                                                            <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                            <mat-error  *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('MedicationArray', i, 'Follow_Up_Medication_Insulin')"> </mat-error>   
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                          </div>
+                                           <!--  -->
+                                           <div class="container-fluid no-margin ">
+                                             <div class="row">
+                                                <div *ngIf="!ReadonlyPage && FGroup.value.EditActivate" class="col-md-12 btns-flex-end">
+                                                   <button *ngIf="!SecondaryUpdating" type="button" (click)="resetFArrayHistory('MedicationArray', i)" class="btn btn-outline-secondary cancel float-right save"> Cancel </button>
+                                                   <button *ngIf="!SecondaryUpdating && FGroup.get('_id').value !== null" [ngClass]="{'disabled': FGroup.status !== 'VALID'}" [disabled]="FGroup.status !== 'VALID'" (click)="FollowUpMedicationHistoryUpdate(i)" type="button" class="btn btn-outline-primary float-right save"> Update </button>
+                                                   <button *ngIf="!SecondaryUpdating && FGroup.get('_id').value === null" [ngClass]="{'disabled': FGroup.status !== 'VALID'}" [disabled]="FGroup.status !== 'VALID'" (click)="FollowUpMedicationHistoryCreate(i)" type="button" class="btn btn-outline-primary float-right save"> Submit </button>
+                                                   <button *ngIf="SecondaryUpdating" type="button" class="btn btn-outline-primary float-right save uploading">
+                                                      <i class="fa fa-spinner fa-pulse" aria-hidden="true"></i> Uploading...
+                                                   </button>
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </ng-container>
+                                 </ng-container>
+                              </form>
+                              <!-- Editable Form -->
+                              <ng-container *ngIf="!MedicationReadOnly">
+                                 <form class="form-horizontal" *ngIf="CurrentTabIndex === 1 && FormLoaded" [formGroup]="DynamicFGroup">
+                                    <div *ngIf="CheckSubJuniorCategoryVisibility('Medication_In_Month')" class="medication-in-one-month">
+                                       <div class="tabpane-title">
+                                          <h5>Medication In {{ShowMonthOfMedication | date:'mediumDate'}}</h5>
+                                       </div>
+                                       <div class="container">
+                                          <div class="row">
+                                             <div *ngIf="CheckVisibility('Follow_Up_Medication_Aspirin')" class="form-group form-group-sm col-sm-6">
+                                                <div class="row">
+                                                   <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Medication_Aspirin')}" class="col-lg-3 col-md-4 col-sm-6 col-form-label text-lg-right">Aspirin</label>
+                                                   <div class="col-lg-9 col-md-8 col-sm-6">
+                                                      <div class="YesOrNoButton" btnRadioGroup formControlName="Follow_Up_Medication_Aspirin"  [ngClass]="{'disabled': CheckDisable('Follow_Up_Medication_Aspirin')}">
+                                                         <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                         <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                         <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Medication_Aspirin')"> </mat-error>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                             <div *ngIf="CheckVisibility('Follow_Up_Medication_Clopidogrel')"  class="form-group form-group-sm col-sm-6">
+                                                <div class="row">
+                                                   <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Medication_Clopidogrel')}" class="col-lg-3 col-md-4 col-sm-6 col-form-label text-lg-right">Clopidogrel</label>
+                                                   <div class="col-lg-9 col-md-8 col-sm-6">
+                                                      <div class="YesOrNoButton" btnRadioGroup formControlName="Follow_Up_Medication_Clopidogrel" [ngClass]="{'disabled': CheckDisable('Follow_Up_Medication_Clopidogrel')}">
+                                                         <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                         <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                         <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Medication_Clopidogrel')"> </mat-error>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                             <div *ngIf="CheckVisibility('Follow_Up_Medication_Prasugral')"  class="form-group form-group-sm col-sm-6">
+                                                <div class="row">
+                                                   <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Medication_Prasugral')}" class="col-lg-3 col-md-4 col-sm-6 col-form-label text-lg-right">Prasugrel</label>
+                                                   <div class="col-lg-9 col-md-8 col-sm-6">
+                                                      <div class="YesOrNoButton" btnRadioGroup formControlName="Follow_Up_Medication_Prasugral" [ngClass]="{'disabled': CheckDisable('Follow_Up_Medication_Prasugral')}">
+                                                         <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                         <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                         <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Medication_Prasugral')"> </mat-error>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                             <div *ngIf="CheckVisibility('Follow_Up_Medication_Nitrate')"  class="form-group form-group-sm col-sm-6">
+                                                <div class="row">
+                                                   <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Medication_Nitrate')}" class="col-lg-3 col-md-4 col-sm-6 col-form-label text-lg-right">Nitrate</label>
+                                                   <div class="col-lg-9 col-md-8 col-sm-6">
+                                                      <div class="YesOrNoButton" btnRadioGroup formControlName="Follow_Up_Medication_Nitrate" [ngClass]="{'disabled': CheckDisable('Follow_Up_Medication_Nitrate')}">
+                                                         <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                         <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                         <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Medication_Nitrate')"> </mat-error>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                             <div *ngIf="CheckVisibility('Follow_Up_Medication_Betablocker')"  class="form-group form-group-sm col-sm-6">
+                                                <div class="row">
+                                                   <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Medication_Betablocker')}" class="col-lg-3 col-md-4 col-sm-6 col-form-label text-lg-right">Betablocker</label>
+                                                   <div class="col-lg-9 col-md-8 col-sm-6">
+                                                      <div class="YesOrNoButton" btnRadioGroup formControlName="Follow_Up_Medication_Betablocker" [ngClass]="{'disabled': CheckDisable('Follow_Up_Medication_Betablocker')}">
+                                                         <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                         <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                         <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Medication_Betablocker')"> </mat-error>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                             <div *ngIf="CheckVisibility('Follow_Up_Medication_ACEI')"  class="form-group form-group-sm col-sm-6">
+                                                <div class="row">
+                                                   <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Medication_ACEI')}" class="col-lg-3 col-md-4 col-sm-6 col-form-label text-lg-right">ACEI</label>
+                                                   <div class="col-lg-9 col-md-8 col-sm-6">
+                                                      <div class="YesOrNoButton" btnRadioGroup formControlName="Follow_Up_Medication_ACEI" [ngClass]="{'disabled': CheckDisable('Follow_Up_Medication_ACEI')}">
+                                                         <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                         <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                         <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Medication_ACEI')"></mat-error>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                             <div *ngIf="CheckVisibility('Follow_Up_Medication_ARB')"  class="form-group form-group-sm col-sm-6">
+                                                <div class="row">
+                                                   <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Medication_ARB')}" class="col-lg-3 col-md-4 col-sm-6 col-form-label text-lg-right">ARB</label>
+                                                   <div class="col-lg-9 col-md-8 col-sm-6">
+                                                      <div class="YesOrNoButton" btnRadioGroup formControlName="Follow_Up_Medication_ARB" [ngClass]="{'disabled': CheckDisable('Follow_Up_Medication_ARB')}">
+                                                         <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                         <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                         <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Medication_ARB')"></mat-error>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                             <div *ngIf="CheckVisibility('Follow_Up_Medication_Statins')"  class="form-group form-group-sm col-sm-6">
+                                                <div class="row">
+                                                   <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Medication_Statins')}" class="col-lg-3 col-md-4 col-sm-6 col-form-label text-lg-right">Statins</label>
+                                                   <div class="col-lg-9 col-md-8 col-sm-6">
+                                                      <div class="YesOrNoButton" btnRadioGroup formControlName="Follow_Up_Medication_Statins"  [ngClass]="{'disabled': CheckDisable('Follow_Up_Medication_Statins')}">
+                                                         <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                         <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                         <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Medication_Statins')"> </mat-error>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                             <div *ngIf="CheckVisibility('Follow_Up_Medication_OHA')"  class="form-group form-group-sm col-sm-6">
+                                                <div class="row">
+                                                   <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Medication_OHA')}" class="col-lg-3 col-md-4 col-sm-6 col-form-label text-lg-right">OHA</label>
+                                                   <div class="col-lg-9 col-md-8 col-sm-6">
+                                                      <div class="YesOrNoButton" btnRadioGroup formControlName="Follow_Up_Medication_OHA" [ngClass]="{'disabled': CheckDisable('Follow_Up_Medication_OHA')}">
+                                                         <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                         <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                         <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Medication_OHA')"> </mat-error>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                             <div *ngIf="CheckVisibility('Follow_Up_Medication_Insulin')"  class="form-group form-group-sm col-sm-6">
+                                                <div class="row">
+                                                   <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Medication_Insulin')}" class="col-lg-3 col-md-4 col-sm-6 col-form-label text-lg-right">Insulin</label>
+                                                   <div class="col-lg-9 col-md-8 col-sm-6">
+                                                      <div class="YesOrNoButton" btnRadioGroup formControlName="Follow_Up_Medication_Insulin" [ngClass]="{'disabled': CheckDisable('Follow_Up_Medication_Insulin')}">
+                                                         <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                         <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                         <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Medication_Insulin')"> </mat-error>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                    <!-- Submit the Form -->
+                                    <div class="row">
+                                       <div *ngIf="!ReadonlyPage && !SecondaryEdit" class="col-md-12">
+                                          <button type="button" *ngIf="FollowupMedicationId === null && !FormUploading" (click)="FollowUpMedicationSubmit()" class="btn btn-outline-primary float-right save">Save & Continue</button>
+                                          <button type="button" *ngIf="FollowupMedicationId !== null && !FormUploading" (click)="FollowUpMedicationUpdate()" class="btn btn-outline-primary float-right save">Update & Continue</button>
+                                          <button *ngIf="FormUploading" type="button" class="btn btn-outline-primary float-right save uploading">
+                                             <i class="fa fa-spinner fa-pulse" aria-hidden="true"></i> Uploading...
+                                          </button>
+                                       </div>
+                                    </div>  
+                                 </form>
+                              </ng-container>
+                           </div>
+                        </div>                    
+                     </div>
+                  </div>
+               </mat-tab>
+
+               <mat-tab label="Events" class="full-width" [disabled]="CheckSubCategoryVisibility('Events')">
+                  <div class="portlet-tab">
+                     <div class="portlet-tab-panelbody">
+                        <div class="row">
+                           <div class="col-md-12">
+                           <!-- Read Only Form -->
+                              <form *ngIf="CurrentTabIndex === 2 && FollowUpHistoryAvailable && FormLoaded" class="full-width" [formGroup]="HistoryFGroup">
+                                 <ng-container formArrayName="EventsArray">
+                                    <ng-container *ngFor="let FGroup of GetHistoryFormArray('EventsArray'); let i=index" [formGroupName]="i">
+                                       <div *ngIf="CheckSubJuniorCategoryVisibility('Events_In_Month')" class="events-in-one-month">
+                                          <div class="tabpane-title">
+                                             <h5>Events In {{FGroup.controls?.Follow_Up_Date?.value | date:'mediumDate'}} </h5>
+                                          </div>
+                                          <div *ngIf="!ReadonlyPage && !FGroup.controls['EditActivate'].value" class="quarterCircleTopRight" style="float:right">
+                                             <span (click)="EditHistoryArray('EventsArray', i)" class="col-action-icon special-icon" matTooltip="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></span>
+                                             <span (click)="deleteHistoryArray('EventsArray', i)" class="col-action-icon special-icon" matTooltip="Delete"><i class="fa fa-trash" aria-hidden="true"></i></span>
+                                          </div>
+                                          <div class="container" *ngIf="CheckSubJuniorCategoryVisibility('Events_In_Month')">
+                                             <div class="row">
+
+                                                <div *ngIf="CheckVisibility('Follow_Up_Events_Readmission')"  class="form-group form-group-sm col-sm-12">
+                                                   <div class="row">
+                                                      <div class="col-md-6 col-sm-12">
+                                                         <div class="row">  
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Readmission')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Readmission</label>
+                                                            <div class="col-sm-6">
+                                                               <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Follow_Up_Events_Readmission">
+                                                                  <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                                  <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                                  <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('EventsArray', i, 'Follow_Up_Events_Readmission')"> </mat-error>   
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                      </div> 
+                                                   </div>
+                                                </div>
+
+                                                <div *ngIf="CheckVisibility('Follow_Up_Events_Readmission_Reason') && FGroup.controls['Follow_Up_Events_Readmission'].value === 'Yes'" class="form-group form-group-sm col-sm-12">
+                                                   <div class="row">
+                                                      <div class="col-md-6 col-sm-12">
+                                                         <div class="row">  
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Readmission_Reason')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Readmission Reason</label>
+                                                            <div class="col-sm-6">
+                                                               <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                                  <input matInput formControlName="Follow_Up_Events_Readmission_Reason" placeholder="">
+                                                                  <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('EventsArray', i, 'Follow_Up_Events_Readmission_Reason')"> </mat-error>   
+                                                               </mat-form-field>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-md-6 col-sm-12">
+                                                         <div class="row">  
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Readmission_Date')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Readmission Date</label>
+                                                            <div class="col-sm-6">
+                                                               <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                                  <input matInput formControlName="Follow_Up_Events_Readmission_Date" (click)="Readmission_datepicker.open()" [max] = "noFutureDate"  [matDatepicker] ="Readmission_datepicker" placeholder="Date">
+                                                                  <mat-icon (click)="Readmission_datepicker.open()" matSuffix>event </mat-icon>
+                                                                  <mat-datepicker touchUi #Readmission_datepicker></mat-datepicker>
+                                                                  <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('EventsArray', i, 'Follow_Up_Events_Readmission_Date')"> </mat-error>   
+                                                               </mat-form-field>
+                                                            </div>
+                                                         </div>
+                                                      </div> 
+                                                   </div>
+                                                </div>
+
+                                                <div *ngIf="CheckVisibility('Follow_Up_Events_Additional_cardiac_procedures')"  class="form-group form-group-sm col-sm-12">
+                                                   <div class="row">
+                                                      <div class="col-md-6 col-sm-12">
+                                                         <div class="row">  
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Additional_cardiac_procedures')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Additional cardiac procedures</label>
+                                                            <div class="col-sm-6">
+                                                               <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Follow_Up_Events_Additional_cardiac_procedures">
+                                                                  <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                                  <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                                  <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('EventsArray', i, 'Follow_Up_Events_Additional_cardiac_procedures')"> </mat-error>   
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                      </div> 
+                                                   </div>
+                                                </div>
+
+                                                <ng-container *ngIf="FGroup.controls['Follow_Up_Events_Additional_cardiac_procedures'].value === 'Yes'">
+                                                   <div *ngIf="CheckVisibility('Follow_Up_Events_CABG')" class="form-group form-group-sm col-sm-12">
+                                                      <div class="row">
+                                                         <div class="col-md-6 col-sm-12">
+                                                            <div class="row">  
+                                                               <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_CABG')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">CABG</label>
+                                                               <div class="col-sm-6">
+                                                                  <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Follow_Up_Events_CABG">
+                                                                     <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                                     <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                                     <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('EventsArray', i, 'Follow_Up_Events_CABG')"> </mat-error>   
+                                                                  </div>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                         <div *ngIf="FGroup.controls['Follow_Up_Events_CABG'].value === 'Yes'" class="col-md-6 col-sm-12">
+                                                            <div class="row">  
+                                                               <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_CABG_Date')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">CABG Date</label>
+                                                               <div class="col-sm-6">
+                                                                  <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                                     <input matInput formControlName="Follow_Up_Events_CABG_Date" (click)="CABG_datepicker.open()" [max] = "noFutureDate"  [matDatepicker] ="CABG_datepicker" placeholder="Date">
+                                                                     <mat-icon (click)="CABG_datepicker.open()" matSuffix>event </mat-icon>
+                                                                     <mat-datepicker touchUi #CABG_datepicker></mat-datepicker>
+                                                                     <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('EventsArray', i, 'Follow_Up_Events_CABG_Date')"> </mat-error>   
+                                                                  </mat-form-field>
+                                                               </div>
+                                                            </div>
+                                                         </div> 
+                                                      </div>
+                                                   </div>
+
+                                                   <div *ngIf="CheckVisibility('Follow_Up_Events_PCI')" class="form-group form-group-sm col-sm-12">
+                                                      <div class="row">
+                                                         <div class="col-md-6 col-sm-12">
+                                                            <div class="row">  
+                                                               <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_PCI')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">PCI</label>
+                                                               <div class="col-sm-6">
+                                                                  <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Follow_Up_Events_PCI">
+                                                                     <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                                     <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                                     <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('EventsArray', i, 'Follow_Up_Events_PCI')"> </mat-error>   
+                                                                  </div>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                         <div *ngIf="FGroup.controls['Follow_Up_Events_PCI'].value === 'Yes'" class="col-md-6 col-sm-12">
+                                                            <div class="row">  
+                                                               <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_PCI_Date')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">PCI Date</label>
+                                                               <div class="col-sm-6">
+                                                                  <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                                     <input matInput formControlName="Follow_Up_Events_PCI_Date" (click)="PCI_datepicker.open()" [max] = "noFutureDate"  [matDatepicker] ="PCI_datepicker" placeholder="Date">
+                                                                     <mat-icon (click)="PCI_datepicker.open()" matSuffix>event </mat-icon>
+                                                                     <mat-datepicker touchUi #CABG_datepicker></mat-datepicker>
+                                                                     <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('EventsArray', i, 'Follow_Up_Events_PCI_Date')"> </mat-error>   
+                                                                  </mat-form-field>
+                                                               </div>
+                                                            </div>
+                                                         </div> 
+                                                      </div>
+                                                   </div>
+
+                                                   <div *ngIf="CheckVisibility('Follow_Up_Events_Others')"  class="form-group form-group-sm col-sm-12">
+                                                      <div class="row">
+                                                         <div class="col-md-6 col-sm-12">
+                                                            <div class="row">  
+                                                               <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Others')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right"> Others </label>
+                                                               <div class="col-sm-6">
+                                                                  <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Follow_Up_Events_Others">
+                                                                     <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                                     <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                                     <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('EventsArray', i, 'Follow_Up_Events_Others')"> </mat-error>   
+                                                                  </div>
+                                                               </div>
+                                                            </div>
+                                                         </div> 
+                                                      </div>
+                                                   </div>
+
+                                                   <ng-container *ngIf="FGroup.controls['Follow_Up_Events_Others'].value === 'Yes'">
+                                                      <div *ngIf="CheckVisibility('Follow_Up_Events_Specify_Others')" class="form-group form-group-sm col-sm-12">
+                                                         <div class="row">
+                                                            <div class="col-md-6 col-sm-12">
+                                                               <div class="row">  
+                                                                  <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Specify_Others')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Specify Others</label>
+                                                                  <div class="col-sm-6">
+                                                                     <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                                        <input matInput formControlName="Follow_Up_Events_Specify_Others" placeholder="">
+                                                                        <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('EventsArray', i, 'Follow_Up_Events_Specify_Others')"> </mat-error>   
+                                                                     </mat-form-field>
+                                                                  </div>
+                                                               </div>
+                                                            </div>
+                                                            <div class="col-md-6 col-sm-12">
+                                                               <div class="row">  
+                                                                  <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Others_Date')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Date</label>
+                                                                  <div class="col-sm-6">
+                                                                     <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                                        <input matInput formControlName="Follow_Up_Events_Others_Date" (click)="Other_datepicker.open()" [max] = "noFutureDate"  [matDatepicker] ="Other_datepicker" placeholder="Date">
+                                                                        <mat-icon (click)="Other_datepicker.open()" matSuffix>event </mat-icon>
+                                                                        <mat-datepicker touchUi #Other_datepicker></mat-datepicker>
+                                                                        <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('EventsArray', i, 'Follow_Up_Events_Others_Date')"> </mat-error>   
+                                                                     </mat-form-field>
+                                                                  </div>
+                                                               </div>
+                                                            </div> 
+                                                         </div>
+                                                      </div>
+                                                   </ng-container>
+                                                   
+                                                </ng-container>
+
+
+                                                <div *ngIf="CheckVisibility('Follow_Up_Events_Recurrence_Of_Angina')"  class="form-group form-group-sm col-sm-12">
+                                                   <div class="row">
+                                                   <div class="col-md-6 col-sm-12">
+                                                      <div class="row">  
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Recurrence_Of_Angina')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Recurrence of Angina</label>
+                                                         <div class="col-sm-6">
+                                                            <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Follow_Up_Events_Recurrence_Of_Angina">
+                                                               <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                               <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                               <mat-error  *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('EventsArray', i, 'Follow_Up_Events_Recurrence_Of_Angina')"> </mat-error>   
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                   </div> 
+                                                   </div>
+                                                </div>
+
+                                                <div *ngIf="CheckVisibility('Follow_Up_Events_TMT')"  class="form-group form-group-sm col-sm-12">
+                                                   <div class="row">
+                                                   <div class="col-md-6 col-sm-12">
+                                                      <div class="row">  
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_TMT')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">TMT</label>
+                                                         <div class="col-sm-5">
+                                                            <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Follow_Up_Events_TMT">
+                                                               <label class="hbtn hb-fill-right" btnRadio="positive" tabindex="0" role="button">+ ve</label>
+                                                               <label class="hbtn hb-fill-left" btnRadio="negative" tabindex="0" role="button">- ve</label>
+                                                               <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('EventsArray', i, 'Follow_Up_Events_TMT')"> </mat-error>   
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                   </div>                                
+                                                </div>
+
+                                                <div *ngIf="CheckVisibility('Follow_Up_Events_Echo_LVEF')"  class="form-group form-group-sm col-sm-12">
+                                                   <div class="row">
+                                                   <div class="col-md-6 col-sm-12">
+                                                      <div class="row">  
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Echo_LVEF')}" class="col-sm-6 col-md-4 col-form-label text-lg-right">Echo LVEF</label>
+                                                         <div class="col-sm-6">
+                                                            <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                               <input matInput formControlName="Follow_Up_Events_Echo_LVEF" placeholder="">
+                                                               <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('EventsArray', i, 'Follow_Up_Events_Echo_LVEF')"> </mat-error>   
+                                                            </mat-form-field>
+                                                         </div>
+                                                      </div>
+                                                   </div> 
+                                                   </div>                                   
+                                                </div>
+
+                                                <div *ngIf="CheckVisibility('Follow_Up_Events_Re_CART')"  class="form-group form-group-sm col-sm-12">
+                                                   <div class="row">
+                                                   <div *ngIf="CheckVisibility('Follow_Up_Events_Re_CART')"  class="col-md-6 col-sm-12">
+                                                      <div class="row">
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Re_CART')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Repeat Angiogram</label>
+                                                         <div class="col-sm-6">
+                                                            <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Follow_Up_Events_Re_CART" >
+                                                               <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                               <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                               <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('EventsArray', i, 'Follow_Up_Events_Re_CART')"> </mat-error>   
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                   <ng-container *ngIf="FGroup.controls['Follow_Up_Events_Re_CART'].value === 'Yes'">
+                                                      <div *ngIf="CheckVisibility('Follow_Up_Events_Re_CART_Date')"  class="col-md-6 col-sm-12">
+                                                         <div class="row">
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Re_CART_Date')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Repeat Angiogram Date</label>
+                                                         <div class="col-sm-6">
+                                                            <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                               <input matInput formControlName="Follow_Up_Events_Re_CART_Date" (click)="re_cart_datepicker.open()" [max] = "noFutureDate"  [matDatepicker] ="re_cart_datepicker" placeholder="Date">
+                                                               <mat-icon (click)="re_cart_datepicker.open()" matSuffix>event </mat-icon>
+                                                               <mat-datepicker touchUi #re_cart_datepicker></mat-datepicker>
+                                                               <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('EventsArray', i, 'Follow_Up_Events_Re_CART_Date')"> </mat-error>   
+                                                            </mat-form-field>
+                                                         </div>
+                                                         </div>
+                                                      </div>  
+                                                   </ng-container>                                          
+                                                   </div>
+                                                </div>
+
+                                                <div *ngIf="CheckVisibility('Follow_Up_Events_Restenosis')"  class="form-group form-group-sm col-sm-12">
+                                                   <div class="row">
+                                                   <div *ngIf="CheckVisibility('Follow_Up_Events_Restenosis')"  class="col-md-6 col-sm-12">
+                                                      <div class="row">
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Restenosis')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Restenosis</label>
+                                                         <div class="col-sm-6">
+                                                         <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Follow_Up_Events_Restenosis">
+                                                            <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                            <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('EventsArray', i, 'Follow_Up_Events_Restenosis')"> </mat-error>   
+                                                         </div>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                   <ng-container *ngIf="FGroup.controls['Follow_Up_Events_Restenosis'].value === 'Yes'">
+                                                      <div *ngIf="CheckVisibility('Follow_Up_Events_Restenosis_Date')"  class="col-md-6 col-sm-12">
+                                                         <div class="row">
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Restenosis_Date')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Restenosis Date</label>
+                                                         <div class="col-sm-6">
+                                                            <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                               <input matInput (click)="restenosis_datepicker.open()" formControlName="Follow_Up_Events_Restenosis_Date" [max] = "noFutureDate"  [matDatepicker] ="restenosis_datepicker" placeholder="Date">
+                                                               <mat-icon (click)="restenosis_datepicker.open()" matSuffix>event </mat-icon>
+                                                               <mat-datepicker touchUi #restenosis_datepicker></mat-datepicker>
+                                                               <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('EventsArray', i, 'Follow_Up_Events_Restenosis_Date')"> </mat-error>   
+                                                            </mat-form-field>
+                                                         </div>
+                                                         </div>
+                                                      </div>   
+                                                   </ng-container>                                         
+                                                   </div>
+                                                </div>
+
+                                                <div *ngIf="CheckVisibility('Follow_Up_Events_Re_MI')"  class="form-group form-group-sm col-sm-12">
+                                                   <div class="row">
+                                                   <div *ngIf="CheckVisibility('Follow_Up_Events_Re_MI')"  class="col-md-6 col-sm-12">
+                                                      <div class="row">
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Re_MI')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Re-MI</label>
+                                                         <div class="col-sm-6">
+                                                            <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Follow_Up_Events_Re_MI" >
+                                                               <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                               <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                               <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('EventsArray', i, 'Follow_Up_Events_Re_MI')"> </mat-error>   
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                   <ng-container *ngIf="FGroup.controls['Follow_Up_Events_Re_MI'].value === 'Yes'">
+                                                      <div *ngIf="CheckVisibility('Follow_Up_Events_Re_MI_Date')"  class="col-md-6 col-sm-12">
+                                                         <div class="row">
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Re_MI_Date')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Re-MI Date</label>
+                                                         <div class="col-sm-6">
+                                                            <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                               <input matInput (click)="Re_MI_datepicker.open()" formControlName="Follow_Up_Events_Re_MI_Date" [max] = "noFutureDate"  [matDatepicker] ="Re_MI_datepicker" placeholder="Date">
+                                                               <mat-icon (click)="Re_MI_datepicker.open()" matSuffix>event</mat-icon>
+                                                               <mat-datepicker touchUi #Re_MI_datepicker></mat-datepicker>
+                                                               <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('EventsArray', i, 'Follow_Up_Events_Re_MI_Date')"> </mat-error>   
+                                                            </mat-form-field>
+                                                         </div>
+                                                         </div>
+                                                      </div> 
+                                                   </ng-container>                                           
+                                                   </div>
+                                                </div>
+
+                                                <div *ngIf="CheckVisibility('Follow_Up_Events_Re_Intervention')"  class="form-group form-group-sm col-sm-12">
+                                                   <div class="row">
+                                                   <div class="col-md-6 col-sm-12">
+                                                      <div class="row margin-bottom-10">
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Re_Intervention')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Re-Intervention</label>
+                                                         <div class="col-sm-6">
+                                                         <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Follow_Up_Events_Re_Intervention" >
+                                                            <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                            <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('EventsArray', i, 'Follow_Up_Events_Re_Intervention')"> </mat-error>   
+                                                         </div>
+                                                         </div>
+                                                      </div>
+                                                   </div> 
+                                                   </div>                                   
+                                                </div>
+                                                <ng-container *ngIf="FGroup.controls['Follow_Up_Events_Re_Intervention'].value === 'Yes'">
+                                                   <div *ngIf="CheckVisibility('Follow_Up_Events_TLR_PCI1')"  class="form-group form-group-sm col-sm-12">
+                                                   <div class="row">
+                                                      <div *ngIf="CheckVisibility('Follow_Up_Events_TLR_PCI1')"  class="col-md-6 col-sm-12">
+                                                         <div class="row">
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_TLR_PCI1')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">TLR PCI1</label>
+                                                         <div class="col-sm-6">
+                                                            <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Follow_Up_Events_TLR_PCI1" >
+                                                               <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                               <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                               <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('EventsArray', i, 'Follow_Up_Events_TLR_PCI1')"> </mat-error>   
+                                                            </div>
+                                                         </div>
+                                                         </div>
+                                                      </div>
+                                                      <ng-container *ngIf="FGroup.controls['Follow_Up_Events_TLR_PCI1'].value === 'Yes'">
+                                                         <div *ngIf="CheckVisibility('Follow_Up_Events_TLR_PCI1_Date')"  class="col-md-6 col-sm-12">
+                                                         <div class="row">
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_TLR_PCI1_Date')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">TLR PCI Date</label>
+                                                            <div class="col-sm-6">
+                                                               <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                               <input matInput (click)="TLR_PCI1_datepicker.open()" formControlName="Follow_Up_Events_TLR_PCI1_Date" [max] = "noFutureDate"  [matDatepicker] ="TLR_PCI1_datepicker" placeholder="Date">
+                                                               <mat-icon (click)="TLR_PCI1_datepicker.open()" matSuffix>event</mat-icon>
+                                                               <mat-datepicker touchUi #TLR_PCI1_datepicker></mat-datepicker>
+                                                               <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('EventsArray', i, 'Follow_Up_Events_TLR_PCI1_Date')"> </mat-error>   
+                                                               </mat-form-field>
+                                                            </div>
+                                                         </div>
+                                                         </div> 
+                                                      </ng-container>                                           
+                                                   </div>
+                                                   </div>
+
+                                                   <div *ngIf="CheckVisibility('Follow_Up_Events_TVR_PCI')"  class="form-group form-group-sm col-sm-12">
+                                                   <div class="row">
+                                                      <div *ngIf="CheckVisibility('Follow_Up_Events_TVR_PCI')"  class="col-md-6 col-sm-12">
+                                                         <div class="row">
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_TVR_PCI')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">TVR PCI</label>
+                                                         <div class="col-sm-6">
+                                                            <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Follow_Up_Events_TVR_PCI" >
+                                                               <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                               <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                               <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('EventsArray', i, 'Follow_Up_Events_TVR_PCI')"> </mat-error>   
+                                                            </div>
+                                                         </div>
+                                                         </div>
+                                                      </div>
+                                                      <ng-container *ngIf="FGroup.controls['Follow_Up_Events_TVR_PCI'].value === 'Yes'">
+                                                         <div *ngIf="CheckVisibility('Follow_Up_Events_TVR_PCI_Date')"  class="col-md-6 col-sm-12">
+                                                         <div class="row">
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_TVR_PCI_Date')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">TVR PCI Date</label>
+                                                               <div class="col-sm-6">
+                                                               <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                                  <input matInput (click)="TVR_PCI_datepicker.open()" formControlName="Follow_Up_Events_TVR_PCI_Date" [max] = "noFutureDate"  [matDatepicker] ="TVR_PCI_datepicker" placeholder="Date">
+                                                                  <mat-icon (click)="TVR_PCI_datepicker.open()" matSuffix>event</mat-icon>
+                                                                  <mat-datepicker touchUi #TVR_PCI_datepicker></mat-datepicker>
+                                                                  <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('EventsArray', i, 'Follow_Up_Events_TVR_PCI_Date')"> </mat-error>   
+                                                               </mat-form-field>
+                                                               </div>
+                                                         </div>
+                                                         </div> 
+                                                      </ng-container>                                           
+                                                   </div>
+                                                   </div>
+
+                                                   <div *ngIf="CheckVisibility('Follow_Up_Events_Non_TVR_PCI')"  class="form-group form-group-sm col-sm-12">
+                                                   <div class="row">
+                                                      <div *ngIf="CheckVisibility('Follow_Up_Events_Non_TVR_PCI')"  class="col-md-6 col-sm-12">
+                                                         <div class="row">
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Non_TVR_PCI')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Non TVR PCI</label>
+                                                         <div class="col-sm-6">
+                                                            <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Follow_Up_Events_Non_TVR_PCI">
+                                                               <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                               <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                               <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('EventsArray', i, 'Follow_Up_Events_Non_TVR_PCI')"> </mat-error>   
+                                                            </div>
+                                                         </div>
+                                                         </div>
+                                                      </div>
+                                                      <ng-container *ngIf="FGroup.controls['Follow_Up_Events_Non_TVR_PCI'].value === 'Yes'">
+                                                         <div *ngIf="CheckVisibility('Follow_Up_Events_Non_TVR_PCI_Date')"  class="col-md-6 col-sm-12">
+                                                         <div class="row">
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Non_TVR_PCI_Date')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Non TVR PCI  Date</label>
+                                                            <div class="col-sm-6">
+                                                               <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                               <input matInput (click)="NOT_TVR_PCI_datepicker.open()" formControlName="Follow_Up_Events_Non_TVR_PCI_Date" [max] = "noFutureDate"  [matDatepicker] ="NOT_TVR_PCI_datepicker" placeholder="Date">
+                                                               <mat-icon (click)="NOT_TVR_PCI_datepicker.open()" matSuffix>event </mat-icon>
+                                                               <mat-datepicker touchUi #NOT_TVR_PCI_datepicker></mat-datepicker>
+                                                               <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('EventsArray', i, 'Follow_Up_Events_Non_TVR_PCI_Date')"> </mat-error>   
+                                                               </mat-form-field>
+                                                            </div>
+                                                         </div>
+                                                         </div>   
+                                                      </ng-container>                                         
+                                                   </div>
+                                                   </div>
+                                                </ng-container>
+
+                                                <div *ngIf="CheckVisibility('Follow_Up_Events_Stroke')"  class="form-group form-group-sm col-sm-12">
+                                                   <div class="row">
+                                                   <div *ngIf="CheckVisibility('Follow_Up_Events_Stroke')"  class="col-md-6 col-sm-12">
+                                                      <div class="row">
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Stroke')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Stroke</label>
+                                                         <div class="col-sm-6">
+                                                         <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Follow_Up_Events_Stroke" >
+                                                            <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                            <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('EventsArray', i, 'Follow_Up_Events_Stroke')"> </mat-error>   
+                                                         </div>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                   <ng-container *ngIf="FGroup.controls['Follow_Up_Events_Stroke'].value === 'Yes'">
+                                                      <div *ngIf="CheckVisibility('Follow_Up_Events_Stroke_Date')"  class="col-md-6 col-sm-12">
+                                                         <div class="row">
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Stroke_Date')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Stroke Date</label>
+                                                            <div class="col-sm-6">
+                                                               <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                               <input matInput (click)="Stroke_datepicker.open()" formControlName="Follow_Up_Events_Stroke_Date" [max] = "noFutureDate"  [matDatepicker] ="Stroke_datepicker" placeholder="Date">
+                                                               <mat-icon (click)="Stroke_datepicker.open()" matSuffix>event</mat-icon>
+                                                               <mat-datepicker touchUi #Stroke_datepicker></mat-datepicker>
+                                                               <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('EventsArray', i, 'Follow_Up_Events_Stroke_Date')"> </mat-error>   
+                                                               </mat-form-field>
+                                                         </div>
+                                                         </div>
+                                                      </div>   
+                                                   </ng-container>                                         
+                                                   </div>
+                                                </div>
+
+                                                <div *ngIf="CheckVisibility('Follow_Up_Death')"  class="form-group form-group-sm col-sm-12">
+                                                   <div class="row">
+                                                   <div *ngIf="CheckVisibility('Follow_Up_Death')"  class="col-md-6 col-sm-12">
+                                                      <div class="row">
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Death')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Death</label>
+                                                         <div class="col-sm-6">
+                                                            <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Follow_Up_Death">
+                                                               <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                               <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                               <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('EventsArray', i, 'Follow_Up_Death')"> </mat-error>   
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+																	<ng-container *ngIf="FGroup.controls['Follow_Up_Death'].value === 'Yes'">
+                                                      <div *ngIf="CheckVisibility('Follow_Up_Death_Date')"  class="col-md-6 col-sm-12">
+                                                         <div class="row">
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Death_Date')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Death Date</label>
+                                                            <div class="col-sm-6">
+                                                               <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                               <input matInput (click)="Death_datepicker.open()" formControlName="Follow_Up_Death_Date" [max] = "noFutureDate"  [matDatepicker] ="Death_datepicker" placeholder="Date">
+                                                               <mat-icon (click)="Death_datepicker.open()" matSuffix>event</mat-icon>
+                                                               <mat-datepicker touchUi #Death_datepicker></mat-datepicker>
+                                                               <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('EventsArray', i, 'Follow_Up_Death_Date')"> </mat-error>   
+                                                               </mat-form-field>
+                                                         </div>
+                                                         </div>
+                                                      </div>   
+                                                   </ng-container> 
+                                                   <ng-container *ngIf="FGroup.controls['Follow_Up_Death'].value === 'Yes'">
+                                                      <div *ngIf="CheckVisibility('Follow_Up_Reason_Of_Death')"  class="col-md-6 col-sm-12">
+                                                         <div class="row">
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Reason_Of_Death')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Reason of Death</label>
+                                                            <div class="col-sm-6">
+                                                            <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Follow_Up_Reason_Of_Death">
+                                                               <label class="hbtn hb-fill-right" btnRadio="Cardiac" tabindex="0" role="button"> Cardiac </label>
+                                                               <label class="hbtn hb-fill-left" btnRadio="Non-Cardiac" tabindex="0" role="button"> Non-Cardiac </label>
+                                                               <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('EventsArray', i, 'Follow_Up_Reason_Of_Death')"> </mat-error>   
+                                                            </div>
+                                                         </div>
+                                                         </div>
+                                                      </div>    
+                                                   </ng-container>
+                                                   </div>
+                                                </div>
+                                                <div *ngIf="CheckVisibility('Follow_Up_Event_Comments')"  class="form-group form-group-sm col-sm-12">
+                                                   <div class="row">
+                                                      <div class="col-md-6 col-sm-12">
+                                                         <div class="row">  
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Event_Comments')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Comments</label>
+                                                            <div class="col-sm-6">
+                                                               <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                               <textarea matInput formControlName="Follow_Up_Event_Comments" placeholder=""></textarea>
+                                                               <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('EventsArray', i, 'Follow_Up_Event_Comments')"> </mat-error>   
+                                                               </mat-form-field>
+                                                            </div>
+                                                         </div>
+                                                      </div> 
+                                                   </div>                                   
+                                                </div>  
+                                             </div>
+                                          </div>
+                                          <!--  -->
+                                          <div class="container-fluid no-margin ">
+                                             <div class="row">
+                                                <div *ngIf="!ReadonlyPage && FGroup.value.EditActivate" class="col-md-12 btns-flex-end">
+                                                   <button *ngIf="!SecondaryUpdating" type="button" (click)="resetFArrayHistory('EventsArray', i)" class="btn btn-outline-secondary cancel float-right save"> Cancel </button>
+                                                   <button *ngIf="!SecondaryUpdating && FGroup.get('_id').value !== null" [ngClass]="{'disabled': FGroup.status !== 'VALID'}" [disabled]="FGroup.status !== 'VALID'" (click)="FollowUpEventsHistoryUpdate(i)" type="button" class="btn btn-outline-primary float-right save"> Update </button>
+                                                   <button *ngIf="!SecondaryUpdating && FGroup.get('_id').value === null" [ngClass]="{'disabled': FGroup.status !== 'VALID'}" [disabled]="FGroup.status !== 'VALID'" (click)="FollowUpEventsHistoryCreate(i)" type="button" class="btn btn-outline-primary float-right save"> Submit </button>
+                                                   <button *ngIf="SecondaryUpdating" type="button" class="btn btn-outline-primary float-right save uploading">
+                                                      <i class="fa fa-spinner fa-pulse" aria-hidden="true"></i> Uploading...
+                                                   </button>
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </ng-container>
+                                 </ng-container>
+                              </form>
+                           <!-- Editable Form -->
+                              <ng-container *ngIf="!EventsReadOnly">
+                                 <form class="form-horizontal" *ngIf="CurrentTabIndex === 2 && FormLoaded" [formGroup]="DynamicFGroup">
+                                    <div class="events-in-one-month">
+                                       <div class="tabpane-title">
+                                          <h5>Events In {{ShowMonthOfEvent | date:'mediumDate'}}</h5>
+                                       </div>
+                                       <div class="container" *ngIf="CheckSubJuniorCategoryVisibility('Events_In_Month')">
+                                          <div class="row">
+
+                                             <div *ngIf="CheckVisibility('Follow_Up_Events_Readmission')"  class="form-group form-group-sm col-sm-12">
+                                                <div class="row">
+                                                   <div class="col-md-6 col-sm-12">
+                                                      <div class="row">  
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Readmission')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Readmission</label>
+                                                         <div class="col-sm-6">
+                                                            <div class="YesOrNoButton" btnRadioGroup formControlName="Follow_Up_Events_Readmission" [ngClass]="{'disabled': CheckDisable('Follow_Up_Events_Readmission')}">
+                                                               <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                               <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                               <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Events_Readmission')"> </mat-error>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                   </div> 
+                                                </div>
+                                             </div>
+                                             <ng-container *ngIf="DynamicFGroup.controls['Follow_Up_Events_Readmission'].value === 'Yes'">
+                                                <div *ngIf="CheckVisibility('Follow_Up_Events_Readmission_Reason') || CheckMandatory('Follow_Up_Events_Readmission_Date')"  class="form-group form-group-sm col-sm-12">
+                                                   <div class="row">
+                                                      <div class="col-md-6 col-sm-12" *ngIf="CheckVisibility('Follow_Up_Events_Readmission_Reason')">
+                                                         <div class="row">  
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Readmission_Reason')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right"> Reason </label>
+                                                            <div class="col-sm-6">
+                                                               <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                                  <input matInput formControlName="Follow_Up_Events_Readmission_Reason" placeholder="">
+                                                                  <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Events_Readmission_Reason')"> </mat-error>   
+                                                               </mat-form-field>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-md-6 col-sm-12" *ngIf="CheckVisibility('Follow_Up_Events_Readmission_Date')">
+                                                         <div class="row">  
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Readmission_Date')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Readmission Date</label>
+                                                            <div class="col-sm-6">
+                                                               <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                                  <input matInput formControlName="Follow_Up_Events_Readmission_Date" (click)="Readmission_datepicker.open()" [max] = "noFutureDate"  [matDatepicker] ="Readmission_datepicker" placeholder="Date">
+                                                                  <mat-icon (click)="Readmission_datepicker.open()" matSuffix>event </mat-icon>
+                                                                  <mat-datepicker touchUi #Readmission_datepicker></mat-datepicker>
+                                                                  <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Events_Readmission_Date')"> </mat-error>   
+                                                               </mat-form-field>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </ng-container>
+
+
+                                             <div *ngIf="CheckVisibility('Follow_Up_Events_Additional_cardiac_procedures')"  class="form-group form-group-sm col-sm-12">
+                                                <div class="row">
+                                                   <div class="col-md-6 col-sm-12">
+                                                      <div class="row">  
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Additional_cardiac_procedures')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Additional cardiac procedures</label>
+                                                         <div class="col-sm-6">
+                                                            <div class="YesOrNoButton" btnRadioGroup formControlName="Follow_Up_Events_Additional_cardiac_procedures" [ngClass]="{'disabled': CheckDisable('Follow_Up_Events_Additional_cardiac_procedures')}">
+                                                               <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                               <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                               <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Events_Additional_cardiac_procedures')"> </mat-error>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                   </div> 
+                                                </div>
+                                             </div>
+                                             <ng-container *ngIf="DynamicFGroup.controls['Follow_Up_Events_Additional_cardiac_procedures'].value === 'Yes'">
+                                                <div *ngIf="CheckVisibility('Follow_Up_Events_CABG') || CheckMandatory('Follow_Up_Events_CABG_Date')"  class="form-group form-group-sm col-sm-12">
+                                                   <div class="row">
+                                                      <div class="col-md-6 col-sm-12" *ngIf="CheckVisibility('Follow_Up_Events_CABG')">
+                                                         <div class="row">  
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_CABG')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right"> CABG </label>
+                                                            <div class="col-sm-6">
+                                                               <div class="YesOrNoButton" btnRadioGroup formControlName="Follow_Up_Events_CABG" [ngClass]="{'disabled': CheckDisable('Follow_Up_Events_CABG')}">
+                                                                  <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                                  <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                                  <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Events_CABG')"> </mat-error>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-md-6 col-sm-12" *ngIf="CheckVisibility('Follow_Up_Events_CABG_Date') && DynamicFGroup.controls['Follow_Up_Events_CABG'].value === 'Yes'">
+                                                         <div class="row">  
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_CABG_Date')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">CABG Date</label>
+                                                            <div class="col-sm-6">
+                                                               <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                                  <input matInput formControlName="Follow_Up_Events_CABG_Date" (click)="CABG_datepicker.open()" [max] = "noFutureDate"  [matDatepicker] ="CABG_datepicker" placeholder="Date">
+                                                                  <mat-icon (click)="CABG_datepicker.open()" matSuffix>event </mat-icon>
+                                                                  <mat-datepicker touchUi #CABG_datepicker></mat-datepicker>
+                                                                  <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Events_CABG_Date')"> </mat-error>   
+                                                               </mat-form-field>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                                <div *ngIf="CheckVisibility('Follow_Up_Events_PCI') || CheckMandatory('Follow_Up_Events_PCI_Date')"  class="form-group form-group-sm col-sm-12">
+                                                   <div class="row">
+                                                      <div class="col-md-6 col-sm-12" *ngIf="CheckVisibility('Follow_Up_Events_PCI')">
+                                                         <div class="row">  
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_PCI')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right"> PCI </label>
+                                                            <div class="col-sm-6">
+                                                               <div class="YesOrNoButton" btnRadioGroup formControlName="Follow_Up_Events_PCI" [ngClass]="{'disabled': CheckDisable('Follow_Up_Events_PCI')}">
+                                                                  <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                                  <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                                  <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Events_PCI')"> </mat-error>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                      <div class="col-md-6 col-sm-12" *ngIf="CheckVisibility('Follow_Up_Events_PCI_Date') && DynamicFGroup.controls['Follow_Up_Events_PCI'].value === 'Yes'">
+                                                         <div class="row">  
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_PCI_Date')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">PCI Date</label>
+                                                            <div class="col-sm-6">
+                                                               <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                                  <input matInput formControlName="Follow_Up_Events_PCI_Date" (click)="PCI_datepicker.open()" [max] = "noFutureDate"  [matDatepicker] ="PCI_datepicker" placeholder="Date">
+                                                                  <mat-icon (click)="PCI_datepicker.open()" matSuffix>event </mat-icon>
+                                                                  <mat-datepicker touchUi #PCI_datepicker></mat-datepicker>
+                                                                  <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Events_PCI_Date')"> </mat-error>   
+                                                               </mat-form-field>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                                <div *ngIf="CheckVisibility('Follow_Up_Events_Others')"  class="form-group form-group-sm col-sm-12">
+                                                   <div class="row">
+                                                      <div class="col-md-6 col-sm-12">
+                                                         <div class="row">  
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Others')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Others</label>
+                                                            <div class="col-sm-6">
+                                                               <div class="YesOrNoButton" btnRadioGroup formControlName="Follow_Up_Events_Others" [ngClass]="{'disabled': CheckDisable('Follow_Up_Events_Others')}">
+                                                                  <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                                  <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                                  <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Events_Others')"> </mat-error>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                      </div> 
+                                                   </div>
+                                                </div>
+                                                <ng-container *ngIf="DynamicFGroup.controls['Follow_Up_Events_Others'].value === 'Yes'">
+                                                   <div *ngIf="CheckVisibility('Follow_Up_Events_Specify_Others') || CheckMandatory('Follow_Up_Events_Others_Date')"  class="form-group form-group-sm col-sm-12">
+                                                      <div class="row">
+                                                         <div class="col-md-6 col-sm-12" *ngIf="CheckVisibility('Follow_Up_Events_Specify_Others')">
+                                                            <div class="row">  
+                                                               <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Specify_Others')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right"> Specify Others </label>
+                                                               <div class="col-sm-6">
+                                                                  <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                                     <input matInput formControlName="Follow_Up_Events_Specify_Others" placeholder="">
+                                                                     <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Events_Specify_Others')"> </mat-error>   
+                                                                  </mat-form-field>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                         <div class="col-md-6 col-sm-12" *ngIf="CheckVisibility('Follow_Up_Events_Others_Date')">
+                                                            <div class="row">  
+                                                               <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Others_Date')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Date</label>
+                                                               <div class="col-sm-6">
+                                                                  <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                                     <input matInput formControlName="Follow_Up_Events_Others_Date" (click)="_datepicker.open()" [max] = "noFutureDate"  [matDatepicker] ="_datepicker" placeholder="Date">
+                                                                     <mat-icon (click)="_datepicker.open()" matSuffix>event </mat-icon>
+                                                                     <mat-datepicker touchUi #_datepicker></mat-datepicker>
+                                                                     <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Events_Others_Date')"> </mat-error>   
+                                                                  </mat-form-field>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </ng-container>
+                                                
+                                             </ng-container>
+                                            
+
+                                             <div *ngIf="CheckVisibility('Follow_Up_Events_Recurrence_Of_Angina')"  class="form-group form-group-sm col-sm-12">
+                                                <div class="row">
+                                                <div class="col-md-6 col-sm-12">
+                                                   <div class="row">  
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Recurrence_Of_Angina')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Recurrence of Angina</label>
+                                                      <div class="col-sm-6">
+                                                         <div class="YesOrNoButton" btnRadioGroup formControlName="Follow_Up_Events_Recurrence_Of_Angina" [ngClass]="{'disabled': CheckDisable('Follow_Up_Events_Recurrence_Of_Angina')}">
+                                                            <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                            <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Events_Recurrence_Of_Angina')"> </mat-error>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div> 
+                                                </div>
+                                             </div>
+
+                                             <div *ngIf="CheckVisibility('Follow_Up_Events_TMT')"  class="form-group form-group-sm col-sm-12">
+                                                <div class="row">
+                                                <div class="col-md-6 col-sm-12">
+                                                   <div class="row">  
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_TMT')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">TMT</label>
+                                                      <div class="col-sm-5">
+                                                         <div class="YesOrNoButton" btnRadioGroup formControlName="Follow_Up_Events_TMT" [ngClass]="{'disabled': CheckDisable('Follow_Up_Events_TMT')}">
+                                                            <label class="hbtn hb-fill-right" btnRadio="positive" tabindex="0" role="button">+ ve</label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="negative" tabindex="0" role="button">- ve</label>
+                                                            <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Events_TMT')"> </mat-error>   
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                                </div>                                
+                                             </div>
+
+                                             <div *ngIf="CheckVisibility('Follow_Up_Events_Echo_LVEF')"  class="form-group form-group-sm col-sm-12">
+                                                <div class="row">
+                                                <div class="col-md-6 col-sm-12">
+                                                   <div class="row">  
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Echo_LVEF')}" class="col-sm-6 col-md-4 col-form-label text-lg-right">Echo LVEF</label>
+                                                      <div class="col-sm-6">
+                                                         <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                            <input matInput formControlName="Follow_Up_Events_Echo_LVEF" placeholder="">
+                                                            <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Events_Echo_LVEF')"> </mat-error>   
+                                                         </mat-form-field>
+                                                      </div>
+                                                   </div>
+                                                </div> 
+                                                </div>                                   
+                                             </div>
+
+                                             <div *ngIf="CheckVisibility('Follow_Up_Events_Re_CART')"  class="form-group form-group-sm col-sm-12">
+                                                <div class="row">
+                                                <div *ngIf="CheckVisibility('Follow_Up_Events_Re_CART')"  class="col-md-6 col-sm-12">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Re_CART')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Repeat Angiogram</label>
+                                                      <div class="col-sm-6">
+                                                         <div class="YesOrNoButton" btnRadioGroup formControlName="Follow_Up_Events_Re_CART" [ngClass]="{'disabled': CheckDisable('Follow_Up_Events_Re_CART')}">
+                                                            <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                            <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Events_Re_CART')"> </mat-error>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                                <ng-container *ngIf="DynamicFGroup.controls['Follow_Up_Events_Re_CART'].value === 'Yes'">
+                                                   <div *ngIf="CheckVisibility('Follow_Up_Events_Re_CART_Date')"  class="col-md-6 col-sm-12">
+                                                      <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Re_CART_Date')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Repeat Angiogram Date</label>
+                                                      <div class="col-sm-6">
+                                                         <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                            <input matInput formControlName="Follow_Up_Events_Re_CART_Date" (click)="re_cart_datepicker.open()" [max] = "noFutureDate"  [matDatepicker] ="re_cart_datepicker" placeholder="Date">
+                                                            <mat-icon (click)="re_cart_datepicker.open()" matSuffix>event </mat-icon>
+                                                            <mat-datepicker touchUi #re_cart_datepicker></mat-datepicker>
+                                                            <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Events_Re_CART_Date')"> </mat-error>   
+                                                         </mat-form-field>
+                                                      </div>
+                                                      </div>
+                                                   </div>  
+                                                </ng-container>                                          
+                                                </div>
+                                             </div>
+
+                                             <div *ngIf="CheckVisibility('Follow_Up_Events_Restenosis')"  class="form-group form-group-sm col-sm-12">
+                                                <div class="row">
+                                                <div *ngIf="CheckVisibility('Follow_Up_Events_Restenosis')"  class="col-md-6 col-sm-12">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Restenosis')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Restenosis</label>
+                                                      <div class="col-sm-6">
+                                                      <div class="YesOrNoButton" btnRadioGroup formControlName="Follow_Up_Events_Restenosis"  [ngClass]="{'disabled': CheckDisable('Follow_Up_Events_Restenosis')}">
+                                                         <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                         <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                         <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Events_Restenosis')"> </mat-error>
+                                                      </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                                <ng-container *ngIf="DynamicFGroup.controls['Follow_Up_Events_Restenosis'].value === 'Yes'">
+                                                   <div *ngIf="CheckVisibility('Follow_Up_Events_Restenosis_Date')"  class="col-md-6 col-sm-12">
+                                                      <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Restenosis_Date')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Restenosis Date</label>
+                                                      <div class="col-sm-6">
+                                                         <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                            <input matInput (click)="restenosis_datepicker.open()" formControlName="Follow_Up_Events_Restenosis_Date" [max] = "noFutureDate"  [matDatepicker] ="restenosis_datepicker" placeholder="Date">
+                                                            <mat-icon (click)="restenosis_datepicker.open()" matSuffix>event </mat-icon>
+                                                            <mat-datepicker touchUi #restenosis_datepicker></mat-datepicker>
+                                                            <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Events_Restenosis_Date')"> </mat-error>   
+                                                         </mat-form-field>
+                                                      </div>
+                                                      </div>
+                                                   </div>   
+                                                </ng-container>                                         
+                                                </div>
+                                             </div>
+
+                                             <div *ngIf="CheckVisibility('Follow_Up_Events_Re_MI')"  class="form-group form-group-sm col-sm-12">
+                                                <div class="row">
+                                                <div *ngIf="CheckVisibility('Follow_Up_Events_Re_MI')"  class="col-md-6 col-sm-12">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Re_MI')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Re-MI</label>
+                                                      <div class="col-sm-6">
+                                                         <div class="YesOrNoButton" btnRadioGroup formControlName="Follow_Up_Events_Re_MI" [ngClass]="{'disabled': CheckDisable('Follow_Up_Events_Re_MI')}">
+                                                            <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                            <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Events_Re_MI')"> </mat-error>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                                <ng-container *ngIf="DynamicFGroup.controls['Follow_Up_Events_Re_MI'].value === 'Yes'">
+                                                   <div *ngIf="CheckVisibility('Follow_Up_Events_Re_MI_Date')"  class="col-md-6 col-sm-12">
+                                                      <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Re_MI_Date')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Re-MI Date</label>
+                                                      <div class="col-sm-6">
+                                                         <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                            <input matInput (click)="Re_MI_datepicker.open()" formControlName="Follow_Up_Events_Re_MI_Date" [max] = "noFutureDate"  [matDatepicker] ="Re_MI_datepicker" placeholder="Date">
+                                                            <mat-icon (click)="Re_MI_datepicker.open()" matSuffix>event</mat-icon>
+                                                            <mat-datepicker touchUi #Re_MI_datepicker></mat-datepicker>
+                                                            <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Events_Re_MI_Date')"> </mat-error>   
+                                                         </mat-form-field>
+                                                      </div>
+                                                      </div>
+                                                   </div> 
+                                                </ng-container>                                           
+                                                </div>
+                                             </div>
+
+                                             <div *ngIf="CheckVisibility('Follow_Up_Events_Re_Intervention')"  class="form-group form-group-sm col-sm-12">
+                                                <div class="row">
+                                                <div class="col-md-6 col-sm-12">
+                                                   <div class="row margin-bottom-10">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Re_Intervention')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Re-Intervention</label>
+                                                      <div class="col-sm-6">
+                                                      <div class="YesOrNoButton" btnRadioGroup formControlName="Follow_Up_Events_Re_Intervention" [ngClass]="{'disabled': CheckDisable('Follow_Up_Events_Re_MI')}">
+                                                         <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                         <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                         <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Events_Re_Intervention')"> </mat-error>
+                                                      </div>
+                                                      </div>
+                                                   </div>
+                                                </div> 
+                                                </div>                                   
+                                             </div>
+                                             <ng-container *ngIf="DynamicFGroup.controls['Follow_Up_Events_Re_Intervention'].value === 'Yes'">
+                                                <div *ngIf="CheckVisibility('Follow_Up_Events_TLR_PCI1')"  class="form-group form-group-sm col-sm-12">
+                                                <div class="row">
+                                                   <div *ngIf="CheckVisibility('Follow_Up_Events_TLR_PCI1')"  class="col-md-6 col-sm-12">
+                                                      <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_TLR_PCI1')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">TLR PCI1</label>
+                                                      <div class="col-sm-6">
+                                                         <div class="YesOrNoButton" btnRadioGroup formControlName="Follow_Up_Events_TLR_PCI1" [ngClass]="{'disabled': CheckDisable('Follow_Up_Events_Re_MI')}">
+                                                            <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                            <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Events_TLR_PCI1')"> </mat-error>
+                                                         </div>
+                                                      </div>
+                                                      </div>
+                                                   </div>
+                                                   <ng-container *ngIf="DynamicFGroup.controls['Follow_Up_Events_TLR_PCI1'].value === 'Yes'">
+                                                      <div *ngIf="CheckVisibility('Follow_Up_Events_TLR_PCI1_Date')"  class="col-md-6 col-sm-12">
+                                                      <div class="row">
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_TLR_PCI1_Date')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">TLR PCI Date</label>
+                                                         <div class="col-sm-6">
+                                                            <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                            <input matInput (click)="TLR_PCI1_datepicker.open()" formControlName="Follow_Up_Events_TLR_PCI1_Date" [max] = "noFutureDate"  [matDatepicker] ="TLR_PCI1_datepicker" placeholder="Date">
+                                                            <mat-icon (click)="TLR_PCI1_datepicker.open()" matSuffix>event</mat-icon>
+                                                            <mat-datepicker touchUi #TLR_PCI1_datepicker></mat-datepicker>
+                                                            <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Events_TLR_PCI1_Date')"> </mat-error>   
+                                                            </mat-form-field>
+                                                         </div>
+                                                      </div>
+                                                      </div> 
+                                                   </ng-container>                                           
+                                                </div>
+                                                </div>
+
+                                                <div *ngIf="CheckVisibility('Follow_Up_Events_TVR_PCI')"  class="form-group form-group-sm col-sm-12">
+                                                <div class="row">
+                                                   <div *ngIf="CheckVisibility('Follow_Up_Events_TVR_PCI')"  class="col-md-6 col-sm-12">
+                                                      <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_TVR_PCI')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">TVR PCI</label>
+                                                      <div class="col-sm-6">
+                                                         <div class="YesOrNoButton" btnRadioGroup formControlName="Follow_Up_Events_TVR_PCI" [ngClass]="{'disabled': CheckDisable('Follow_Up_Events_TVR_PCI')}">
+                                                            <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                            <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Events_TVR_PCI')"> </mat-error>
+                                                         </div>
+                                                      </div>
+                                                      </div>
+                                                   </div>
+                                                   <ng-container *ngIf="DynamicFGroup.controls['Follow_Up_Events_TVR_PCI'].value === 'Yes'">
+                                                      <div *ngIf="CheckVisibility('Follow_Up_Events_TVR_PCI_Date')"  class="col-md-6 col-sm-12">
+                                                      <div class="row">
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_TVR_PCI_Date')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">TVR PCI Date</label>
+                                                            <div class="col-sm-6">
+                                                            <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                               <input matInput (click)="TVR_PCI_datepicker.open()" formControlName="Follow_Up_Events_TVR_PCI_Date" [max] = "noFutureDate"  [matDatepicker] ="TVR_PCI_datepicker" placeholder="Date">
+                                                               <mat-icon (click)="TVR_PCI_datepicker.open()" matSuffix>event</mat-icon>
+                                                               <mat-datepicker touchUi #TVR_PCI_datepicker></mat-datepicker>
+                                                               <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Events_TVR_PCI_Date')"> </mat-error>   
+                                                            </mat-form-field>
+                                                            </div>
+                                                      </div>
+                                                      </div> 
+                                                   </ng-container>                                           
+                                                </div>
+                                                </div>
+
+                                                <div *ngIf="CheckVisibility('Follow_Up_Events_Non_TVR_PCI')"  class="form-group form-group-sm col-sm-12">
+                                                <div class="row">
+                                                   <div *ngIf="CheckVisibility('Follow_Up_Events_Non_TVR_PCI')"  class="col-md-6 col-sm-12">
+                                                      <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Non_TVR_PCI')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Non TVR PCI</label>
+                                                      <div class="col-sm-6">
+                                                         <div class="YesOrNoButton" btnRadioGroup formControlName="Follow_Up_Events_Non_TVR_PCI" [ngClass]="{'disabled': CheckDisable('Follow_Up_Events_Non_TVR_PCI')}">
+                                                            <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                            <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Events_Non_TVR_PCI')"> </mat-error>
+                                                         </div>
+                                                      </div>
+                                                      </div>
+                                                   </div>
+                                                   <ng-container *ngIf="DynamicFGroup.controls['Follow_Up_Events_Non_TVR_PCI'].value === 'Yes'">
+                                                      <div *ngIf="CheckVisibility('Follow_Up_Events_Non_TVR_PCI_Date')"  class="col-md-6 col-sm-12">
+                                                      <div class="row">
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Non_TVR_PCI_Date')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Non TVR PCI  Date</label>
+                                                         <div class="col-sm-6">
+                                                            <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                            <input matInput (click)="NOT_TVR_PCI_datepicker.open()" formControlName="Follow_Up_Events_Non_TVR_PCI_Date" [max] = "noFutureDate"  [matDatepicker] ="NOT_TVR_PCI_datepicker" placeholder="Date">
+                                                            <mat-icon (click)="NOT_TVR_PCI_datepicker.open()" matSuffix>event </mat-icon>
+                                                            <mat-datepicker touchUi #NOT_TVR_PCI_datepicker></mat-datepicker>
+                                                            <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Events_Non_TVR_PCI_Date')"> </mat-error>   
+                                                            </mat-form-field>
+                                                         </div>
+                                                      </div>
+                                                      </div>   
+                                                   </ng-container>                                         
+                                                </div>
+                                                </div>
+                                             </ng-container>
+
+                                             <div *ngIf="CheckVisibility('Follow_Up_Events_Stroke')"  class="form-group form-group-sm col-sm-12">
+                                                <div class="row">
+                                                <div *ngIf="CheckVisibility('Follow_Up_Events_Stroke')"  class="col-md-6 col-sm-12">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Stroke')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Stroke</label>
+                                                      <div class="col-sm-6">
+                                                      <div class="YesOrNoButton" btnRadioGroup formControlName="Follow_Up_Events_Stroke" [ngClass]="{'disabled': CheckDisable('Follow_Up_Events_Stroke')}">
+                                                         <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                         <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                         <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Events_Stroke')"> </mat-error>
+                                                      </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                                <ng-container *ngIf="DynamicFGroup.controls['Follow_Up_Events_Stroke'].value === 'Yes'">
+                                                   <div *ngIf="CheckVisibility('Follow_Up_Events_Stroke_Date')"  class="col-md-6 col-sm-12">
+                                                      <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Events_Stroke_Date')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Stroke Date</label>
+                                                         <div class="col-sm-6">
+                                                            <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                            <input matInput (click)="Stroke_datepicker.open()" formControlName="Follow_Up_Events_Stroke_Date" [max] = "noFutureDate"  [matDatepicker] ="Stroke_datepicker" placeholder="Date">
+                                                            <mat-icon (click)="Stroke_datepicker.open()" matSuffix>event</mat-icon>
+                                                            <mat-datepicker touchUi #Stroke_datepicker></mat-datepicker>
+                                                            <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Events_Stroke_Date')"> </mat-error>   
+                                                            </mat-form-field>
+                                                      </div>
+                                                      </div>
+                                                   </div>   
+                                                </ng-container>                                         
+                                                </div>
+                                             </div>
+
+                                             <div *ngIf="CheckVisibility('Follow_Up_Death')"  class="form-group form-group-sm col-sm-12">
+                                                <div class="row">
+                                                <div *ngIf="CheckVisibility('Follow_Up_Death')"  class="col-md-6 col-sm-12">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Death')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Death</label>
+                                                      <div class="col-sm-6">
+                                                         <div class="YesOrNoButton" btnRadioGroup formControlName="Follow_Up_Death" [ngClass]="{'disabled': CheckDisable('Follow_Up_Death')}">
+                                                            <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                            <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Death')"> </mat-error>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+																<ng-container *ngIf="DynamicFGroup.controls['Follow_Up_Death'].value === 'Yes'">
+                                                   <div *ngIf="CheckVisibility('Follow_Up_Death_Date')"  class="col-md-6 col-sm-12">
+                                                      <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Death_Date')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Death Date</label>
+                                                         <div class="col-sm-6">
+                                                            <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                            <input matInput (click)="Death_datepicker.open()" formControlName="Follow_Up_Death_Date" [max] = "noFutureDate"  [matDatepicker] ="Death_datepicker" placeholder="Date">
+                                                            <mat-icon (click)="Death_datepicker.open()" matSuffix>event</mat-icon>
+                                                            <mat-datepicker touchUi #Death_datepicker></mat-datepicker>
+                                                            <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Death_Date')"> </mat-error>   
+                                                            </mat-form-field>
+                                                      </div>
+                                                      </div>
+                                                   </div>   
+                                                </ng-container>                                         
+                                                <ng-container *ngIf="DynamicFGroup.controls['Follow_Up_Death'].value === 'Yes'">
+                                                   <div *ngIf="CheckVisibility('Follow_Up_Reason_Of_Death')"  class="col-md-6 col-sm-12">
+                                                      <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Reason_Of_Death')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Reason of Death</label>
+                                                         <div class="col-sm-6">
+                                                         <div class="YesOrNoButton" btnRadioGroup formControlName="Follow_Up_Reason_Of_Death" [ngClass]="{'disabled': CheckDisable('Follow_Up_Reason_Of_Death')}">
+                                                            <label class="hbtn hb-fill-right" btnRadio="Cardiac" tabindex="0" role="button"> Cardiac </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="Non-Cardiac" tabindex="0" role="button"> Non-Cardiac </label>
+                                                            <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Reason_Of_Death')"> </mat-error>   
+                                                         </div>
+                                                      </div>
+                                                      </div>
+                                                   </div>    
+                                                </ng-container>                                          
+                                                </div>
+                                             </div>
+                                             <div *ngIf="CheckVisibility('Follow_Up_Event_Comments')"  class="form-group form-group-sm col-sm-12">
+                                                <div class="row">
+                                                   <div class="col-md-6 col-sm-12">
+                                                      <div class="row">  
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Follow_Up_Event_Comments')}" class="col-sm-6 col-md-6 col-lg-4 col-form-label text-lg-right">Comments</label>
+                                                         <div class="col-sm-6">
+                                                            <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                            <textarea matInput formControlName="Follow_Up_Event_Comments" placeholder=""></textarea>
+                                                            <mat-error [innerHTML]="GetFormControlErrorMessage('Follow_Up_Event_Comments')"> </mat-error>   
+                                                            </mat-form-field>
+                                                         </div>
+                                                      </div>
+                                                   </div> 
+                                                </div>                                   
+                                             </div>  
+                                          </div>
+                                       </div>
+                                    </div>
+                                    <!-- Submit the Form -->
+                                    <div class="row">
+                                       <div *ngIf="!ReadonlyPage && !SecondaryEdit" class="col-md-12">
+                                       <button type="button" *ngIf="FollowupEventsId === null && !FormUploading" (click)="FollowUpEventSubmit()" class="btn btn-outline-primary float-right save">Save & Continue</button>
+                                       <button type="button" *ngIf="FollowupEventsId !== null && !FormUploading" (click)="FollowUpEventUpdate()" class="btn btn-outline-primary float-right save">Update & Continue</button>
+                                       <button *ngIf="FormUploading" type="button" class="btn btn-outline-primary float-right save uploading">
+                                          <i class="fa fa-spinner fa-pulse" aria-hidden="true"></i> Uploading...
+                                       </button>
+                                    </div>
+                                    </div>  
+                                 </form>
+                              </ng-container>
+                           </div>
+                        </div> 
+                     </div>
+                  </div>
+               </mat-tab>          
+            </mat-tab-group>
+            </div>
+         </div>
+      </ng-container>
+      <ng-container *ngIf="ContentLoading">
+         <div  class="tbl-loading-center loader-entry-page">
+            <div  id="inTurnFadingTextG">
+               <div  class="inTurnFadingTextG" id="inTurnFadingTextG_1">L</div>
+               <div  class="inTurnFadingTextG" id="inTurnFadingTextG_2">O</div>
+               <div  class="inTurnFadingTextG" id="inTurnFadingTextG_3">A</div>
+               <div  class="inTurnFadingTextG" id="inTurnFadingTextG_4">D</div>
+               <div  class="inTurnFadingTextG" id="inTurnFadingTextG_5">I</div>
+               <div  class="inTurnFadingTextG" id="inTurnFadingTextG_6">N</div>
+               <div  class="inTurnFadingTextG" id="inTurnFadingTextG_7">G</div>
+               <div  class="inTurnFadingTextG" id="inTurnFadingTextG_8">.</div>
+               <div  class="inTurnFadingTextG" id="inTurnFadingTextG_9">.</div>
+               <div  class="inTurnFadingTextG" id="inTurnFadingTextG_10">.</div>
+            </div>
+         </div>
+      </ng-container>
+   </div>
+</section>

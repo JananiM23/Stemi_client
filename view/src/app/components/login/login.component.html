@@ -1,0 +1,37 @@
+<div class="limiter">
+   <div class="container-login">
+      <div class="login-box">
+        <div class="logo">
+            <img width="90%" src="assets/images/stemi-sa.jpg">
+        </div>
+        <form [formGroup]="LoginForm" (ngSubmit)="Login()" class="form-horizontal">
+            <div class="form-group">
+                <input class="us-name" type="text" formControlName="User_Name" placeholder="Username">
+                <span class="us-icon"><i class="fa fa-user"></i></span>
+                <div *ngIf="LoginForm.controls['User_Name'].errors && !LoginForm.controls['User_Name'].pristine" class="input-error-notify animated shake">
+                    <ng-container *ngIf="LoginForm.controls['User_Name'].errors.required">
+                        <i class="fa fa-exclamation-triangle" style="padding: 4px 7px;"></i><span>This Username is Required</span>
+                    </ng-container>
+                </div>
+            </div>                    
+            <div class="form-group">
+                <input class="us-password" type="password" formControlName="User_Password" placeholder="Password">
+                <span class="us-icon"><i class="fa fa-lock"></i></span>
+                <div *ngIf="LoginForm.controls['User_Password'].errors && !LoginForm.controls['User_Password'].pristine" class="input-error-notify animated shake">
+                    <ng-container *ngIf="LoginForm.controls['User_Password'].errors.required">
+                        <i class="fa fa-exclamation-triangle" style="padding: 4px 7px;"></i><span>This Password is Required</span>
+                    </ng-container>
+                </div>
+            </div>
+            <button class="btn-login" type="submit">Login</button>
+        </form>
+                            
+       </div>
+       
+		 <div class="stemi-india-logo">
+			 <img src="assets/images/stemi-logo-old.png" >
+		 </div>
+       <!-- <a class="applyBtn" [routerLink]="['/Hospital-Apply']"> Hospital Apply Now </a> -->
+
+    </div>
+</div>

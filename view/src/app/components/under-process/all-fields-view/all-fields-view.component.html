@@ -1,0 +1,49 @@
+<div class="container">
+   <mat-accordion>
+      <mat-expansion-panel *ngFor="let Field of AllFields; let i=index">
+         <mat-expansion-panel-header>
+            <mat-panel-title>
+               <h5> {{i+1}}) &nbsp; {{Field.Name}} </h5>
+            </mat-panel-title>
+            <mat-panel-description>
+               {{Field._id}}
+            </mat-panel-description>
+         </mat-expansion-panel-header>
+         <p class="Field"> Name : <span>  {{Field.Name}} </span> </p>
+         <p class="Field"> Key-Name : <span>  {{Field.Key_Name}} </span> </p>
+         <p class="Field"> Type : <span>  {{Field.Type}} </span> </p>
+         <p class="Field"> Child's : <span>  {{Field.If_Child_Available}} </span> </p>
+         <p class="Field"> Parent : <span>  {{Field.If_Parent_Available}} </span> </p>
+         <p class="Field"> Parent-Info : <span>  {{Field.Parent?.Name || '-'}} </span> </p>
+         <p class="Field"> Visibility : <span>  {{Field.Visibility}} </span> </p>
+         <p class="Field"> Mandatory : <span>  {{Field.Mandatory}} </span> </p>
+         <p class="Field"> Validation : <span>  {{Field.Validation}} </span> </p>
+         <p class="Field"> Validation-Control-Array-Available : <span>  {{Field.If_Validation_Control_Array}} </span> </p>
+         <p class="Field"> Validation-Control-Array : <span>  {{Field.Validation_Control_Array | json}} </span> </p>
+         <p class="Field"> Date-Restriction : <span>  {{Field.If_Date_Restriction}} </span> </p>
+         <p class="Field"> Min-Date-Restriction : <span>  {{Field.If_Min_Date_Restriction}} </span> </p>
+         <p class="Field"> Min-Date-Field : <span>  {{Field.Min_Date_Field?.Name || '-'}} </span> </p>
+         <p class="Field"> Min-Date-Array-Available : <span>  {{Field.If_Min_Date_Array_Available}} </span> </p>
+         <p class="Field"> Min-Date-Array : <span>  {{Field.Min_Date_Array | json}} </span> </p>
+         <p class="Field"> Max-Date-Restriction : <span>  {{Field.If_Max_Date_Restriction}} </span> </p>
+         <p class="Field"> Max-Date-Field : <span>  {{Field.Max_Date_Field?.Name || '-'}} </span> </p>
+         <p class="Field"> Max-Date-Array-Available : <span>  {{Field.If_Max_Date_Array_Available}} </span> </p>
+         <p class="Field"> Max-Date-Array : <span>  {{Field.Max_Date_Array | json}} </span> </p>
+         <p class="Field"> Future-Date-Available : <span>  {{Field.If_Future_Date_Available}} </span> </p>
+         <p class="Field"> Number-Restriction : <span>  {{Field.If_Number_Restriction}} </span> </p>
+         <p class="Field"> Min-Number-Restriction : <span>  {{Field.If_Min_Number_Restriction}} </span> </p>
+         <p class="Field"> Min-Number-Value : <span>  {{Field.Min_Number_Value}} </span> </p>
+         <p class="Field"> Min-Number-Field-Restriction : <span>  {{Field.If_Min_Number_Field_Restriction}} </span> </p>
+         <p class="Field"> Min-Number-Field : <span>  {{Field.Min_Number_Field?.Name || '-'}} </span> </p>
+         <p class="Field"> Max-Number-Restriction : <span>  {{Field.If_Max_Number_Restriction}} </span> </p>
+         <p class="Field"> Max-Number-Value : <span>  {{Field.Max_Number_Value}} </span> </p>
+         <p class="Field"> Max-Number-Field-Restriction : <span>  {{Field.If_Max_Number_Field_Restriction}} </span> </p>
+         <p class="Field"> Max-Number-Field : <span>  {{Field.Max_Number_Field?.Name || '-'}} </span> </p>
+         <p class="Field"> Category : <span>  {{Field.Category}} </span> </p>
+         <p class="Field"> Sub-Category : <span>  {{Field.Sub_Category}} </span> </p>
+         <p class="Field"> Sub-Junior-Category : <span>  {{Field.Sub_Junior_Category}} </span> </p>
+         <p class="Field"> Active-Status : <span>  {{Field.Active_Status}} </span> </p>
+         <p class="Field"> Delete-Status : <span>  {{Field.If_Deleted}} </span> </p>
+      </mat-expansion-panel>
+   </mat-accordion>
+</div>

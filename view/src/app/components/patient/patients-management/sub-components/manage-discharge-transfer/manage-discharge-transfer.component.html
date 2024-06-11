@@ -1,0 +1,1235 @@
+<section>
+   <div class="row">
+      <ng-container *ngIf="!ContentLoading">
+         <div class="col-md-12 tab-pane-container">
+            <div class="row">
+               <mat-tab-group class="full-width" [selectedIndex]="CurrentTabIndex" (selectedIndexChange)="TabChangeEvent($event)">
+                  <mat-tab label="Death" class="full-width" [disabled]="CheckSubCategoryVisibility('Death')"> 
+                     <div class="portlet-tab">
+                        <div class="portlet-tab-panelbody">
+                           <div class="row">
+                              <div class="col-md-12">
+                                 <form class="form-horizontal" *ngIf="CurrentTabIndex === 0 && FormLoaded" [formGroup]="DynamicFGroup">
+                                    <!-- Death -->
+                                    <div class="dischareg-and-tranfer" *ngIf="CheckSubJuniorCategoryVisibility('Death')">
+                                       <div class="container">
+                                          <div class="row">
+                                             <div *ngIf="CheckVisibility('Discharge_Transfer_Death')" class="form-group col-lg-6 col-md-5 col-sm-12">
+                                                <div class="row">
+                                                   <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Transfer_Death')}" class="col-lg-4 col-md-5 col-form-label text-lg-right">In-Hospital Death</label>
+                                                   <div class="col-lg-8 col-md-6">
+                                                      <div class="YesOrNoButton" btnRadioGroup formControlName="Discharge_Transfer_Death" [ngClass]="{'disabled': CheckDisable('Discharge_Transfer_Death')}">
+                                                         <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                         <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                         <mat-error [innerHTML]="GetFormControlErrorMessage('Discharge_Transfer_Death')"> </mat-error>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                             <ng-container *ngIf="DynamicFGroup.get('Discharge_Transfer_Death').value === 'Yes'">
+                                                <div *ngIf="CheckVisibility('Discharge_Transfer_Cause_of_Death')" class="form-group col-lg-6 col-md-5 col-sm-12">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Transfer_Cause_of_Death')}" class="col-lg-4 col-md-5 col-form-label text-lg-right">Cause of Death</label>
+                                                      <div class="col-lg-8 col-md-6">
+                                                         <div class="YesOrNoButton" btnRadioGroup formControlName="Discharge_Transfer_Cause_of_Death" [ngClass]="{'disabled': CheckDisable('Discharge_Transfer_Cause_of_Death')}">
+                                                            <label class="hbtn hb-fill-right" btnRadio="Cardiac" tabindex="0" role="button"> Cardiac </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="Non-Cardiac" tabindex="0" role="button"> Non-Cardiac </label>
+                                                            <mat-error [innerHTML]="GetFormControlErrorMessage('Discharge_Transfer_Cause_of_Death')"> </mat-error>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                                <div *ngIf="CheckVisibility('Discharge_Transfer_Death_Date_Time')" class="form-group col-lg-6 col-md-12 col-sm-12">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Transfer_Death_Date_Time')}" class="col-sm-4 col-form-label text-lg-right">Death Date/time</label>
+                                                      <div class="col-md-8">
+                                                         <div class="row">
+                                                            <div class="col-sm-6">
+                                                               <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                                  <input formControlName="Discharge_Transfer_Death_Date_Time" (keypress)="NotAllow()" (keydown)="ClearInput($event)" (click)="death_datepicker.open()" matInput [required]="CheckMandatory('Discharge_Transfer_Death_Date_Time') ? '' : null" [max] = "noFutureDate"  [matDatepicker] ="death_datepicker" placeholder="Date">
+                                                                  <mat-icon (click)="death_datepicker.open()" matSuffix >event </mat-icon>
+                                                                  <mat-datepicker touchUi #death_datepicker></mat-datepicker>
+                                                               </mat-form-field>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                               <mat-form-field [ngClass]="{'mat-form-field-invalid': CheckTimeRelatedDateErrorStatus('Discharge_Transfer_Death_Date_Time', 'Discharge_Transfer_Death_Time')}" class="full-width column-time" [floatLabel]="'never'" appearance="fill">
+                                                                  <input formControlName="Discharge_Transfer_Death_Time" matInput (keypress)="NotAllow()" (keydown)="ClearInput($event)" [required]="CheckMandatory('Discharge_Transfer_Death_Date_Time') ? '' : null" data-history="false" [ngxTimepicker]="death_timepicker" [format]="24" placeholder="Time">
+                                                                  <mat-icon matSuffix (click)="death_timepicker.open()">access_time</mat-icon>
+                                                                  <ngx-material-timepicker (opened)="MaxTime('Discharge_Transfer_Death_Time', 'Discharge_Transfer_Death_Date_Time')" [defaultTime]="DefaultTime('Discharge_Transfer_Death_Time')" #death_timepicker></ngx-material-timepicker>
+                                                               </mat-form-field>
+                                                            </div>
+                                                            <div class="col-sm-12">
+                                                               <mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Discharge_Transfer_Death_Date_Time')"></mat-error>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </ng-container>
+                                          </div>
+                                          <ng-container *ngIf="DynamicFGroup.get('Discharge_Transfer_Death').value === 'Yes'">
+                                             <div class="row">
+                                                <div *ngIf="CheckVisibility('Discharge_Transfer_Remarks')" class="form-group col-lg-6 col-md-12 col-sm-12">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Transfer_Remarks')}"  for="Street" class="col-sm-4 col-form-label text-lg-right">Remarks</label>
+                                                      <div class="col-md-8">
+                                                      <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                         <input formControlName="Discharge_Transfer_Remarks" matInput placeholder="">                                                     
+                                                         <mat-error class="" [innerHTML]="GetFormControlErrorMessage('Discharge_Transfer_Remarks')"> </mat-error>
+                                                      </mat-form-field>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                          </ng-container>
+                                       </div>
+                                    </div>                                       
+                                    <!-- Submit the Form -->
+                                    <div class="row">
+                                       <div *ngIf="!ReadonlyPage" class="col-sm-12">
+                                          <button type="button" *ngIf="DeathId === null && !FormUploading" (click)="DeathSubmit()" class="btn btn-outline-primary float-right save">Save & Continue</button>
+                                          <button type="button" *ngIf="DeathId !== null && !FormUploading" (click)="DeathUpdate()" class="btn btn-outline-primary float-right save">Update & Continue</button>
+                                          <button *ngIf="FormUploading" type="button" class="btn btn-outline-primary float-right save uploading">
+                                             <i class="fa fa-spinner fa-pulse" aria-hidden="true"></i> Uploading...
+                                          </button>
+                                       </div>
+                                    </div> 
+                                 </form>
+                              </div>
+                           </div>                     
+                        </div>
+                     </div>
+                  </mat-tab>
+
+                  <mat-tab label="Discharge Medications" class="full-width" [disabled]="CheckSubCategoryVisibility('Discharge_Medications') || (PatientDeath && PatientInfo.Hospital_History.length === 1)"> 
+                     <div *ngIf="CurrentTabIndex === 1 && FormLoaded" class="portlet-tab">
+                        <div class="portlet-tab-panelbody">
+                           <div class="row">
+                              <div class="col-md-12">
+                                 <!-- Discharge Medications -->
+                                 <div class="dischareg-and-tranfer" *ngIf="CheckSubJuniorCategoryVisibility('Discharge_Medications_In_Hub_Hospital')">
+                                    <div class="tabpane-title" [ngClass]="{'stages-enable': MedicationHistoryAvailable }">
+                                       <h5 class="section-title">Discharge / Transfer Medications </h5>
+                                       <!-- Stage wise Hospital changes icons -->
+                                       <div *ngIf="MedicationHistoryAvailable" class="stage-container">
+                                          <ng-container *ngFor="let FGroupValue of GetHistoryFormArrayValue('MedicationHistory'); let i=index" >
+                                             <div class="stage-by-process" [ngClass]="{'active': FGroupValue.HistoryActive }">
+                                                <img (click)="ActiveToggleHistory('MedicationHistory', i)" class="stage-icon" src="../../../../../../assets/images/icons-blue-{{FGroupValue.Hospital_Key}}.png">
+                                                <span class="navigation-arrow">>>></span>
+                                             </div>
+                                          </ng-container>
+                                          <div *ngIf="CurrentHospitalInfo !== null" class="stage-by-process active">
+                                             <img class="stage-icon" src="../../../../../../assets/images/icons-blue-{{CurrentHospitalInfo.Hospital_Role === 'EMS' ? 'E' : (CurrentHospitalInfo.Hospital_Role | slice: 0:1) + (CurrentHospitalInfo.Hospital_Role | slice: -1)}}.png">
+                                          </div>
+                                       </div>
+                                       <!-- Stage wise Hospital changes icons -->
+                                    </div>
+
+                                    <!-- Readonly FormGroup -->
+                                    <form *ngIf="MedicationHistoryAvailable && HistoryAvailable" class="full-width" [formGroup]="HistoryFGroup">
+                                       <ng-container formArrayName="MedicationHistory">
+                                          <ng-container *ngFor="let FGroup of GetHistoryFormArray('MedicationHistory'); let i=index" [formGroupName]="i">
+                                             <div *ngIf="FGroup.controls['HistoryActive'].value" class="form-details-container hospital-stage-active"> <!-- hospital-stage-active -->
+                                                <div class="quarterCircleBottomRight">
+                                                   <img class="stage-icon" src="../../../../../../assets/images/icons-blue-{{FGroup.controls['Hospital_Key'].value}}.png">
+                                                </div>   
+                                                <div *ngIf="UserInfo.User_Type === 'SA' && !ReadonlyPage && !FGroup.controls['EditActivate'].value" class="quarterCircleTopRight">
+                                                   <span (click)="EditHistoryArray('MedicationHistory', i)" class="col-action-icon special-icon" matTooltip="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></span>
+                                                </div> 
+                                                <!-- container centers content on large screens -->
+                                                <div class="container">
+                                                   <div class="row">
+                                                      <div *ngIf="CheckVisibility('Discharge_Medications_Aspirin')" class="form-group col-lg-6 col-md-12 col-sm-12">
+                                                         <div class="row">
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Medications_Aspirin')}" class="col-sm-3 col-form-label text-lg-right">Aspirin</label>
+                                                            <div class="col-sm-9">
+                                                               <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Discharge_Medications_Aspirin">
+                                                                  <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                                  <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                                  <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('MedicationHistory', i, 'Discharge_Medications_Aspirin')"> </mat-error>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                      <div *ngIf="CheckVisibility('Discharge_Medications_Clopidogrel')" class="form-group col-lg-6 col-md-12 col-sm-12">
+                                                         <div class="row">
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Medications_Clopidogrel')}" class="col-sm-3 col-form-label text-lg-right">Clopidogrel</label>
+                                                               <div class="col-sm-9">
+                                                               <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Discharge_Medications_Clopidogrel">
+                                                                  <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                                  <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                                  <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('MedicationHistory', i, 'Discharge_Medications_Clopidogrel')"> </mat-error>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                      <div *ngIf="CheckVisibility('Discharge_Medications_Prasugrel')" class="form-group col-lg-6 col-md-12 col-sm-12">
+                                                         <div class="row">
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Medications_Prasugrel')}" class="col-sm-3 col-form-label text-lg-right">Prasugrel</label>
+                                                               <div class="col-sm-9">
+                                                               <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Discharge_Medications_Prasugrel">
+                                                                  <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                                  <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                                  <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('MedicationHistory', i, 'Discharge_Medications_Prasugrel')"> </mat-error>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                      <div *ngIf="CheckVisibility('Discharge_Medications_Ticagrelor')" class="form-group col-lg-6 col-md-12 col-sm-12">
+                                                         <div class="row">
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Medications_Ticagrelor')}" class="col-sm-3 col-form-label text-lg-right">Ticagrelor</label>
+                                                            <div class="col-sm-9">
+                                                               <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}"  btnRadioGroup formControlName="Discharge_Medications_Ticagrelor" >
+                                                                  <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                                  <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                                  <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('MedicationHistory', i, 'Discharge_Medications_Ticagrelor')"> </mat-error>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                      <div *ngIf="CheckVisibility('Discharge_Medications_ACEI')" class="form-group col-lg-6 col-md-12 col-sm-12">
+                                                         <div class="row">
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Medications_ACEI')}" class="col-sm-3 col-form-label text-lg-right">ACEI</label>
+                                                            <div class="col-sm-9">
+                                                               <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Discharge_Medications_ACEI">
+                                                                  <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                                  <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                                  <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('MedicationHistory', i, 'Discharge_Medications_ACEI')"> </mat-error>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                      <div *ngIf="CheckVisibility('Discharge_Medications_ARB')" class="form-group col-lg-6 col-md-12 col-sm-12">
+                                                         <div class="row">
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Medications_ARB')}" class="col-sm-3 col-form-label text-lg-right">ARB</label>
+                                                            <div class="col-sm-9">
+                                                               <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Discharge_Medications_ARB">
+                                                                  <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                                  <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                                  <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('MedicationHistory', i, 'Discharge_Medications_ARB')"> </mat-error>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                      <div *ngIf="CheckVisibility('Discharge_Medications_Beta_Blocker')" class="form-group col-lg-6 col-md-12 col-sm-12">
+                                                         <div class="row">
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Medications_Beta_Blocker')}" class="col-sm-3 col-form-label text-lg-right">Beta Blocker</label>
+                                                            <div class="col-sm-9">
+                                                               <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Discharge_Medications_Beta_Blocker">
+                                                                  <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                                  <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                                  <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('MedicationHistory', i, 'Discharge_Medications_Beta_Blocker')"> </mat-error>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                      <div *ngIf="CheckVisibility('Discharge_Medications_Nitrate')" class="form-group col-lg-6 col-md-12 col-sm-12">
+                                                         <div class="row">
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Medications_Nitrate')}" class="col-sm-3 col-form-label text-lg-right">Nitrate</label>
+                                                            <div class="col-sm-9">
+                                                               <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Discharge_Medications_Nitrate">
+                                                                  <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                                  <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                                  <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('MedicationHistory', i, 'Discharge_Medications_Nitrate')"> </mat-error>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                      <div *ngIf="CheckVisibility('Discharge_Medications_Statin')" class="form-group col-lg-6 col-md-12 col-sm-12">
+                                                         <div class="row">
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Medications_Statin')}" class="col-sm-3 col-form-label text-lg-right">Statin</label>
+                                                            <div class="col-sm-9">
+                                                               <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Discharge_Medications_Statin">
+                                                                  <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                                  <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                                  <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('MedicationHistory', i, 'Discharge_Medications_Statin')"> </mat-error>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+																		<ng-container *ngIf="FGroup.get('Discharge_Medications_Statin').value === 'Yes'" >
+																			<div *ngIf="CheckVisibility('Discharge_Medications_Statin_Option')" class="form-group col-lg-6 col-md-12 col-sm-12">
+																				<div class="row">
+																					<label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Medications_Statin_Option')}" class="col-sm-3 col-form-label text-lg-right">Statin Option</label>
+																					<div class="col-sm-9">
+																						<mat-form-field class="full-width" [floatLabel]="'auto'" appearance="fill">
+																							<mat-select formControlName="Discharge_Medications_Statin_Option" [required]="CheckMandatory('Discharge_Medications_Statin_Option') ? '' : null" placeholder="Select Option">
+																							<mat-option value="">Select Options</mat-option>
+																							<mat-option *ngFor= "let Option of StatinOptions;let i=index" [value]="Option.Key">{{Option.Name}}</mat-option>                                            
+																							</mat-select>
+																							<mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate"  [innerHTML]="GetHistoryFormControlErrorMessage('MedicationHistory', i, 'Discharge_Medications_Statin_Option')"> </mat-error>
+																						</mat-form-field>
+																					</div>
+																				</div>
+																			</div>
+																		</ng-container>
+																		<ng-container *ngIf="FGroup.get('Discharge_Medications_Statin').value !== 'Yes'" >
+																			<div class=" col-lg-6 col-md-12 col-sm-12"></div>
+																		</ng-container>
+                                                      <div *ngIf="CheckVisibility('Discharge_Medications_Echocardiography')" class="form-group col-lg-6 col-md-12 col-sm-12">
+                                                         <div class="row">
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Medications_Echocardiography')}" class="col-sm-3 col-form-label text-lg-right">Echocardiography</label>
+                                                            <div class="col-sm-9">
+                                                               <div class="YesOrNoButton" [ngClass]="{'disabled': !FGroup.value.EditActivate}" btnRadioGroup formControlName="Discharge_Medications_Echocardiography">
+                                                                  <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                                  <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                                  <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('MedicationHistory', i, 'Discharge_Medications_Echocardiography')"> </mat-error>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+																		<div class="col-lg-6 col-md-12 col-sm-12"></div>
+                                                      <div *ngIf="CheckVisibility('Discharge_Medications_Ejection_Fraction')" class="form-group col-lg-6 col-md-12 col-sm-12">
+                                                         <div class="row">
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Medications_Ejection_Fraction')}" class="col-sm-3 col-form-label text-lg-right">Ejection Fraction</label>
+                                                            <div class="col-sm-9">
+                                                               <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                                  <input formControlName="Discharge_Medications_Ejection_Fraction" matInput placeholder="Ejection Fraction">
+                                                                  <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('MedicationHistory', i, 'Discharge_Medications_Ejection_Fraction')"> </mat-error>
+                                                               </mat-form-field>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                                <!-- New Row Dynamically adding -->
+                                                <div class="container">
+                                                   <div class="row" *ngIf="CheckVisibility('Discharge_Medications_Other_Medicine')">
+                                                      <div *ngIf="CheckVisibility('Discharge_Medications_Other_Medicine')" class="form-group col-lg-6 col-md-12 col-sm-12">
+                                                         <ng-container formArrayName="OtherMedicationArray" >
+                                                            <div *ngFor="let OtherMedicationArray of FGroup.controls['OtherMedicationArray'].controls; let j=index" [formGroupName]="j" class="row">
+                                                               <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Medications_Other_Medicine')}" class="col-sm-3 col-form-label text-lg-right">Other Medicine</label>
+                                                               <div class="col-sm-8">
+                                                                  <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                                     <input formControlName="Discharge_Medications_Other_Medicine" matInput placeholder="Medicine">
+                                                                     <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('MedicationHistory', i, 'Discharge_Medications_Other_Medicine', j)"> </mat-error>
+                                                                  </mat-form-field>
+                                                               </div>
+                                                            </div>
+                                                         </ng-container>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                                <!-- New Row Dynamically adding -->
+                                                <!--  -->
+                                                <div class="container-fluid no-margin ">
+                                                   <div class="row">
+                                                      <div *ngIf="!ReadonlyPage && FGroup.value.EditActivate" class="col-md-12 btns-flex-end">
+                                                         <button *ngIf="!SecondaryUpdating" type="button" (click)="resetFArrayHistory('MedicationHistory', i)" class="btn btn-outline-secondary cancel float-right save"> Cancel </button>
+                                                         <button *ngIf="!SecondaryUpdating && FGroup.get('_id').value !== null" [ngClass]="{'disabled': FGroup.status !== 'VALID'}" [disabled]="FGroup.status !== 'VALID'" (click)="TransferHistoryMedicationUpdate(i)" type="button" class="btn btn-outline-primary float-right save"> Update </button>
+                                                         <button *ngIf="!SecondaryUpdating && FGroup.get('_id').value === null" [ngClass]="{'disabled': FGroup.status !== 'VALID'}" [disabled]="FGroup.status !== 'VALID'" (click)="TransferHistoryMedicationCreate(i)" type="button" class="btn btn-outline-primary float-right save"> Submit </button>
+                                                         <button *ngIf="SecondaryUpdating" type="button" class="btn btn-outline-primary float-right save uploading">
+                                                            <i class="fa fa-spinner fa-pulse" aria-hidden="true"></i> Uploading...
+                                                         </button>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                          </ng-container>
+                                       </ng-container>
+                                    </form>
+
+                                    <!-- Editable FormGroup -->
+                                    <form *ngIf="CurrentHospitalInfo !== null" class="full-width" [formGroup]="DynamicFGroup">
+                                       <div class="form-details-container" [ngClass]="{'hospital-stage-active': MedicationHistoryAvailable }"> <!-- hospital-stage-active -->
+                                          <div *ngIf="MedicationHistoryAvailable" class="quarterCircleBottomRight">
+                                             <img class="stage-icon" src="../../../../../../assets/images/icons-blue-{{CurrentHospitalInfo.Hospital_Role === 'EMS' ? 'E' : (CurrentHospitalInfo.Hospital_Role | slice: 0:1) + (CurrentHospitalInfo.Hospital_Role | slice: -1)}}.png">
+                                          </div>
+                                          <!-- container centers content on large screens -->
+                                          <div class="container">
+                                             <div class="row">
+                                                <div *ngIf="CheckVisibility('Discharge_Medications_Aspirin')" class="form-group col-md-6">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Medications_Aspirin')}" class="col-sm-4 col-form-label text-lg-right">Aspirin</label>
+                                                      <div class="col-sm-8">
+                                                         <div class="YesOrNoButton" btnRadioGroup formControlName="Discharge_Medications_Aspirin" [ngClass]="{'disabled': CheckDisable('Discharge_Medications_Aspirin')}">
+                                                            <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                            <mat-error [innerHTML]="GetFormControlErrorMessage('Discharge_Medications_Aspirin')"> </mat-error>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                                <div *ngIf="CheckVisibility('Discharge_Medications_Clopidogrel')" class="form-group col-md-6">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Medications_Clopidogrel')}" class="col-sm-4 col-form-label text-lg-right">Clopidogrel</label>
+                                                         <div class="col-sm-8">
+                                                         <div class="YesOrNoButton" btnRadioGroup formControlName="Discharge_Medications_Clopidogrel" [ngClass]="{'disabled': CheckDisable('Discharge_Medications_Clopidogrel')}">
+                                                            <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                            <mat-error [innerHTML]="GetFormControlErrorMessage('Discharge_Medications_Clopidogrel')"> </mat-error>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                                <div *ngIf="CheckVisibility('Discharge_Medications_Prasugrel')" class="form-group col-md-6">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Medications_Prasugrel')}" class="col-sm-4 col-form-label text-lg-right">Prasugrel</label>
+                                                         <div class="col-sm-8">
+                                                         <div class="YesOrNoButton" btnRadioGroup formControlName="Discharge_Medications_Prasugrel" [ngClass]="{'disabled': CheckDisable('Discharge_Medications_Prasugrel')}">
+                                                            <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                            <mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Discharge_Medications_Prasugrel')"> </mat-error>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                                <div *ngIf="CheckVisibility('Discharge_Medications_Ticagrelor')" class="form-group col-md-6">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Medications_Ticagrelor')}" class="col-sm-4 col-form-label text-lg-right">Ticagrelor</label>
+                                                      <div class="col-sm-8">
+                                                         <div class="YesOrNoButton" btnRadioGroup formControlName="Discharge_Medications_Ticagrelor"  [ngClass]="{'disabled': CheckDisable('Discharge_Medications_Ticagrelor')}">
+                                                            <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                            <mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Discharge_Medications_Ticagrelor')"> </mat-error>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                                <div *ngIf="CheckVisibility('Discharge_Medications_ACEI')" class="form-group col-md-6">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Medications_ACEI')}" class="col-sm-4 col-form-label text-lg-right">ACEI</label>
+                                                      <div class="col-sm-8">
+                                                         <div class="YesOrNoButton" btnRadioGroup formControlName="Discharge_Medications_ACEI"  [ngClass]="{'disabled': CheckDisable('Discharge_Medications_ACEI')}">
+                                                            <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                            <mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Discharge_Medications_ACEI')"> </mat-error>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                                <div *ngIf="CheckVisibility('Discharge_Medications_ARB')" class="form-group col-md-6">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Medications_ARB')}" class="col-sm-4 col-form-label text-lg-right">ARB</label>
+                                                      <div class="col-sm-8">
+                                                         <div class="YesOrNoButton" btnRadioGroup formControlName="Discharge_Medications_ARB"  [ngClass]="{'disabled': CheckDisable('Discharge_Medications_ARB')}">
+                                                            <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                            <mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Discharge_Medications_ARB')"> </mat-error>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                                <div *ngIf="CheckVisibility('Discharge_Medications_Beta_Blocker')" class="form-group col-md-6">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Medications_Beta_Blocker')}" class="col-sm-4 col-form-label text-lg-right">Beta Blocker</label>
+                                                      <div class="col-sm-8">
+                                                         <div class="YesOrNoButton" btnRadioGroup formControlName="Discharge_Medications_Beta_Blocker" [ngClass]="{'disabled': CheckDisable('Discharge_Medications_Beta_Blocker')}">
+                                                            <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                            <mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Discharge_Medications_Beta_Blocker')"> </mat-error>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                                <div *ngIf="CheckVisibility('Discharge_Medications_Nitrate')" class="form-group col-md-6">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Medications_Nitrate')}" class="col-sm-4 col-form-label text-lg-right">Nitrate</label>
+                                                      <div class="col-sm-8">
+                                                         <div class="YesOrNoButton" btnRadioGroup formControlName="Discharge_Medications_Nitrate" [ngClass]="{'disabled': CheckDisable('Discharge_Medications_Nitrate')}">
+                                                            <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                            <mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Discharge_Medications_Nitrate')"> </mat-error>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                                <div *ngIf="CheckVisibility('Discharge_Medications_Statin')" class="form-group col-md-6">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Medications_Statin')}" class="col-sm-4 col-form-label text-lg-right">Statin</label>
+                                                      <div class="col-sm-8">
+                                                         <div class="YesOrNoButton" btnRadioGroup formControlName="Discharge_Medications_Statin"  [ngClass]="{'disabled': CheckDisable('Discharge_Medications_Statin')}">
+                                                            <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                            <mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Discharge_Medications_Statin')"> </mat-error>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+																<ng-container *ngIf="DynamicFGroup.get('Discharge_Medications_Statin').value === 'Yes'" >
+																	<div *ngIf="CheckVisibility('Discharge_Medications_Statin_Option')" class="form-group col-lg-6 col-md-12 col-sm-12">
+																		<div class="row">
+																			<label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Medications_Statin_Option')}" class="col-sm-3 col-form-label text-lg-right">Statin Option</label>
+																			<div class="col-sm-9">
+																				<mat-form-field class="full-width" [floatLabel]="'auto'" appearance="fill">
+																					<mat-select formControlName="Discharge_Medications_Statin_Option" [required]="CheckMandatory('Discharge_Medications_Statin_Option') ? '' : null" placeholder="Select Option">
+																					<mat-option value="">Select Options</mat-option>
+																					<mat-option *ngFor= "let Option of StatinOptions;let i=index" [value]="Option.Key">{{Option.Name}}</mat-option>                                            
+																					</mat-select>
+																					<mat-error [innerHTML]="GetFormControlErrorMessage('Discharge_Medications_Statin_Option')"> </mat-error>
+																				</mat-form-field>
+																			</div>
+																		</div>
+																	</div>
+																</ng-container>
+																<ng-container *ngIf="DynamicFGroup.get('Discharge_Medications_Statin').value !== 'Yes'" >
+																	<div class=" col-lg-6 col-md-12 col-sm-12"></div>
+																</ng-container>
+                                                <div *ngIf="CheckVisibility('Discharge_Medications_Echocardiography')" class="form-group col-md-6">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Medications_Echocardiography')}" class="col-sm-4 col-form-label text-lg-right">Echocardiography</label>
+                                                      <div class="col-sm-8">
+                                                         <div class="YesOrNoButton" btnRadioGroup formControlName="Discharge_Medications_Echocardiography"  [ngClass]="{'disabled': CheckDisable('Discharge_Medications_Echocardiography')}">
+                                                            <label class="hbtn hb-fill-right" btnRadio="Yes" tabindex="0" role="button"> Yes </label>
+                                                            <label class="hbtn hb-fill-left" btnRadio="No" tabindex="0" role="button"> No </label>
+                                                            <mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Discharge_Medications_Echocardiography')"> </mat-error>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+																<div class=" col-md-6"></div>
+                                                <div *ngIf="CheckVisibility('Discharge_Medications_Ejection_Fraction')" class="form-group col-md-6">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Medications_Ejection_Fraction')}" class="col-sm-4 col-form-label text-lg-right">Ejection Fraction</label>
+                                                      <div class="col-sm-8">
+                                                         <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                            <input type="number" formControlName="Discharge_Medications_Ejection_Fraction" matInput placeholder="Ejection Fraction">
+                                                            <mat-error [innerHTML]="GetFormControlErrorMessage('Discharge_Medications_Ejection_Fraction')"> </mat-error>   
+                                                         </mat-form-field>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                          </div>
+                                          <!-- New Row Dynamically adding -->
+                                          <div class="container">
+                                             <div class="row" *ngIf="CheckVisibility('Discharge_Medications_Other_Medicine')">
+                                                <div *ngIf="!ReadonlyPage" class="form-group col-sm-12 margin-top-20">
+                                                   <span class="btn-add-plus" (click)="AddArrayControl()"><i class="fa fa-plus"></i></span>
+                                                </div>
+                                                <div *ngIf="CheckVisibility('Discharge_Medications_Other_Medicine')" class="form-group col-md-12">
+                                                   <ng-container formArrayName="OtherMedicationArray" >
+                                                      <div *ngFor="let OtherMedicationArray of GetFormArray('OtherMedicationArray'); let i=index" [formGroupName]="i" class="row">
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Medications_Other_Medicine')}" class="col-sm-3 col-form-label text-lg-right">Other Medicine</label>
+                                                         <div class="col-sm-8">
+                                                            <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                               <input formControlName="Discharge_Medications_Other_Medicine" matInput placeholder="Medicine">
+                                                               <mat-error [innerHTML]="GetFormControlErrorMessage('Discharge_Medications_Other_Medicine', i)"> </mat-error>   
+                                                            </mat-form-field>
+                                                         </div>
+                                                         <div class="col-sm-1">
+                                                            <span *ngIf="!ReadonlyPage" (click)="removeArrayControl(i)" class="btn-remove-minus"><i class="fa fa-minus"></i></span>
+                                                         </div>
+                                                      </div>
+                                                   </ng-container>
+                                                </div>
+                                             </div>
+                                          </div>
+                                          <!-- New Row Dynamically adding -->
+                                       </div>
+                                    </form>
+
+                                 </div>
+
+
+                                 <!-- Submit the Form -->
+                                 <div class="row">
+                                    <div *ngIf="!ReadonlyPage && !SecondaryEdit" class="col-sm-12">
+                                       <button type="button" *ngIf="DischargeMedicationId === null && !FormUploading" (click)="DischargeMedicationSubmit()" class="btn btn-outline-primary float-right save">Save & Continue</button>
+                                       <button type="button" *ngIf="DischargeMedicationId !== null && !FormUploading" (click)="DischargeMedicationUpdate()" class="btn btn-outline-primary float-right save">Update & Continue</button>
+                                       <button *ngIf="FormUploading" type="button" class="btn btn-outline-primary float-right save uploading">
+                                          <i class="fa fa-spinner fa-pulse" aria-hidden="true"></i> Uploading...
+                                       </button>
+                                    </div>
+                                 </div> 
+                              </div>
+                           </div>                        
+                        </div>
+                     </div>
+                  </mat-tab>
+                  
+                  <mat-tab label="Discharge / Transfer" class="full-width" [disabled]="CheckSubCategoryVisibility('Discharge_Transfer') || (PatientDeath && PatientInfo.Hospital_History.length === 1)"> 
+                     <div *ngIf="CurrentTabIndex === 2 && FormLoaded" class="portlet-tab">
+                        <div class="portlet-tab-panelbody">
+                           <div class="row">
+                              <div class="col-md-12">
+                                 <!-- Discharge / Transfer -->
+                                 <div class="dischareg-and-tranfer" *ngIf="CheckSubJuniorCategoryVisibility('Discharge_Details')">
+                                    <div *ngIf="IfDidNotArrive">
+                                       <p style="color: #0577e7; font-weight: 500; letter-spacing: 0.5px; margin: 0px;text-align: center;">
+                                          **** This patient "Did Not Arrive" to the last transferred hospital. ****
+                                       </p>
+                                    </div>
+                                    <div class="tabpane-title" [ngClass]="{'stages-enable': DischargeHistoryAvailable }">
+                                       <h5 class="section-title">Discharge / Transfer </h5>
+                                       <!-- Stage wise Hospital changes icons -->
+                                       <div *ngIf="DischargeHistoryAvailable" class="stage-container">
+                                          <ng-container *ngFor="let FGroupValue of GetHistoryFormArrayValue('DischargeHistory'); let i=index" >
+                                             <div class="stage-by-process" [ngClass]="{'active': FGroupValue.HistoryActive }">
+                                                <img (click)="ActiveToggleHistory('DischargeHistory', i)" class="stage-icon" src="../../../../../../assets/images/icons-blue-{{FGroupValue.Hospital_Key}}.png">
+                                                <span class="navigation-arrow">>>></span>
+                                             </div>
+                                          </ng-container>
+                                          <div *ngIf="CurrentHospitalInfo !== null" class="stage-by-process active">
+                                             <img class="stage-icon" src="../../../../../../assets/images/icons-blue-{{CurrentHospitalInfo.Hospital_Role === 'EMS' ? 'E' : (CurrentHospitalInfo.Hospital_Role | slice: 0:1) + (CurrentHospitalInfo.Hospital_Role | slice: -1)}}.png">
+                                          </div>
+                                       </div>
+                                       <!-- Stage wise Hospital changes icons -->
+                                    </div>
+                                    <!-- Readonly FormGroup -->
+                                    <form *ngIf="DischargeHistoryAvailable && HistoryAvailable" class="full-width" [formGroup]="HistoryFGroup">
+                                       <ng-container formArrayName="DischargeHistory">
+                                          <ng-container *ngFor="let FGroup of GetHistoryFormArray('DischargeHistory'); let i=index" [formGroupName]="i">
+                                             <div *ngIf="FGroup.value.HistoryActive" class="form-details-container hospital-stage-active"> <!-- hospital-stage-active -->
+                                                <div class="quarterCircleBottomRight">
+                                                   <img class="stage-icon" src="../../../../../../assets/images/icons-blue-{{FGroup.value.Hospital_Key}}.png">
+                                                </div>
+                                                <div *ngIf="UserInfo.User_Type === 'SA' && !ReadonlyPage && !FGroup.controls['EditActivate'].value" class="quarterCircleTopRight">
+                                                   <span (click)="EditHistoryArray('DischargeHistory', i)" class="col-action-icon special-icon" matTooltip="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></span>
+                                                </div>  
+                                                <!-- container centers content on large screens -->
+                                                <div class="container">
+                                                   <div class="row">
+                                                      <div *ngIf="CheckVisibility('Discharge_Transfer_ICU_CCU_HCU_Date_Time')" class="form-group col-sm-12">
+                                                         <div class="row">
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Transfer_ICU_CCU_HCU_Date_Time')}" class="col-lg-4 col-md-5 col-form-label text-lg-right">Discharge / Transfer ICU/CCU Date & Time</label>
+                                                            <div class="col-md-6">
+                                                               <div class="row">
+                                                                  <div class="col-sm-6">
+                                                                     <div class="YesOrNoButton" btnRadioGroup formControlName="Discharge_Transfer_ICU_CCU_HCU_Date_Time">
+                                                                        <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                                           <input formControlName="Discharge_Transfer_ICU_CCU_HCU_Date_Time" (dateChange)="HistoryDateChange('Discharge_Transfer_ICU_CCU_HCU_Time', 'Discharge_Transfer_ICU_CCU_HCU_Date_Time', 'DischargeHistory', i)" (keypress)="NotAllow()" (keydown)="ClearInput($event)" (click)="discharge_transfer_from_hospital_datepicker.open()" matInput [required]="CheckMandatory('Discharge_Transfer_ICU_CCU_HCU_Date_Time') ? '' : null" [max] = "noFutureDate"  [matDatepicker] ="discharge_transfer_ICU_datepicker" placeholder="Date">
+                                                                           <mat-icon (click)="discharge_transfer_ICU_datepicker.open()" matSuffix >event </mat-icon>
+                                                                           <mat-datepicker touchUi #discharge_transfer_ICU_datepicker></mat-datepicker>
+                                                                        </mat-form-field>
+                                                                     </div>
+                                                                  </div>
+                                                                  <div class="col-sm-6">
+                                                                     <mat-form-field [ngClass]="{'mat-form-field-invalid': CheckTimeRelatedDateErrorStatus('Discharge_Transfer_ICU_CCU_HCU_Date_Time', 'Discharge_Transfer_ICU_CCU_HCU_Time')}" class="full-width column-time" [floatLabel]="'never'" appearance="fill">
+                                                                        <input matInput formControlName="Discharge_Transfer_ICU_CCU_HCU_Time" (keypress)="NotAllow()" (keydown)="ClearInput($event)" [required]="CheckMandatory('Discharge_Transfer_ICU_CCU_HCU_Time') ? '' : null" data-history="true" [ngxTimepicker]="Discharge_Transfer_ICU_CCU_HCU_Timepicker" [format]="24" placeholder="Time">
+                                                                        <mat-icon matSuffix (click)="Discharge_Transfer_ICU_CCU_HCU_Timepicker.open()">access_time</mat-icon>
+                                                                        <ngx-material-timepicker (opened)="MaxTimeHistoryArray('Discharge_Transfer_ICU_CCU_HCU_Time', 'Discharge_Transfer_ICU_CCU_HCU_Date_Time', 'DischargeHistory', i)"  #Discharge_Transfer_ICU_CCU_HCU_Timepicker></ngx-material-timepicker>
+                                                                     </mat-form-field>
+                                                                  </div>
+                                                                  <div class="col-sm-12">
+                                                                     <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" class="mat-error-full" [innerHTML]="GetHistoryFormControlErrorMessage('DischargeHistory', i, 'Discharge_Transfer_ICU_CCU_HCU_Date_Time')"> </mat-error>
+                                                                  </div>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+
+                                                      <div *ngIf="CheckVisibility('Discharge_Transfer_from_Hospital_Date_Time')" class="form-group col-sm-12">
+                                                         <div class="row">
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Transfer_from_Hospital_Date_Time')}" class="col-lg-4 col-md-5 col-form-label text-lg-right">Discharge From Hospital Date & Time</label>
+                                                            <div class="col-md-6">
+                                                               <div class="row">
+                                                                  <div class="col-sm-6">
+                                                                     <div class="YesOrNoButton" btnRadioGroup formControlName="Discharge_Transfer_from_Hospital_Date_Time">
+                                                                        <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                                           <input formControlName="Discharge_Transfer_from_Hospital_Date_Time" (dateChange)="HistoryDateChange('Discharge_Transfer_from_Hospital_Time', 'Discharge_Transfer_from_Hospital_Date_Time', 'DischargeHistory', i)" (keypress)="NotAllow()" (keydown)="ClearInput($event)" (click)="discharge_transfer_from_hospital_datepicker.open()" matInput [required]="CheckMandatory('Discharge_Transfer_from_Hospital_Date_Time') ? '' : null" [max] = "noFutureDate"  [matDatepicker] ="discharge_transfer_from_hospital_datepicker" placeholder="Date">
+                                                                           <mat-icon (click)="discharge_transfer_from_hospital_datepicker.open()" matSuffix >event </mat-icon>
+                                                                           <mat-datepicker touchUi #discharge_transfer_from_hospital_datepicker></mat-datepicker>
+                                                                        </mat-form-field>
+                                                                     </div>
+                                                                  </div>
+                                                                  <div class="col-sm-6">
+                                                                     <mat-form-field [ngClass]="{'mat-form-field-invalid': CheckTimeRelatedDateErrorStatus('Discharge_Transfer_from_Hospital_Date_Time', 'Discharge_Transfer_from_Hospital_Time')}" class="full-width column-time" [floatLabel]="'never'" appearance="fill">
+                                                                        <input matInput formControlName="Discharge_Transfer_from_Hospital_Time" (keypress)="NotAllow()" (keydown)="ClearInput($event)" [required]="CheckMandatory('Discharge_Transfer_from_Hospital_Time') ? '' : null" data-history="true" [ngxTimepicker]="discharge_transfer_from_hospital_timepicker" [format]="24" placeholder="Time">
+                                                                        <mat-icon matSuffix (click)="discharge_transfer_from_hospital_timepicker.open()">access_time</mat-icon>
+                                                                        <ngx-material-timepicker (opened)="MaxTimeHistoryArray('Discharge_Transfer_from_Hospital_Time', 'Discharge_Transfer_from_Hospital_Date_Time', 'DischargeHistory', i)"  #discharge_transfer_from_hospital_timepicker></ngx-material-timepicker>
+                                                                     </mat-form-field>
+                                                                  </div>
+                                                                  <div class="col-sm-12">
+                                                                     <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" class="mat-error-full" [innerHTML]="GetHistoryFormControlErrorMessage('DischargeHistory', i, 'Discharge_Transfer_from_Hospital_Date_Time')"> </mat-error>
+                                                                  </div>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                      <div *ngIf="CheckVisibility('Discharge_Transfer_To')" class="form-group col-sm-12">
+                                                         <div class="row">
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Transfer_To')}" class="col-lg-4 col-md-4 col-form-label text-lg-right">Discharge / Transfer To</label>
+                                                            <div class="col-sm-6">
+                                                               <div class="YesOrNoButton disabled" btnRadioGroup formControlName="Discharge_Transfer_To">
+                                                                  <label class="hbtn hb-fill-right" btnRadio="Current_Cluster" tabindex="0" role="button"> Current Cluster </label>
+                                                                  <label class=" hbtn hb-fill-left" btnRadio="Other_Cluster" tabindex="0" role="button"> Other Cluster </label>
+                                                                  <label class=" hbtn hb-fill-left" btnRadio="Non_Stemi_Cluster" tabindex="0" role="button"> Referral Facility </label>
+																						<label *ngIf="CurrentHospitalInfo.Hospital_Role !== 'EMS'" class="hbtn hb-fill-right" btnRadio="Step_Down_Facility" tabindex="0" role="button"> Step-Down Facility </label>
+																						<label *ngIf="CurrentHospitalInfo.Hospital_Role !== 'EMS'" class="hbtn hb-fill-right" btnRadio="Home" tabindex="0" role="button"> Home </label>
+                                                                  <mat-error [innerHTML]="GetFormControlErrorMessage('Discharge_Transfer_To')"> </mat-error>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+            
+                                                      <ng-container *ngIf="FGroup.value.Discharge_Transfer_To === 'Other_Cluster'">
+                                                            <div *ngIf="CheckVisibility('Transfer_to_Stemi_Cluster')" class="form-group col-sm-12">
+                                                               <div class="row">
+                                                                  <label [ngClass]="{'lbl-required': CheckMandatory('Transfer_to_Stemi_Cluster')}"  for="Street" class="col-sm-4 col-form-label text-lg-right">Transfer to Cluster</label>
+                                                                  <div class="col-sm-6">
+                                                                     <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                                        <input matInput placeholder="Cluster" autocomplete="off" formControlName="Transfer_to_Stemi_Cluster"> <!-- [matAutocomplete]="ClusterAutocomplete" (blur)="AutocompleteBlur('Transfer_to_Stemi_Cluster')" -->
+                                                                        <!-- <mat-autocomplete #ClusterAutocomplete="matAutocomplete" [displayWith]="ClusterDisplayName">
+                                                                           <mat-option *ngFor="let Cluster of filteredClustersList | async" [value]="Cluster"> {{Cluster.Cluster_Name}} </mat-option>
+                                                                        </mat-autocomplete> -->
+                                                                        <!-- <mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Transfer_to_Stemi_Cluster')"> </mat-error> -->
+                                                                     </mat-form-field>
+                                                                  </div>
+                                                               </div>
+                                                            </div>
+                                                      </ng-container>
+                                                      <ng-container *ngIf="FGroup.value.Discharge_Transfer_To === 'Current_Cluster' || FGroup.value.Discharge_Transfer_To === 'Other_Cluster'">
+                                                         <div *ngIf="CheckVisibility('Transfer_to_Stemi_Cluster_Hospital_Name')" class="form-group col-sm-12">
+                                                            <div class="row">
+                                                               <label [ngClass]="{'lbl-required': CheckMandatory('Transfer_to_Stemi_Cluster_Hospital_Name')}"  for="Street" class="col-sm-4 col-form-label text-lg-right">Transfer to Cluster Hospital</label>
+                                                               <div class="col-sm-6">
+                                                                  <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                                     <input matInput placeholder="Hospital" autocomplete="off" formControlName="Transfer_to_Stemi_Cluster_Hospital_Name"> <!-- [matAutocomplete]="hospitalAutocomplete"  (blur)="AutocompleteBlur('Transfer_to_Stemi_Cluster_Hospital_Name')" -->
+                                                                     <!-- <mat-autocomplete #hospitalAutocomplete="matAutocomplete" (optionSelected)="SetAddress($event.option.value)" [displayWith]="HospitalDisplayName">
+                                                                        <mat-option *ngFor="let hospital of filteredHospitalsList | async" [value]="hospital"> {{hospital.Hospital_Name}} ({{hospital.Hospital_Type === 'Tier 2' ? 'T' : (hospital.Hospital_Role | slice: 0:1) + (hospital.Hospital_Role === 'EMS' ? '' : hospital.Hospital_Role | slice: -1 ) }}) </mat-option>
+                                                                     </mat-autocomplete>
+                                                                     <mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Transfer_to_Stemi_Cluster_Hospital_Name')"> </mat-error> -->
+                                                                  </mat-form-field>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                      </ng-container>
+                                                      <ng-container *ngIf="FGroup.value.Discharge_Transfer_To === 'Current_Cluster' || FGroup.value.Discharge_Transfer_To === 'Other_Cluster'">
+                                                         <div *ngIf="CheckVisibility('Transfer_to_Stemi_Cluster_Hospital_Address')" class="form-group col-sm-12">
+                                                            <div class="row">
+                                                               <label [ngClass]="{'lbl-required': CheckMandatory('Transfer_to_Stemi_Cluster_Hospital_Address')}"  for="Street" class="col-sm-4 col-form-label text-lg-right">Transfer to Cluster Hospital Address</label>
+                                                               <div class="col-sm-6">
+                                                                  <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill"  [ngClass]="{'disabled': CheckDisable('Transfer_to_Stemi_Cluster_Hospital_Address')}">
+                                                                     <textarea formControlName="Transfer_to_Stemi_Cluster_Hospital_Address" matInput placeholder="Address" ></textarea>
+                                                                     <!-- <mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Transfer_to_Stemi_Cluster_Hospital_Address')"> </mat-error> -->
+                                                                  </mat-form-field>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                      </ng-container>
+                                                      <ng-container *ngIf="FGroup.value.Discharge_Transfer_To === 'Non_Stemi_Cluster' || FGroup.value.Discharge_Transfer_To === 'Step_Down_Facility'">
+                                                         <div *ngIf="CheckVisibility('Transfer_to_Non_Stemi_Cluster_Hospital_Hospital_Name')" class="form-group col-sm-12">
+                                                            <div class="row">
+                                                               <label [ngClass]="{'lbl-required': CheckMandatory('Transfer_to_Non_Stemi_Cluster_Hospital_Hospital_Name')}"  for="Street" class="col-sm-4 col-form-label text-lg-right">Transfer to {{FGroup.value.Discharge_Transfer_To === 'Step_Down_Facility' ? 'Step-Down' : 'Referral'}} Facility Name</label>
+                                                               <div class="col-sm-6">
+                                                                  <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                                     <input formControlName="Transfer_to_Non_Stemi_Cluster_Hospital_Hospital_Name" matInput placeholder="Hospital Name">  
+                                                                     <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('DischargeHistory', i, 'Transfer_to_Non_Stemi_Cluster_Hospital_Hospital_Name')"> </mat-error>
+                                                                  </mat-form-field>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                         <div *ngIf="CheckVisibility('Transfer_to_Non_Stemi_Cluster_Hospital_Hospital_Address')" class="form-group col-sm-12">
+                                                            <div class="row">
+                                                               <label [ngClass]="{'lbl-required': CheckMandatory('Transfer_to_Non_Stemi_Cluster_Hospital_Hospital_Address')}"  for="Street" class="col-sm-4 col-form-label text-lg-right">Transfer to {{FGroup.value.Discharge_Transfer_To === 'Step_Down_Facility' ? 'Step-Down' : 'Referral'}} Facility Address</label>
+                                                               <div class="col-sm-6">
+                                                                  <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                                     <textarea formControlName="Transfer_to_Non_Stemi_Cluster_Hospital_Hospital_Address" matInput placeholder="Address"></textarea>
+                                                                     <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('DischargeHistory', i, 'Transfer_to_Non_Stemi_Cluster_Hospital_Hospital_Address')"> </mat-error>
+                                                                  </mat-form-field>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                      </ng-container>
+                                                      
+                                                      <ng-container *ngIf="FGroup.value.Discharge_Transfer_To !== '' && FGroup.value.Discharge_Transfer_To !== null">
+                                                         <div *ngIf="CheckVisibility('Discharge_Details_Remarks')" class="form-group col-sm-12">
+                                                            <div class="row">
+                                                               <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Details_Remarks')}"  for="Street" class="col-sm-4 col-form-label text-lg-right">Remarks</label>
+                                                                  <div class="col-sm-6">
+                                                                  <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                                     <textarea formControlName="Discharge_Details_Remarks" matInput placeholder="Remarks"></textarea>
+                                                                     <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('DischargeHistory', i, 'Discharge_Details_Remarks')"> </mat-error>
+                                                                  </mat-form-field>
+                                                                  </div>
+                                                            </div>
+                                                         </div>
+                                                         <ng-container *ngIf="FGroup.value.Discharge_Transfer_To !== 'Home' && FGroup.value.Discharge_Transfer_To !== 'Step_Down_Facility' && FGroup.value.Hospital_Role !== 'EMS' ">
+                                                            <div *ngIf="CheckVisibility('Transport_Vehicle')" class="form-group col-sm-12">
+                                                               <div class="row">
+                                                                  <label [ngClass]="{'lbl-required': CheckMandatory('Transport_Vehicle')}" class="col-sm-4 col-form-label text-lg-right">Transport Vehicle</label>
+                                                                  <div class="col-sm-6">
+                                                                     <div class="YesOrNoButton disabled" btnRadioGroup formControlName="Transport_Vehicle">
+                                                                        <label class="hbtn hb-fill-left" btnRadio="Private" tabindex="0" role="button"> Private </label>
+                                                                        <label class="hbtn hb-fill-right" btnRadio="Public" tabindex="0" role="button"> Public </label>
+                                                                        <label class="hbtn hb-fill-right" btnRadio="Govt_ambulance" tabindex="0" role="button"> Govt Ambulance </label>
+                                                                        <label class="hbtn hb-fill-right" btnRadio="Private_ambulance" tabindex="0" role="button"> Private Ambulance </label>
+                                                                        <br>
+                                                                        <label class="hbtn hb-fill-right" btnRadio="Helicopter" tabindex="0" role="button"> Helicopter </label>
+                                                                        <label class="hbtn hb-fill-right" btnRadio="Fixed_wing" tabindex="0" role="button"> Fixed Wing </label>
+                                                                        <label class="hbtn hb-fill-right" btnRadio="Others" tabindex="0" role="button"> Others </label>
+                                                                        <br>
+                                                                     </div>
+                                                                  </div>
+                                                               </div>
+                                                            </div>
+                                                            <ng-container *ngIf="FGroup.value.Transport_Vehicle === 'Others'">
+                                                               <div *ngIf="CheckVisibility('Transport_Vehicle_Other')" class="form-group col-sm-12">
+                                                                  <div class="row">
+                                                                     <label [ngClass]="{'lbl-required': CheckMandatory('Transport_Vehicle_Other')}"  for="Street" class="col-sm-4 col-form-label text-lg-right"> Specify Other Transport Vehicle </label>
+                                                                     <div class="col-sm-6">
+                                                                        <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                                           <input matInput placeholder="Specify Other Transport Vehicle" formControlName="Transport_Vehicle_Other">
+                                                                           <mat-error class="mat-error-full" [innerHTML]="GetHistoryFormControlErrorMessage('DischargeHistory', i, 'Transport_Vehicle_Other')"> </mat-error>
+                                                                        </mat-form-field>
+                                                                     </div>
+                                                                  </div>
+                                                               </div>
+                                                            </ng-container>
+                                                            <ng-container *ngIf="FGroup.value.Transport_Vehicle !== 'Private' && FGroup.value.Transport_Vehicle !== 'Public' && FGroup.value.Transport_Vehicle !== 'Others' && FGroup.value.Transport_Vehicle !== ''">                                 
+                                                               <ng-container *ngIf="FGroup.getRawValue().Transport_Vehicle === 'Cluster_Ambulance' ">
+                                                                  <div *ngIf="CheckVisibility('Discharge_Cluster_Ambulance')" class="form-group col-sm-12">
+                                                                     <div class="row">
+                                                                        <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Cluster_Ambulance')}"  for="Street" class="col-sm-4 col-form-label text-lg-right">Ambulance </label>
+                                                                        <div class="col-sm-6">
+                                                                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                                              <input matInput placeholder="Hospital" autocomplete="off" formControlName="Discharge_Cluster_Ambulance">
+                                                                              <!-- <input matInput placeholder="Cluster" [matAutocomplete]="AmbulanceAutocomplete" autocomplete="off" formControlName="Discharge_Cluster_Ambulance" (blur)="AutocompleteBlur('Discharge_Cluster_Ambulance')">
+                                                                              <mat-autocomplete #AmbulanceAutocomplete="matAutocomplete" [displayWith]="HospitalDisplayName">
+                                                                                 <mat-option *ngFor="let Ambulance of filteredAmbulancesList | async" [value]="Ambulance"> {{Ambulance.Hospital_Name}} </mat-option>
+                                                                              </mat-autocomplete>
+                                                                              <mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Discharge_Cluster_Ambulance')"> </mat-error> -->
+                                                                           </mat-form-field>
+                                                                        </div>
+                                                                     </div>
+                                                                  </div>
+                                                               </ng-container>
+                                                               <div *ngIf="CheckVisibility('Discharge_Ambulance_Call_Date_Time')" class="form-group col-sm-12">
+                                                                  <div class="row">
+                                                                     <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Ambulance_Call_Date_Time')}" class="col-sm-4 col-form-label text-lg-right">Date & Time of Ambulance Call</label>
+                                                                     <div class="col-sm-6">
+                                                                        <div class="row">
+                                                                           <div class="col-sm-6">
+                                                                              <div class="YesOrNoButton" btnRadioGroup formControlName="Discharge_Ambulance_Call_Date_Time" >
+                                                                                 <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                                                    <input formControlName="Discharge_Ambulance_Call_Date_Time" (dateChange)="HistoryDateChange('Discharge_Ambulance_Call_Date_Time', 'Discharge_Ambulance_Call_Date_Time', 'DischargeHistory', i)" matInput (keypress)="NotAllow()" (keydown)="ClearInput($event)" (click)="discharge_ambulance_call_datepicker.open()" [required]="CheckMandatory('Discharge_Ambulance_Call_Date_Time') ? '' : null" [max] = "noFutureDate"  [matDatepicker] ="discharge_ambulance_call_datepicker" placeholder="Date">
+                                                                                    <mat-icon  (click)="discharge_ambulance_call_datepicker.open()" matSuffix >event </mat-icon>
+                                                                                    <mat-datepicker touchUi #discharge_ambulance_call_datepicker></mat-datepicker>
+                                                                                 </mat-form-field>
+                                                                              </div>
+                                                                           </div>
+                                                                           <div class="col-sm-6">
+                                                                              <mat-form-field [ngClass]="{'mat-form-field-invalid': CheckTimeRelatedDateErrorStatus('Discharge_Ambulance_Call_Date_Time', 'Discharge_Ambulance_Call_Time')}" class="full-width column-time" [floatLabel]="'never'" appearance="fill">
+                                                                                 <input formControlName="Discharge_Ambulance_Call_Time" matInput (keypress)="NotAllow()" (keydown)="ClearInput($event)" [required]="CheckMandatory('Discharge_Ambulance_Call_Time') ? '' : null" data-history="true" [ngxTimepicker]="discharge_ambulance_call_timepicker" [format]="24" placeholder="Time">
+                                                                                 <mat-icon matSuffix (click)="discharge_ambulance_call_timepicker.open()">access_time</mat-icon>
+                                                                                 <ngx-material-timepicker (opened)="MaxTimeHistoryArray('Discharge_Ambulance_Call_Time', 'Discharge_Ambulance_Call_Date_Time', 'DischargeHistory', i)" #discharge_ambulance_call_timepicker></ngx-material-timepicker>
+                                                                              </mat-form-field>
+                                                                           </div>
+                                                                           <div class="col-sm-12">
+                                                                              <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('DischargeHistory', i, 'Discharge_Ambulance_Call_Date_Time')"> </mat-error>
+                                                                           </div>
+                                                                        </div>
+                                                                     </div>
+                                                                  </div>
+                                                               </div>
+                                                               <div *ngIf="CheckVisibility('Discharge_Ambulance_Arrival_Date_Time')" class="form-group col-sm-12">
+                                                                  <div class="row">
+                                                                     <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Ambulance_Arrival_Date_Time')}" class="col-sm-4 col-form-label text-lg-right">Date & Time of Ambulance Arrival</label>
+                                                                     <div class="col-sm-6">
+                                                                        <div class="row">
+                                                                           <div class="col-sm-6">
+                                                                              <div class="YesOrNoButton" btnRadioGroup formControlName="Discharge_Ambulance_Arrival_Date_Time">
+                                                                                 <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                                                    <input formControlName="Discharge_Ambulance_Arrival_Date_Time" (dateChange)="HistoryDateChange('Discharge_Ambulance_Arrival_Time', 'Discharge_Ambulance_Arrival_Date_Time', 'DischargeHistory', i)" (keypress)="NotAllow()" (keydown)="ClearInput($event)" (click)="discharge_ambulance_arrival_datepicker.open()" matInput [required]="CheckMandatory('Discharge_Ambulance_Arrival_Date_Time') ? '' : null" [max] = "noFutureDate"  [matDatepicker] ="discharge_ambulance_arrival_datepicker" placeholder="Date">
+                                                                                    <mat-icon (click)="discharge_ambulance_arrival_datepicker.open()" matSuffix >event </mat-icon>
+                                                                                    <mat-datepicker touchUi #discharge_ambulance_arrival_datepicker></mat-datepicker>
+                                                                                 </mat-form-field>
+                                                                              </div>
+                                                                           </div>
+                                                                           <div class="col-sm-6">
+                                                                              <mat-form-field [ngClass]="{'mat-form-field-invalid': CheckTimeRelatedDateErrorStatus('Discharge_Ambulance_Arrival_Date_Time', 'Discharge_Ambulance_Arrival_Time')}" class="full-width column-time" [floatLabel]="'never'" appearance="fill">
+                                                                                 <input formControlName="Discharge_Ambulance_Arrival_Time" matInput (keypress)="NotAllow()" (keydown)="ClearInput($event)" [required]="CheckMandatory('Discharge_Ambulance_Arrival_Time') ? '' : null" data-history="true" [ngxTimepicker]="discharge_ambulance_arrival_timepicker" [format]="24" placeholder="Time">
+                                                                                 <mat-icon matSuffix (click)="discharge_ambulance_arrival_timepicker.open()">access_time</mat-icon>
+                                                                                 <ngx-material-timepicker (opened)="MaxTimeHistoryArray('Discharge_Ambulance_Arrival_Time', 'Discharge_Ambulance_Arrival_Date_Time', 'DischargeHistory', i)" #discharge_ambulance_arrival_timepicker></ngx-material-timepicker>
+                                                                              </mat-form-field>
+                                                                           </div>
+                                                                           <div class="col-sm-12">
+                                                                              <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('DischargeHistory', i, 'Discharge_Ambulance_Arrival_Date_Time')"> </mat-error>
+                                                                           </div>
+                                                                        </div>
+                                                                     </div>
+                                                                  </div>
+                                                               </div>
+                                                               <div *ngIf="CheckVisibility('Discharge_Ambulance_Departure_Date_Time')" class="form-group col-sm-12">
+                                                                  <div class="row">
+                                                                     <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Ambulance_Departure_Date_Time')}" class="col-sm-4 col-form-label text-lg-right">Date & Time of Ambulance Departure</label>
+                                                                     <div class="col-sm-6">
+                                                                        <div class="row">
+                                                                           <div class="col-sm-6">
+                                                                              <div class="YesOrNoButton" btnRadioGroup formControlName="Discharge_Ambulance_Departure_Date_Time">
+                                                                                 <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                                                    <input matInput (dateChange)="HistoryDateChange('Discharge_Ambulance_Departure_Time', 'Discharge_Ambulance_Departure_Date_Time', 'DischargeHistory', i)" formControlName="Discharge_Ambulance_Departure_Date_Time" (keypress)="NotAllow()" (keydown)="ClearInput($event)" (click)="discharge_ambulance_departure_datepicker.open()" [required]="CheckMandatory('Discharge_Ambulance_Departure_Date_Time') ? '' : null" [max] = "noFutureDate"  [matDatepicker] ="discharge_ambulance_departure_datepicker" placeholder="Date">
+                                                                                    <mat-icon (click)="discharge_ambulance_departure_datepicker.open()" matSuffix >event </mat-icon>
+                                                                                    <mat-datepicker touchUi #discharge_ambulance_departure_datepicker></mat-datepicker>
+                                                                                 </mat-form-field>
+                                                                              </div>
+                                                                           </div>
+                                                                           <div class="col-sm-6">
+                                                                              <mat-form-field [ngClass]="{'mat-form-field-invalid': CheckTimeRelatedDateErrorStatus('Discharge_Ambulance_Departure_Date_Time', 'Discharge_Ambulance_Departure_Time')}" class="full-width column-time" [floatLabel]="'never'" appearance="fill">
+                                                                                 <input matInput formControlName="Discharge_Ambulance_Departure_Time" (keypress)="NotAllow()" (keydown)="ClearInput($event)" [required]="CheckMandatory('Discharge_Ambulance_Departure_Time') ? '' : null" data-history="true" [ngxTimepicker]="discharge_ambulance_departure_timepicker" [format]="24" placeholder="Time">
+                                                                                 <mat-icon matSuffix (click)="discharge_ambulance_departure_timepicker.open()">access_time</mat-icon>
+                                                                                 <ngx-material-timepicker (opened)="MaxTimeHistoryArray('Discharge_Ambulance_Departure_Time', 'Discharge_Ambulance_Departure_Date_Time', 'DischargeHistory', i)" #discharge_ambulance_departure_timepicker></ngx-material-timepicker>
+                                                                              </mat-form-field>
+                                                                           </div>
+                                                                           <div class="col-sm-12">
+                                                                              <mat-error *ngIf="!ReadonlyPage && FGroup.value.EditActivate" [innerHTML]="GetHistoryFormControlErrorMessage('DischargeHistory', i, 'Discharge_Ambulance_Departure_Date_Time')"> </mat-error>
+                                                                           </div>
+                                                                        </div>
+                                                                     </div>
+                                                                  </div>
+                                                               </div>
+                                                            </ng-container> 
+                                                         </ng-container>
+                                                      </ng-container>
+                                                   </div>
+                                                </div>
+                                                <!--  -->
+                                                <div class="container-fluid no-margin ">
+                                                   <div class="row">
+                                                      <div *ngIf="!ReadonlyPage && FGroup.value.EditActivate" class="col-md-12 btns-flex-end">
+                                                         <button *ngIf="!SecondaryUpdating" type="button" (click)="resetFArrayHistory('DischargeHistory', i)" class="btn btn-outline-secondary cancel float-right save"> Cancel </button>
+                                                         <button *ngIf="!SecondaryUpdating && FGroup.get('_id').value !== null" [ngClass]="{'disabled': FGroup.status !== 'VALID'}" [disabled]="FGroup.status !== 'VALID'" (click)="DischargeHistoryUpdate(i)" type="button" class="btn btn-outline-primary float-right save"> Update </button>
+                                                         <button *ngIf="SecondaryUpdating" type="button" class="btn btn-outline-primary float-right save uploading">
+                                                            <i class="fa fa-spinner fa-pulse" aria-hidden="true"></i> Uploading...
+                                                         </button>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                          </ng-container>
+                                       </ng-container>
+                                    </form>
+                                    <!-- Editable FormGroup -->
+                                    <form *ngIf="CurrentHospitalInfo !== null" class="full-width" [formGroup]="DynamicFGroup">
+                                       <div class="form-details-container" [ngClass]="{'hospital-stage-active': DischargeHistoryAvailable }"> <!-- hospital-stage-active -->
+                                          <div *ngIf="DischargeHistoryAvailable" class="quarterCircleBottomRight">
+                                             <img class="stage-icon" src="../../../../../../assets/images/icons-blue-{{CurrentHospitalInfo.Hospital_Role === 'EMS' ? 'E' : (CurrentHospitalInfo.Hospital_Role | slice: 0:1) + (CurrentHospitalInfo.Hospital_Role | slice: -1)}}.png">
+                                          </div>
+                                          <!-- container centers content on large screens -->
+                                          <div class="container">
+                                             <div class="row">
+                                                <div *ngIf="CheckVisibility('Discharge_Transfer_ICU_CCU_HCU_Date_Time')" class="form-group col-sm-12">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Transfer_ICU_CCU_HCU_Date_Time')}" class="col-lg-4 col-md-5 col-form-label text-lg-right">Discharge / Transfer ICU/CCU Date & Time</label>
+                                                      <div class="col-md-6">
+                                                         <div class="row">
+                                                            <div class="col-sm-6">
+                                                               <div class="YesOrNoButton" btnRadioGroup formControlName="Discharge_Transfer_ICU_CCU_HCU_Date_Time">
+                                                                  <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                                     <input formControlName="Discharge_Transfer_ICU_CCU_HCU_Date_Time" (keypress)="NotAllow()" (keydown)="ClearInput($event)" (click)="discharge_transfer_ICU_datepicker.open()" matInput [required]="CheckMandatory('Discharge_Transfer_ICU_CCU_HCU_Date_Time') ? '' : null" [max] = "noFutureDate"  [matDatepicker] ="discharge_transfer_ICU_datepicker" placeholder="Date">
+                                                                     <mat-icon (click)="discharge_transfer_ICU_datepicker.open()" matSuffix >event </mat-icon>
+                                                                     <mat-datepicker touchUi #discharge_transfer_ICU_datepicker></mat-datepicker>
+                                                                  </mat-form-field>
+                                                               </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                               <mat-form-field [ngClass]="{'mat-form-field-invalid': CheckTimeRelatedDateErrorStatus('Discharge_Transfer_ICU_CCU_HCU_Date_Time', 'Discharge_Transfer_ICU_CCU_HCU_Time')}" class="full-width column-time" [floatLabel]="'never'" appearance="fill">
+                                                                  <input matInput formControlName="Discharge_Transfer_ICU_CCU_HCU_Time" (keypress)="NotAllow()" (keydown)="ClearInput($event)" [required]="CheckMandatory('Discharge_Transfer_ICU_CCU_HCU_Time') ? '' : null" data-history="false" [ngxTimepicker]="Discharge_Transfer_ICU_CCU_HCU_Timepicker" [format]="24" placeholder="Time">
+                                                                  <mat-icon matSuffix (click)="Discharge_Transfer_ICU_CCU_HCU_Timepicker.open()">access_time</mat-icon>
+                                                                  <ngx-material-timepicker (opened)="MaxTime('Discharge_Transfer_ICU_CCU_HCU_Time', 'Discharge_Transfer_ICU_CCU_HCU_Date_Time')" [defaultTime]="DefaultTime('Discharge_Transfer_ICU_CCU_HCU_Time')" #Discharge_Transfer_ICU_CCU_HCU_Timepicker></ngx-material-timepicker>
+                                                               </mat-form-field>
+                                                            </div>
+                                                            <div class="col-sm-12">
+                                                               <mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Discharge_Transfer_ICU_CCU_HCU_Date_Time')"> </mat-error>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+
+                                                <div *ngIf="CheckVisibility('Discharge_Transfer_from_Hospital_Date_Time')" class="form-group col-sm-12">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Transfer_from_Hospital_Date_Time')}" class="col-lg-4 col-md-5 col-form-label text-lg-right">Discharge From Hospital Date & Time</label>
+                                                      <div class="col-md-6">
+                                                         <div class="row">
+                                                            <div class="col-sm-6">
+                                                               <div class="YesOrNoButton" btnRadioGroup formControlName="Discharge_Transfer_from_Hospital_Date_Time">
+                                                                  <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                                     <input formControlName="Discharge_Transfer_from_Hospital_Date_Time" (keypress)="NotAllow()" (keydown)="ClearInput($event)" (click)="discharge_transfer_from_hospital_datepicker.open()" matInput [required]="CheckMandatory('Discharge_Transfer_from_Hospital_Date_Time') ? '' : null" [max] = "noFutureDate"  [matDatepicker] ="discharge_transfer_from_hospital_datepicker" placeholder="Date">
+                                                                     <mat-icon (click)="discharge_transfer_from_hospital_datepicker.open()" matSuffix >event </mat-icon>
+                                                                     <mat-datepicker touchUi #discharge_transfer_from_hospital_datepicker></mat-datepicker>
+                                                                  </mat-form-field>
+                                                               </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                               <mat-form-field [ngClass]="{'mat-form-field-invalid': CheckTimeRelatedDateErrorStatus('Discharge_Transfer_from_Hospital_Date_Time', 'Discharge_Transfer_from_Hospital_Time')}" class="full-width column-time" [floatLabel]="'never'" appearance="fill">
+                                                                  <input matInput formControlName="Discharge_Transfer_from_Hospital_Time" (keypress)="NotAllow()" (keydown)="ClearInput($event)" [required]="CheckMandatory('Discharge_Transfer_from_Hospital_Time') ? '' : null" data-history="false" [ngxTimepicker]="discharge_transfer_from_hospital_timepicker" [format]="24" placeholder="Time">
+                                                                  <mat-icon matSuffix (click)="discharge_transfer_from_hospital_timepicker.open()">access_time</mat-icon>
+                                                                  <ngx-material-timepicker (opened)="MaxTime('Discharge_Transfer_from_Hospital_Time', 'Discharge_Transfer_from_Hospital_Date_Time')" [defaultTime]="DefaultTime('Discharge_Transfer_from_Hospital_Time')" #discharge_transfer_from_hospital_timepicker></ngx-material-timepicker>
+                                                               </mat-form-field>
+                                                            </div>
+                                                            <div class="col-sm-12">
+                                                               <mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Discharge_Transfer_from_Hospital_Date_Time')"> </mat-error>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                                <div *ngIf="CheckVisibility('Discharge_Transfer_To')" class="form-group col-sm-12">
+                                                   <div class="row">
+                                                      <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Transfer_To')}" class="col-lg-4 col-md-4 col-form-label text-lg-right">Discharge / Transfer To</label>
+                                                      <div class="col-sm-6">
+                                                         <div class="YesOrNoButton" btnRadioGroup formControlName="Discharge_Transfer_To"  [ngClass]="{'disabled': CheckDisable('Discharge_Transfer_To')}">
+                                                            <label class="hbtn hb-fill-right" btnRadio="Current_Cluster" tabindex="0" role="button"> Current Cluster </label>
+                                                            <label class=" hbtn hb-fill-left" btnRadio="Other_Cluster" tabindex="0" role="button"> Other Cluster </label>
+                                                            <label class=" hbtn hb-fill-left" btnRadio="Non_Stemi_Cluster" tabindex="0" role="button"> Referral Facility </label>
+																				<label *ngIf="CurrentHospitalInfo.Hospital_Role !== 'EMS'" class="hbtn hb-fill-right" btnRadio="Step_Down_Facility" tabindex="0" role="button"> Step-Down Facility </label>
+																				<label *ngIf="CurrentHospitalInfo.Hospital_Role !== 'EMS'" class="hbtn hb-fill-right" btnRadio="Home" tabindex="0" role="button"> Home </label>
+                                                            <mat-error [innerHTML]="GetFormControlErrorMessage('Discharge_Transfer_To')"> </mat-error>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+      
+                                                <ng-container *ngIf="DynamicFGroup.getRawValue().Discharge_Transfer_To === 'Other_Cluster'">
+                                                      <div *ngIf="CheckVisibility('Transfer_to_Stemi_Cluster')" class="form-group col-sm-12">
+                                                         <div class="row">
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Transfer_to_Stemi_Cluster')}"  for="Street" class="col-sm-4 col-form-label text-lg-right">Transfer to Cluster</label>
+                                                            <div class="col-sm-6">
+                                                               <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                                  <input matInput placeholder="Cluster" [matAutocomplete]="ClusterAutocomplete" autocomplete="off" formControlName="Transfer_to_Stemi_Cluster" (blur)="AutocompleteBlur('Transfer_to_Stemi_Cluster')">
+                                                                  <mat-autocomplete #ClusterAutocomplete="matAutocomplete" [displayWith]="ClusterDisplayName">
+                                                                     <mat-option *ngFor="let Cluster of filteredClustersList | async" [value]="Cluster"> {{Cluster.Cluster_Name}} </mat-option>
+                                                                  </mat-autocomplete>
+                                                                  <mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Transfer_to_Stemi_Cluster')"> </mat-error>
+                                                               </mat-form-field>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                </ng-container>
+                                                <ng-container *ngIf="DynamicFGroup.getRawValue().Discharge_Transfer_To === 'Current_Cluster' || DynamicFGroup.getRawValue().Discharge_Transfer_To === 'Other_Cluster'">
+                                                   <div *ngIf="CheckVisibility('Transfer_to_Stemi_Cluster_Hospital_Name')" class="form-group col-sm-12">
+                                                      <div class="row">
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Transfer_to_Stemi_Cluster_Hospital_Name')}"  for="Street" class="col-sm-4 col-form-label text-lg-right">Transfer to Cluster Hospital</label>
+                                                         <div class="col-sm-6">
+                                                            <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                               <input matInput placeholder="Hospital" [matAutocomplete]="hospitalAutocomplete" autocomplete="off" formControlName="Transfer_to_Stemi_Cluster_Hospital_Name" (blur)="AutocompleteBlur('Transfer_to_Stemi_Cluster_Hospital_Name')">
+                                                               <mat-autocomplete #hospitalAutocomplete="matAutocomplete" (optionSelected)="SetAddress($event.option.value)" [displayWith]="HospitalDisplayName">
+                                                                  <mat-option *ngFor="let hospital of filteredHospitalsList | async" [value]="hospital"> {{hospital.Hospital_Name}} ({{hospital.Hospital_Type === 'Tier 2' ? 'T' : (hospital.Hospital_Role | slice: 0:1) + (hospital.Hospital_Role === 'EMS' ? '' : hospital.Hospital_Role | slice: -1 ) }}) </mat-option>
+                                                               </mat-autocomplete>
+                                                               <mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Transfer_to_Stemi_Cluster_Hospital_Name')"> </mat-error>
+                                                            </mat-form-field>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </ng-container>
+                                                <ng-container *ngIf="DynamicFGroup.getRawValue().Discharge_Transfer_To === 'Current_Cluster' || DynamicFGroup.getRawValue().Discharge_Transfer_To === 'Other_Cluster'">
+                                                   <div *ngIf="CheckVisibility('Transfer_to_Stemi_Cluster_Hospital_Address')" class="form-group col-sm-12">
+                                                      <div class="row">
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Transfer_to_Stemi_Cluster_Hospital_Address')}"  for="Street" class="col-sm-4 col-form-label text-lg-right">Transfer to Cluster Hospital Address</label>
+                                                         <div class="col-sm-6">
+                                                            <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill"  [ngClass]="{'disabled': CheckDisable('Transfer_to_Stemi_Cluster_Hospital_Address')}">
+                                                               <textarea formControlName="Transfer_to_Stemi_Cluster_Hospital_Address" matInput placeholder="Address" ></textarea>
+                                                               <mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Transfer_to_Stemi_Cluster_Hospital_Address')"> </mat-error>
+                                                            </mat-form-field>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </ng-container>
+                                                <ng-container *ngIf="DynamicFGroup.getRawValue().Discharge_Transfer_To === 'Non_Stemi_Cluster' || DynamicFGroup.getRawValue().Discharge_Transfer_To === 'Step_Down_Facility'">
+                                                   <div *ngIf="CheckVisibility('Transfer_to_Non_Stemi_Cluster_Hospital_Hospital_Name')" class="form-group col-sm-12">
+                                                      <div class="row">
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Transfer_to_Non_Stemi_Cluster_Hospital_Hospital_Name')}"  for="Street" class="col-sm-4 col-form-label text-lg-right">Transfer to {{ DynamicFGroup.getRawValue().Discharge_Transfer_To === 'Step_Down_Facility' ? 'Step-Down' : 'Referral'}} Facility Name</label>
+                                                         <div class="col-sm-6">
+                                                            <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                               <input formControlName="Transfer_to_Non_Stemi_Cluster_Hospital_Hospital_Name" matInput placeholder="Hospital Name">                                                     
+                                                               <mat-error [innerHTML]="GetFormControlErrorMessage('Transfer_to_Non_Stemi_Cluster_Hospital_Hospital_Name')"> </mat-error>
+                                                            </mat-form-field>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                   <div *ngIf="CheckVisibility('Transfer_to_Non_Stemi_Cluster_Hospital_Hospital_Address')" class="form-group col-sm-12">
+                                                      <div class="row">
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Transfer_to_Non_Stemi_Cluster_Hospital_Hospital_Address')}"  for="Street" class="col-sm-4 col-form-label text-lg-right">Transfer to {{ DynamicFGroup.getRawValue().Discharge_Transfer_To === 'Step_Down_Facility' ? 'Step-Down' : 'Referral'}} Facility Address</label>
+                                                         <div class="col-sm-6">
+                                                            <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                               <textarea formControlName="Transfer_to_Non_Stemi_Cluster_Hospital_Hospital_Address" matInput placeholder="Address"></textarea>
+                                                               <mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Transfer_to_Non_Stemi_Cluster_Hospital_Hospital_Address')"> </mat-error>
+                                                            </mat-form-field>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </ng-container>
+                                                
+                                                <ng-container *ngIf="DynamicFGroup.getRawValue().Discharge_Transfer_To !== '' && DynamicFGroup.getRawValue().Discharge_Transfer_To !== null">
+                                                   <div *ngIf="CheckVisibility('Discharge_Details_Remarks')" class="form-group col-sm-12">
+                                                      <div class="row">
+                                                         <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Details_Remarks')}"  for="Street" class="col-sm-4 col-form-label text-lg-right">Remarks</label>
+                                                            <div class="col-sm-6">
+                                                            <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                               <textarea formControlName="Discharge_Details_Remarks" matInput placeholder="Remarks"></textarea>
+                                                               <mat-error class="" [innerHTML]="GetFormControlErrorMessage('Discharge_Details_Remarks')"> </mat-error>                                               
+                                                            </mat-form-field>
+                                                            </div>
+                                                      </div>
+                                                   </div>
+                                                   <ng-container *ngIf="DynamicFGroup.getRawValue().Discharge_Transfer_To !== 'Home'  && !TransportDetailsHide">
+                                                      <div *ngIf="CheckVisibility('Transport_Vehicle')" class="form-group col-sm-12">
+                                                         <div class="row">
+                                                            <label [ngClass]="{'lbl-required': CheckMandatory('Transport_Vehicle')}" class="col-sm-4 col-form-label text-lg-right">Transport Vehicle</label>
+                                                            <div class="col-sm-6">
+                                                               <div class="YesOrNoButton" btnRadioGroup formControlName="Transport_Vehicle"  [ngClass]="{'disabled': CheckDisable('Transport_Vehicle')}">
+                                                                  <label class=" hbtn hb-fill-left" btnRadio="Private" tabindex="0" role="button"> Private </label>
+                                                                  <label class="hbtn hb-fill-right" btnRadio="Public" tabindex="0" role="button"> Public </label>
+                                                                  <label class="hbtn hb-fill-right" btnRadio="Govt_ambulance" tabindex="0" role="button"> Govt Ambulance </label>
+                                                                  <label class="hbtn hb-fill-right" btnRadio="Private_ambulance" tabindex="0" role="button"> Private Ambulance </label>
+                                                                  <br>
+                                                                  <label class="hbtn hb-fill-right" btnRadio="Helicopter" tabindex="0" role="button"> Helicopter </label>
+                                                                  <label class="hbtn hb-fill-right" btnRadio="Fixed_wing" tabindex="0" role="button"> Fixed Wing </label>
+                                                                  <label class="hbtn hb-fill-right" btnRadio="Others" tabindex="0" role="button"> Others </label>
+                                                                  <br>
+                                                                  <mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Transport_Vehicle')"> </mat-error>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                      <ng-container *ngIf="DynamicFGroup.getRawValue().Transport_Vehicle === 'Others'">
+                                                         <div *ngIf="CheckVisibility('Transport_Vehicle_Other')" class="form-group col-sm-12">
+                                                            <div class="row">
+                                                               <label [ngClass]="{'lbl-required': CheckMandatory('Transport_Vehicle_Other')}"  for="Street" class="col-sm-4 col-form-label text-lg-right"> Specify Other Transport Vehicle </label>
+                                                               <div class="col-sm-6">
+                                                                  <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                                     <input matInput placeholder="Specify Other Transport Vehicle" formControlName="Transport_Vehicle_Other">
+                                                                     <mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Transport_Vehicle_Other')"> </mat-error>
+                                                                  </mat-form-field>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                      </ng-container>
+                                                      <ng-container *ngIf="DynamicFGroup.getRawValue().Transport_Vehicle !== 'Private' && DynamicFGroup.getRawValue().Transport_Vehicle !== 'Public' && DynamicFGroup.getRawValue().Transport_Vehicle !== 'Others' && DynamicFGroup.getRawValue().Transport_Vehicle !== ''">                                 
+                                                         <ng-container *ngIf="DynamicFGroup.getRawValue().Transport_Vehicle === 'Cluster_Ambulance' ">
+                                                            <div *ngIf="CheckVisibility('Discharge_Cluster_Ambulance')" class="form-group col-sm-12">
+                                                               <div class="row">
+                                                                  <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Cluster_Ambulance')}"  for="Street" class="col-sm-4 col-form-label text-lg-right">Ambulance </label>
+                                                                  <div class="col-sm-6">
+                                                                     <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                                                        <input matInput placeholder="Cluster" [matAutocomplete]="AmbulanceAutocomplete" autocomplete="off" formControlName="Discharge_Cluster_Ambulance" (blur)="AutocompleteBlur('Discharge_Cluster_Ambulance')">
+                                                                        <mat-autocomplete #AmbulanceAutocomplete="matAutocomplete" [displayWith]="HospitalDisplayName">
+                                                                           <mat-option *ngFor="let Ambulance of filteredAmbulancesList | async" [value]="Ambulance"> {{Ambulance.Hospital_Name}} </mat-option>
+                                                                        </mat-autocomplete>
+                                                                        <mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Discharge_Cluster_Ambulance')"> </mat-error>
+                                                                     </mat-form-field>
+                                                                  </div>
+                                                               </div>
+                                                            </div>
+                                                         </ng-container>
+                                                         <div *ngIf="CheckVisibility('Discharge_Ambulance_Call_Date_Time')" class="form-group col-sm-12">
+                                                               <div class="row">
+                                                                  <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Ambulance_Call_Date_Time')}" class="col-sm-4 col-form-label text-lg-right">Date & Time of Ambulance Call</label>
+                                                                  <div class="col-sm-6">
+                                                                     <div class="row">
+                                                                        <div class="col-sm-6">
+                                                                           <div class="YesOrNoButton" btnRadioGroup formControlName="Discharge_Ambulance_Call_Date_Time" >
+                                                                              <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                                                 <input formControlName="Discharge_Ambulance_Call_Date_Time" matInput (keypress)="NotAllow()" (keydown)="ClearInput($event)" (click)="discharge_ambulance_call_datepicker.open()" [required]="CheckMandatory('Discharge_Ambulance_Call_Date_Time') ? '' : null" [max] = "noFutureDate"  [matDatepicker] ="discharge_ambulance_call_datepicker" placeholder="Date">
+                                                                                 <mat-icon  (click)="discharge_ambulance_call_datepicker.open()" matSuffix >event </mat-icon>
+                                                                                 <mat-datepicker touchUi #discharge_ambulance_call_datepicker></mat-datepicker>
+                                                                              </mat-form-field>
+                                                                           </div>
+                                                                        </div>
+                                                                        <div class="col-sm-6">
+                                                                           <mat-form-field [ngClass]="{'mat-form-field-invalid': CheckTimeRelatedDateErrorStatus('Discharge_Ambulance_Call_Date_Time', 'Discharge_Ambulance_Call_Time')}" class="full-width column-time" [floatLabel]="'never'" appearance="fill">
+                                                                              <input formControlName="Discharge_Ambulance_Call_Time" matInput (keypress)="NotAllow()" (keydown)="ClearInput($event)" [required]="CheckMandatory('Discharge_Ambulance_Call_Time') ? '' : null" data-history="false" [ngxTimepicker]="discharge_ambulance_call_timepicker" [format]="24" placeholder="Time">
+                                                                              <mat-icon matSuffix (click)="discharge_ambulance_call_timepicker.open()">access_time</mat-icon>
+                                                                              <ngx-material-timepicker (opened)="MaxTime('Discharge_Ambulance_Call_Time', 'Discharge_Ambulance_Call_Date_Time')" [defaultTime]="DefaultTime('Discharge_Ambulance_Call_Time')" #discharge_ambulance_call_timepicker></ngx-material-timepicker>
+                                                                           </mat-form-field>
+                                                                        </div>
+                                                                        <div class="col-sm-12">
+                                                                           <mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Discharge_Ambulance_Call_Date_Time')"> </mat-error>
+                                                                        </div>
+                                                                     </div>
+                                                                  </div>
+                                                               </div>
+                                                            </div>
+                                                            <div *ngIf="CheckVisibility('Discharge_Ambulance_Arrival_Date_Time')" class="form-group col-sm-12">
+                                                               <div class="row">
+                                                                  <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Ambulance_Arrival_Date_Time')}" class="col-sm-4 col-form-label text-lg-right">Date & Time of Ambulance Arrival</label>
+                                                                  <div class="col-sm-6">
+                                                                     <div class="row">
+                                                                        <div class="col-sm-6">
+                                                                           <div class="YesOrNoButton" btnRadioGroup formControlName="Discharge_Ambulance_Arrival_Date_Time">
+                                                                              <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                                                 <input formControlName="Discharge_Ambulance_Arrival_Date_Time" (keypress)="NotAllow()" (keydown)="ClearInput($event)" (click)="discharge_ambulance_arrival_datepicker.open()" matInput [required]="CheckMandatory('Discharge_Ambulance_Arrival_Date_Time') ? '' : null" [max] = "noFutureDate"  [matDatepicker] ="discharge_ambulance_arrival_datepicker" placeholder="Date">
+                                                                                 <mat-icon (click)="discharge_ambulance_arrival_datepicker.open()" matSuffix >event </mat-icon>
+                                                                                 <mat-datepicker touchUi #discharge_ambulance_arrival_datepicker></mat-datepicker>
+                                                                              </mat-form-field>
+                                                                           </div>
+                                                                        </div>
+                                                                        <div class="col-sm-6">
+                                                                           <mat-form-field [ngClass]="{'mat-form-field-invalid': CheckTimeRelatedDateErrorStatus('Discharge_Ambulance_Arrival_Date_Time', 'Discharge_Ambulance_Arrival_Time')}" class="full-width column-time" [floatLabel]="'never'" appearance="fill">
+                                                                              <input formControlName="Discharge_Ambulance_Arrival_Time" matInput (keypress)="NotAllow()" (keydown)="ClearInput($event)" [required]="CheckMandatory('Discharge_Ambulance_Arrival_Time') ? '' : null" data-history="false" [ngxTimepicker]="discharge_ambulance_arrival_timepicker" [format]="24" placeholder="Time">
+                                                                              <mat-icon matSuffix (click)="discharge_ambulance_arrival_timepicker.open()">access_time</mat-icon>
+                                                                              <ngx-material-timepicker (opened)="MaxTime('Discharge_Ambulance_Arrival_Time', 'Discharge_Ambulance_Arrival_Date_Time')" [defaultTime]="DefaultTime('Discharge_Ambulance_Arrival_Time')" #discharge_ambulance_arrival_timepicker></ngx-material-timepicker>
+                                                                           </mat-form-field>
+                                                                        </div>
+                                                                        <div class="col-sm-12">
+                                                                           <mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Discharge_Ambulance_Arrival_Date_Time')"> </mat-error>
+                                                                        </div>
+                                                                     </div>
+                                                                  </div>
+                                                               </div>
+                                                            </div>
+                                                            <div *ngIf="CheckVisibility('Discharge_Ambulance_Departure_Date_Time')" class="form-group col-sm-12">
+                                                               <div class="row">
+                                                                  <label [ngClass]="{'lbl-required': CheckMandatory('Discharge_Ambulance_Departure_Date_Time')}" class="col-sm-4 col-form-label text-lg-right">Date & Time of Ambulance Departure</label>
+                                                                  <div class="col-sm-6">
+                                                                     <div class="row">
+                                                                        <div class="col-sm-6">
+                                                                           <div class="YesOrNoButton" btnRadioGroup formControlName="Discharge_Ambulance_Departure_Date_Time">
+                                                                              <mat-form-field class="full-width column-date" [floatLabel]="'never'" appearance="fill">
+                                                                                 <input matInput formControlName="Discharge_Ambulance_Departure_Date_Time" (keypress)="NotAllow()" (keydown)="ClearInput($event)" (click)="discharge_ambulance_departure_datepicker.open()" [required]="CheckMandatory('Discharge_Ambulance_Departure_Date_Time') ? '' : null" [max] = "noFutureDate"  [matDatepicker] ="discharge_ambulance_departure_datepicker" placeholder="Date">
+                                                                                 <mat-icon (click)="discharge_ambulance_departure_datepicker.open()" matSuffix >event </mat-icon>
+                                                                                 <mat-datepicker touchUi #discharge_ambulance_departure_datepicker></mat-datepicker>
+                                                                              </mat-form-field>
+                                                                           </div>
+                                                                        </div>
+                                                                        <div class="col-sm-6">
+                                                                           <mat-form-field [ngClass]="{'mat-form-field-invalid': CheckTimeRelatedDateErrorStatus('Discharge_Ambulance_Departure_Date_Time', 'Discharge_Ambulance_Departure_Time')}" class="full-width column-time" [floatLabel]="'never'" appearance="fill">
+                                                                              <input matInput formControlName="Discharge_Ambulance_Departure_Time" (keypress)="NotAllow()" (keydown)="ClearInput($event)" [required]="CheckMandatory('Discharge_Ambulance_Departure_Time') ? '' : null" data-history="false" [ngxTimepicker]="discharge_ambulance_departure_timepicker" [format]="24" placeholder="Time">
+                                                                              <mat-icon matSuffix (click)="discharge_ambulance_departure_timepicker.open()">access_time</mat-icon>
+                                                                              <ngx-material-timepicker (opened)="MaxTime('Discharge_Ambulance_Departure_Time', 'Discharge_Ambulance_Departure_Date_Time')" [defaultTime]="DefaultTime('Discharge_Ambulance_Departure_Time')" #discharge_ambulance_departure_timepicker></ngx-material-timepicker>
+                                                                           </mat-form-field>
+                                                                        </div>
+                                                                        <div class="col-sm-12">
+                                                                           <mat-error class="mat-error-full" [innerHTML]="GetFormControlErrorMessage('Discharge_Ambulance_Departure_Date_Time')"> </mat-error>
+                                                                        </div>
+                                                                     </div>
+                                                                  </div>
+                                                               </div>
+                                                            </div>
+                                                      </ng-container>
+                                                   </ng-container>
+                                                </ng-container>
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </form>
+                                 </div>
+                                 <!-- Submit the Form -->
+                                 <div class="row">
+                                    <div *ngIf="!ReadonlyPage && !SecondaryEdit" class="col-sm-12">
+                                       <button type="button" *ngIf="DischargeId === null && !FormUploading" (click)="DischargeSubmit()" class="btn btn-outline-primary float-right save">Save & Continue</button>
+                                       <button type="button" *ngIf="DischargeId !== null && !FormUploading" (click)="DischargeUpdate()" class="btn btn-outline-primary float-right save">Update & Continue</button>
+                                       <button *ngIf="FormUploading" type="button" class="btn btn-outline-primary float-right save uploading">
+                                          <i class="fa fa-spinner fa-pulse" aria-hidden="true"></i> Uploading...
+                                       </button>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>                           
+                        </div>
+                     </div>
+                  </mat-tab>
+               </mat-tab-group>
+            </div>
+         </div>
+      </ng-container>
+      <ng-container *ngIf="ContentLoading">
+         <div  class="tbl-loading-center loader-entry-page">
+            <div  id="inTurnFadingTextG">
+               <div  class="inTurnFadingTextG" id="inTurnFadingTextG_1">L</div>
+               <div  class="inTurnFadingTextG" id="inTurnFadingTextG_2">O</div>
+               <div  class="inTurnFadingTextG" id="inTurnFadingTextG_3">A</div>
+               <div  class="inTurnFadingTextG" id="inTurnFadingTextG_4">D</div>
+               <div  class="inTurnFadingTextG" id="inTurnFadingTextG_5">I</div>
+               <div  class="inTurnFadingTextG" id="inTurnFadingTextG_6">N</div>
+               <div  class="inTurnFadingTextG" id="inTurnFadingTextG_7">G</div>
+               <div  class="inTurnFadingTextG" id="inTurnFadingTextG_8">.</div>
+               <div  class="inTurnFadingTextG" id="inTurnFadingTextG_9">.</div>
+               <div  class="inTurnFadingTextG" id="inTurnFadingTextG_10">.</div>
+            </div>
+         </div>
+      </ng-container>
+   </div>
+</section>

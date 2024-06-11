@@ -1,0 +1,143 @@
+.modal-icon-circle {
+   display: flex;
+   justify-content: center;
+}
+.modal-icon-circle .material-icons {
+   text-align: center;
+   font-size: 3em;
+}  
+
+
+
+.modal-title {
+    color: #595959;
+    text-align: center;
+    text-transform: none;
+    word-wrap: break-word;
+    margin-bottom: 4px;
+}
+.modal-sub-info i.material-icons {
+   position: relative;
+   top: 5px;
+   left: 2px;
+}
+
+/* .modal-actions {
+    z-index: 1;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: 1.25em auto 0;
+} */
+
+.btns-modal-action:not([disabled]) {
+    cursor: pointer;
+}
+
+.modal-sub-info {
+    font-weight: 400 !important;
+    letter-spacing: 0.6px;
+    text-align: center;
+    font-size: 15px;
+}
+
+.btns-modal-action{
+    margin: 6px;
+    box-shadow: none;
+    font-weight: 500;
+    background: transparent;
+    border: 3px solid #efefef;
+    padding: 0.4rem 1.5rem;
+    font-size: 15px;
+    outline: none;
+    position: relative;
+    letter-spacing: 0.8px;
+    z-index: 0;
+    color: #000000b0;text-transform: uppercase;
+    background-image: linear-gradient(to right, #2f81d4 0%, #59c5ef 100%) !important;
+}
+button.modal-confirm.btns-modal-action:before, .modal-cancel::before {
+    position: absolute;
+    content: "";
+    transition-duration: 0.3s;
+    z-index: -1;
+    top: 0;
+    bottom: auto;    
+    width: 0;
+    height: 100%;
+    opacity: 1;
+}
+
+button.modal-confirm.btns-modal-action:hover, .modal-cancel:hover {
+    color: #ffffff;
+    background: transparent;
+    transition: color 0.3s ease, background 0s 0.3s ease;
+    z-index: 2;
+}
+button.modal-confirm.btns-modal-action:hover:before, .modal-cancel:hover::before {
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    z-index: -1;
+}
+
+/* blue color background fill right side to left */
+.fill-left-to-right:before {left: 0;}
+.fill-right-to-left:before{right: 0;}
+.fill-left-to-right::before {background-image: linear-gradient(to right, #2f81d4 0%, #59c5ef 100%);}
+.fill-right-to-left::before{background-image: linear-gradient(to right, #2f81d4 0%, #59c5ef 100%);right: 0;}
+button.modal-cancel.btns-modal-action.fill-right-to-left:before {background-image: linear-gradient(90deg, #ff1100, #ff9800 100%);}
+
+
+
+
+/*  Desc  :Modal popup tables start
+    Date  :14-June-2019
+    Author:Manikandan.M UI-Dev
+*/
+.modal-table-record{
+    text-align: center;
+    margin: 20px 0 20px 0;
+}
+.modal-table-record tbody td, .modal-table-record tbody th {
+    border: 1px solid #e3e3e3;
+}
+.modal-table-record tbody th {
+    background: #9E9E9E;
+    color: #fff;
+    padding: 6px 3px;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 13px;
+}
+
+
+
+
+
+/* Desc: Modal New changes css 
+   Date: 04-July-2019
+*/
+.modal-header-title {border-radius: 0;margin: 0;padding: 1rem;color: #ffffff;font-weight: 600;background-image: linear-gradient(to right, #2f81d4 0, #59c5ef 100%);opacity: 1;text-transform: uppercase;}
+.modal-header-title h5 {margin: 0;display: inline-block;}
+.modal-content-body {margin: 2.25em auto 0;}
+.modal-actions {z-index: 1;text-align: right;width: 100%; background: rgb(239, 239, 239); padding: 0 0.5em;}
+.modal-container-close i.fa.fa-times-circle {color: #fff;position: absolute;top: 8px;right: 8px;font-size: 40px;}
+.modal-container-close:hover i {color: #3083d5 !important;cursor: pointer;}
+/* End 04-July-2019 */
+
+/* Disabled buttons css start*/
+.disabled {opacity: 0.7 !important;}
+.disabled:before {content: "";background: transparent !important;}
+.disabled:hover {color: #000000b0 !important;cursor: not-allowed !important;}
+/* Disabled buttons css end*/
+
+
+/* Overwrite css Default modal.scss here start */
+.modal-content{ border:none !important; }
+.modal-body{padding: 0 !important}
+/* Overwrite css Default modal.scss here end */
+
+
+.modal-small-with{ max-width: 300px; margin: 0 auto;}

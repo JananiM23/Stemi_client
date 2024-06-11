@@ -1,0 +1,246 @@
+<section *ngIf="Type && ( Type === 'Create' || Type === 'Edit')">
+      <div class="modal-body">
+         <form [formGroup]="UserForm" (ngSubmit)="onSubmit()">
+         <div class="modal-header-title">
+            <h5> {{Type}} User</h5>
+            <span *ngIf="!Uploading" class="modal-container-close" (click)="modalRef.hide();"><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+         </div>
+         <div class="container modal-content-body">
+            <div class="col-sm-12">
+               <div class="row">
+                  <div class="form-group col-lg-6 col-md-12">
+                     <div class="row">
+                        <label class="col-md-12 col-lg-4 col-form-label text-lg-right lbl-required">User Type</label>
+                        <div class="col-md-12 col-lg-8">
+                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                              <mat-select formControlName="User_Type" (selectionChange)="checkUserType($event.value)">
+                                 <mat-option >Select User Type</mat-option>
+                                 <mat-option value="CO">Coordinators</mat-option>
+                                 <mat-option value="D">Doctors</mat-option>
+                                 <mat-option value="PU">Peripheral Users</mat-option>
+                                 <mat-option value="CDA">Cluster Doctors</mat-option>
+                              </mat-select>
+                              <mat-error [innerHTML]="GetFormControlErrorMessage('User_Type')"></mat-error>
+                           </mat-form-field>
+                        </div>
+                     </div>                          
+                  </div>
+                  <div class="form-group form-group-sm col-sm-6" *ngIf="UserForm.controls['User_Type'].value ==='CDA' || UserForm.controls['User_Type'].value ==='D'">
+                     <div class="row">
+                        <label class="col-md-12 col-lg-4 col-form-label text-lg-right lbl-required">Doctor Registration ID</label>
+                        <div class="col-md-12 col-lg-8">
+                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                              <input matInput formControlName="DocRegID" placeholder="Doctor Registration ID">
+                              <mat-error [innerHTML]="GetFormControlErrorMessage('DocRegID')"></mat-error>
+                           </mat-form-field>
+                        </div>
+                     </div>                    
+                   
+                  </div>  
+                  <div class="form-group col-lg-6 col-md-12">
+                     <div class="row">
+                        <label class="col-md-12 col-lg-4 col-form-label text-lg-right lbl-required">Location</label>
+                        <div class="col-md-12 col-lg-8">
+                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                              <input matInput placeholder="Location" [matAutocomplete]="LocationAutocomplete" autocomplete="off" formControlName="Location" (blur)="AutocompleteBlur('Location')">
+                              <mat-autocomplete #LocationAutocomplete="matAutocomplete" [displayWith]="LocationDisplayName">
+                                 <mat-option *ngFor="let Location of filteredLocationsList | async" [value]="Location"> {{Location.Location_Name}} </mat-option>
+                              </mat-autocomplete>
+                              <mat-error [innerHTML]="GetFormControlErrorMessage('Location')"></mat-error>
+                           </mat-form-field>
+                        </div>
+                     </div>
+                  </div>                  
+                  <div class="form-group form-group-sm col-sm-6" *ngIf="UserForm.controls['User_Type'].value !=='CDA' && UserForm.controls['User_Type'].value !=='CO' && UserForm.controls['Location'].value !== null ">
+                     <div class="row">
+                        <label class="col-md-12 col-lg-4 col-form-label text-lg-right lbl-required">Cluster</label>
+                        <div class="col-md-12 col-lg-8">
+                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                              <input matInput placeholder="Cluster" [matAutocomplete]="ClusterAutocomplete" autocomplete="off" formControlName="Cluster" (blur)="AutocompleteBlur('Cluster')">
+                              <mat-autocomplete #ClusterAutocomplete="matAutocomplete" [displayWith]="ClusterDisplayName">
+                                 <mat-option *ngFor="let Cluster of filteredClusterList | async" [value]="Cluster"> {{Cluster.Cluster_Name}} </mat-option>
+                              </mat-autocomplete>
+                              <mat-error [innerHTML]="GetFormControlErrorMessage('Cluster')"></mat-error>
+                           </mat-form-field>
+                        </div>
+                     </div>                          
+                  </div>
+                  <div class="form-group col-lg-6 col-md-12" *ngIf="UserForm.controls['User_Type'].value ==='CDA'">
+                     <div class="row">
+                        <label class="col-md-12 col-lg-4 col-form-label text-lg-right lbl-required">Alert Duration (Min)</label>
+                        <div class="col-md-12 col-lg-8">
+                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                              <input matInput formControlName="Alert_Duration" placeholder="Alert Duration">
+                              <mat-error [innerHTML]="GetFormControlErrorMessage('Alert_Duration')"></mat-error>
+                           </mat-form-field>
+                        </div>
+                     </div> 
+                  </div>  
+                  <div class="form-group form-group-sm col-sm-6" *ngIf="(UserForm.controls['User_Type'].value ==='CDA' || UserForm.controls['User_Type'].value ==='CO') && UserForm.controls['Location'].value !== null ">
+                     <div class="row">
+                        <label class="col-md-12 col-lg-4 col-form-label text-lg-right lbl-required">Clusters</label>
+                        <div class="col-md-12 col-lg-8">
+                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                              <mat-select formControlName="ClustersArray" multiple>
+                                 <mat-select-trigger [innerHTML]="GeMultipleSelectDisplayContentCluster('ClustersArray')"></mat-select-trigger>
+                                 <mat-option *ngFor="let Cluster of ClusterList; let i=index"  [value]="Cluster._id">{{ Cluster.Cluster_Name}}</mat-option>
+                              </mat-select>
+                              <mat-error [innerHTML]="GetFormControlErrorMessage('ClustersArray')"></mat-error>
+                           </mat-form-field>
+                        </div>
+                     </div>                          
+                  </div>   
+                         
+                  <ng-container *ngIf="UserForm.controls['User_Type'].value !=='' && UserForm.controls['User_Type'].value !=='CO' && UserForm.controls['User_Type'].value !=='CDA'">
+                     <div class="form-group form-group-sm col-sm-6" *ngIf="UserForm.controls['Cluster'].value !== null && UserForm.controls['User_Type'].value==='PU'">
+                        <div class="row">
+                           <label class="col-md-12 col-lg-4 col-form-label text-lg-right lbl-required">Hospital</label>
+                           <div class="col-md-12 col-lg-8">
+                              <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                 <input matInput placeholder="Hospital" [matAutocomplete]="HospitalAutocomplete" autocomplete="off" formControlName="Hospital" (blur)="AutocompleteBlur('Hospital')">
+                                 <mat-autocomplete #HospitalAutocomplete="matAutocomplete" [displayWith]="HospitalDisplayName">
+                                    <mat-option *ngFor="let Hospital of filteredHospitalList | async" [value]="Hospital"> <small style="color: #0e81cd; font-weight: 600;"> ({{Hospital.Hospital_Role === 'EMS' ? 'EMS' : (Hospital.Hospital_Role | slice: 0:1) + (Hospital.Hospital_Role | slice: -1) }}) </small> {{Hospital.Hospital_Name}}  </mat-option>
+                                 </mat-autocomplete>
+                                 <mat-error [innerHTML]="GetFormControlErrorMessage('Hospital')"></mat-error>
+                              </mat-form-field>
+                           </div>
+                        </div>                          
+                     </div>
+                     <div class="form-group form-group-sm col-sm-6" *ngIf="UserForm.controls['User_Type'].value==='D' && UserForm.controls['User_Type'].value !=='' && UserForm.controls['Cluster'].value !== null">
+                        <div class="row">
+                           <label class="col-md-12 col-lg-4 col-form-label text-lg-right lbl-required">Hospitals</label>
+                           <div class="col-md-12 col-lg-8">
+                              <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                 <mat-select formControlName="HospitalsArray" multiple>
+                                    <mat-select-trigger [innerHTML]="GeMultipleSelectDisplayContent('HospitalsArray')"></mat-select-trigger>
+                                    <mat-option *ngFor="let Hospital of HospitalList; let i=index" [value]="Hospital._id">{{Hospital.Hospital_Name}}</mat-option>
+                                 </mat-select>
+                                 <mat-error [innerHTML]="GetFormControlErrorMessage('HospitalsArray')"></mat-error>
+                              </mat-form-field>
+                           </div>
+                        </div>                          
+                     </div>
+                  </ng-container>
+                  
+                  <div class="form-group col-lg-6 col-md-12">
+                     <div class="row">
+                        <label class="col-md-12 col-lg-4 col-form-label text-lg-right lbl-required">Name</label>
+                        <div class="col-md-12 col-lg-8">
+                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                              <input matInput formControlName="Name" placeholder="User Name">
+                              <mat-error [innerHTML]="GetFormControlErrorMessage('Name')"></mat-error>
+                           </mat-form-field>
+                        </div>
+                     </div>                          
+                  </div>                     
+                  <div class="form-group col-lg-6 col-md-12">
+                     <div class="row">
+                        <label class="col-md-12 col-lg-4 col-form-label text-lg-right lbl-required">User Name</label>
+                        <div class="col-md-12 col-lg-8">
+                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                              <input matInput formControlName="User_Name" placeholder="User Name">
+                              <mat-error *ngIf="UserForm.controls['User_Name'].errors && UserForm.controls['User_Name'].touched">
+                                 <span *ngIf="UserForm.controls['User_Name'].errors.required">User Name is required</span>
+                                 <span *ngIf="UserForm.controls['User_Name'].errors.AlphaNumericUnderscoreHyphenDotError">Please Enter Only Alphabets, Numerics, Underscore, Hyphen and Dot!</span>
+                                 <ng-container *ngIf="!UserForm.controls['User_Name'].errors.required">
+                                    <span *ngIf="UserForm.controls['User_Name'].errors.UserName_NotAvailable">User Name Already Exist</span>                                       
+                                 </ng-container>
+                              </mat-error>
+                           </mat-form-field>
+                        </div>
+                     </div>                           
+                  </div>
+                  <div class="form-group col-lg-6 col-md-12">
+                     <div class="row">
+                        <label class="col-md-12 col-lg-4 col-form-label text-lg-right lbl-required">Password</label>
+                        <div class="col-md-12 col-lg-8">
+                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                              <input matInput formControlName="Password" placeholder="Password" [type]="ShowPassword ? 'text' : 'password'" >
+                              <mat-icon style="cursor: pointer;" *ngIf="!ShowPassword" (click)="ShowPassword = true" matSuffix>visibility</mat-icon>
+                              <mat-icon style="cursor: pointer;" *ngIf="ShowPassword" (click)="ShowPassword = false" matSuffix>visibility_off</mat-icon>
+                              <mat-error [innerHTML]="GetFormControlErrorMessage('Password')"></mat-error>
+                           </mat-form-field>
+                        </div>
+                     </div>                          
+                  </div> 
+                  <div class="form-group col-lg-6 col-md-12">
+                     <div class="row">
+                        <label class="col-md-12 col-lg-4 col-form-label text-lg-right lbl-required">Retype Password</label>
+                        <div class="col-md-12 col-lg-8">
+                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                              <input matInput formControlName="RetypePassword" placeholder="Retype Password" [type]="ShowPassword ? 'text' : 'password'">
+                              <mat-error *ngIf="UserForm.controls['RetypePassword'].errors && UserForm.controls['RetypePassword'].touched">
+                                 <span *ngIf="UserForm.controls['RetypePassword'].errors.required">Retype Password is required</span>
+                                 <span *ngIf="UserForm.controls['RetypePassword'].errors.notSame">Password does not match!!</span>
+                              </mat-error>
+                           </mat-form-field>
+                        </div>
+                     </div>                          
+                  </div>
+                  <div class="form-group col-lg-6 col-md-12">
+                     <div class="row">
+                        <label class="col-md-12 col-lg-4 col-form-label text-lg-right lbl-required">Email ID</label>
+                        <div class="col-md-12 col-lg-8">
+                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                              <input matInput formControlName="Email" placeholder="Email ID">
+                              <mat-error [innerHTML]="GetFormControlErrorMessage('Email')"></mat-error>
+                           </mat-form-field>
+                        </div>
+                     </div>                          
+                  </div>
+                  <div class="form-group col-lg-6 col-md-12">
+                     <div class="row">
+                        <label class="col-md-12 col-lg-4 col-form-label text-lg-right lbl-required">Phone No</label>
+                        <div class="col-md-12 col-lg-8">
+                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                              <input matInput formControlName="Phone" placeholder="Phone Number">
+                              <mat-error [innerHTML]="GetFormControlErrorMessage('Phone')"></mat-error>
+                           </mat-form-field>
+                        </div>
+                     </div>                          
+                  </div>
+                  <div class="form-group col-lg-6 col-md-12">
+                     <div class="row">
+                        <label class="col-md-12 col-lg-4 col-form-label text-lg-right">Qualification</label>
+                        <div class="col-md-12 col-lg-8">
+                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                              <input matInput formControlName="Qualification" placeholder="Qualification">
+                              <mat-error [innerHTML]="GetFormControlErrorMessage('Qualification')"></mat-error>
+                           </mat-form-field>
+                        </div>
+                     </div>                          
+                  </div>
+                  <div class="form-group col-lg-6 col-md-12">
+                     <div class="row">
+                        <label class="col-md-12 col-lg-4 col-form-label text-lg-right">Designation</label>
+                        <div class="col-md-12 col-lg-8">
+                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                              <input matInput formControlName="Designation" placeholder="Designation">
+                              <mat-error [innerHTML]="GetFormControlErrorMessage('Designation')"></mat-error>
+                           </mat-form-field>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="row" *ngIf="UserForm.controls['User_Type'].value ==='CO' || UserForm.controls['User_Type'].value ==='PU'">
+                  <div class="form-group form-group-sm col-sm-6" >
+                     <div class="row">
+                        <div class="col-md-12 col-lg-12">
+                           <mat-checkbox formControlName="onlyViewAccess">Only View Access</mat-checkbox>
+                        </div>
+                     </div>
+                  </div> 
+               </div>
+
+            </div>               
+         </div>
+         <div class="modal-actions">
+            <button type="submit" [disabled]="UserForm.status !== 'VALID'|| Uploading" class="modal-confirm btns-modal-action fill-left-to-right" [ngClass]="{'disabled': UserForm.status !== 'VALID'|| Uploading}">
+               <span *ngIf="Type === 'Create' && !Uploading">Submit</span>
+               <span *ngIf="Type === 'Edit' && !Uploading">Update</span>
+               <span *ngIf="Uploading"> Loading... </span>
+            </button>
+         </div>
+         </form>
+      </div>
+   </section>

@@ -1,0 +1,35 @@
+ul.checklist-fields li {
+   margin-top: 8px;
+   line-height: 17px;
+}
+
+.hospital-stage-active div.quarterCircleTopRight {
+   right: 0;
+   text-align: center;
+   width: 50px;
+   height: 50px;
+   background: linear-gradient(to right, #2f81d4 0, #59c5ef 100%);
+   border-radius: 0 0 0 50px;
+   -moz-border-radius:0 0 0 50px;
+   -webkit-border-radius: 0 0 0 50px;
+   position: absolute;
+   top: 0;
+   z-index: 1;
+   margin-right: 0px;
+   box-shadow: -1px 2px 6px silver;
+}
+
+.quarterCircleTopRight .special-icon {
+   border: 3px double #004d96;
+   width: 36px;
+   height: 36px;
+   background: #fff;
+   display: block;
+   margin: 3px 13px;
+   cursor: pointer;
+}
+.quarterCircleTopRight .special-icon i{
+   font-size: 20px;
+    color: #004d96 !important;
+    line-height: 30px;
+}

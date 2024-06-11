@@ -1,0 +1,597 @@
+<div class="row">
+   <div class="nav-container">
+      <nav aria-label="breadcrumb">
+         <ol class="breadcrumb pink lighten-2">
+            <li class="breadcrumb-item">
+               <a class="page-title">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+               <i class="fa fa-angle-right fa-6" aria-hidden="true"></i>
+               <a [routerLink]="['/Hospital-Management']" class="page-title">Hospital</a>
+            </li>
+            <li class="breadcrumb-item active">
+               <i class="fa fa-angle-right fa-6" aria-hidden="true"></i>
+               <a class="page-title">Hospital-View</a>
+            </li>
+         </ol>
+      </nav>
+      <span class="head-notify view-all-entries">View Hospital Entry</span>
+   </div>
+ </div>
+ 
+ 
+ <section>
+   <div class="row">
+      <div class="tab-pane-container">
+         <div class="portlet-tab">
+            <div class="portlet-tab-panelbody">
+               <div class="row">
+                  <div class="col-md-12">
+                     <!-- Hospital List View Details -->
+                     <div class="hospital-listview-details">
+                       <div class="tabpane-title">
+                        <h5 class="section-title">Hospital Details</h5>
+                        <button *ngIf="HospitalDetails?.Hospital_Status === 'Pending'" class="create-button-btn animated fadeInDown btn-approved modal-confirm btns-modal-action fill-left-to-right" 
+                           (click)="HospitalApprove(HospitalDetails._id)">Approve</button>
+
+                        <button *ngIf="HospitalDetails?.Hospital_Status === 'Pending'" 
+                        class="create-button-btn animated fadeInDown modal-cancel btns-modal-action fill-right-to-left pull-left btn-reject" (click)="HospitalReject(HospitalDetails._id)">Reject</button>
+                       </div>
+                       
+                       <div class="container-fluid">
+                           <div class="row">
+                                 <div class="form-group col-lg-7 col-md-12 div-overflow-auto">
+                             <table class="tbl-hospital-list-view">
+                                 <tbody>
+                                     <!-- <tr>
+                                       <th>Hospital ID</th>
+                                       <td>:</td>
+                                       <td></td>
+                                     </tr> -->
+                                     <tr>
+                                       <th>Hospital Type</th>
+                                       <td>:</td>
+                                       <td>{{HospitalDetails?.Hospital_Type}}</td>
+                                     </tr>
+                                     <tr>
+                                       <th>Hospital Role</th>
+                                       <td>:</td>
+                                       <td>{{HospitalDetails?.Hospital_Role}}</td>
+                                     </tr>
+                                     <tr *ngIf="HospitalDetails?.Hospital_Type == 'government'" >
+                                       <th>Ministry/Dept. of administration</th>
+                                       <td>:</td>
+                                       <td>{{HospitalDetails?.Department_of_Administration}}</td>
+                                     </tr>
+                                     <tr>
+                                       <th>
+                                          <ng-container *ngIf="HospitalDetails?.Is_EMS"> Name of the Associated Hospital </ng-container>
+                                          <ng-container *ngIf="!HospitalDetails?.Is_EMS"> Name of the hospital </ng-container>
+                                       </th>
+                                       <td>:</td>
+                                       <td>{{HospitalDetails?.Hospital_Name}} </td>
+                                     </tr>
+                                     <tr>
+                                       <th>Address</th>
+                                       <td>:</td>
+                                       <td>{{HospitalDetails?.Address}}</td>
+                                     </tr> 
+                                     <tr>
+                                       <th>Country</th>
+                                       <td>:</td>
+                                       <td>{{HospitalDetails?.Country.Country_Name}}</td>
+                                     </tr>
+                                     <tr>
+                                       <th>State</th>
+                                       <td>:</td>
+                                       <td>{{HospitalDetails?.State.State_Name}}</td>
+                                     </tr> 
+                                     <tr>
+                                       <th>City</th>
+                                       <td>:</td>
+                                       <td>{{HospitalDetails?.City.City_Name}}</td>
+                                     </tr>  
+                                     <tr>
+                                       <th>Zip code</th>
+                                       <td>:</td>
+                                       <td>{{HospitalDetails?.Pin_Code}}</td>
+                                     </tr>
+                                     <tr>
+                                       <th>Location</th>
+                                       <td>:</td>
+                                       <td>{{HospitalDetails?.Location.Location_Name}}</td>
+                                      </tr>
+                                      <tr>
+                                       <th>Latitude</th>
+                                       <td>:</td>
+                                       <td>{{HospitalDetails?.Latitude}}</td>
+                                      </tr>
+                                      <tr>
+                                       <th>Longitude</th>
+                                       <td>:</td>
+                                       <td>{{HospitalDetails?.Longitude}}</td>
+                                      </tr>
+                                     <tr>
+                                       <th>Phone</th>
+                                       <td>:</td>
+                                       <td>{{HospitalDetails?.Phone}}</td>
+                                     </tr>
+                                     <tr>
+                                       <th>Mobile</th>
+                                       <td>:</td>
+                                       <td>{{HospitalDetails?.Mobile}}</td>
+                                     </tr>
+                                     <tr>
+                                      <th>This Unit is Ambulance</th>
+                                      <td>:</td>
+                                      <td>{{HospitalDetails?.Is_EMS}}</td>
+                                    </tr>
+                                    <ng-container *ngIf="HospitalDetails?.Is_EMS == false || HospitalDetails?.Is_EMS == null">                                    
+                                     <tr>
+                                       <th>Which mobile phone network has best coverage in the hospital?</th>
+                                       <td>:</td>
+                                       <td>{{HospitalDetails?.Best_Mobile_Network}}</td>
+                                     </tr>
+                                     <tr>
+                                       <th>Do you have WiFi connectivity?</th>
+                                       <td>:</td>
+                                       <td>{{HospitalDetails?.Wifi_Availability}}</td>
+                                     </tr>
+                                     <tr *ngIf="HospitalDetails?.Wifi_Availability == 'Yes'">
+                                       <th>Most popular FM channel in the region</th>
+                                       <td>:</td>
+                                       <td>{{HospitalDetails?.Popular_FM_Channel}}</td>
+                                     </tr>
+                                     <tr *ngIf="HospitalDetails?.Wifi_Availability == 'Yes'">
+                                       <th>Most widely read print newspaper in the region</th>
+                                       <td>:</td>
+                                       <td>{{HospitalDetails?.Popular_Newspaper}}</td>
+                                     </tr>                                  
+                                     <tr>
+                                       <th>Do you have an ECG machine in your hospital?</th>
+                                       <td>:</td>
+                                       <td>{{HospitalDetails?.ECG_Availability}}</td>
+                                     </tr>
+                                     <tr>
+                                      <th>DO you have defibrillator in your hospital?</th>
+                                      <td>:</td>
+                                      <td>{{HospitalDetails?.Defibrillator}}</td>
+                                    </tr>
+                                     <tr *ngIf="HospitalDetails?.ECG_Availability == 'Yes'">
+                                      <th>No. of cardiology beds</th>
+                                      <td>:</td>
+                                      <td>{{HospitalDetails?.NoOf_Cardiology_Beds}}</td>
+                                    </tr>
+                                    <tr>
+                                      <th>How many ambulances does the hospital own?</th>
+                                      <td>:</td>
+                                      <td>{{HospitalDetails?.NoOf_Own_Ambulances}}</td>
+                                    </tr>
+                                    <tr>
+                                      <th>How many BLS/ALS Ambulance?</th>
+                                      <td>:</td>
+                                      <td>{{HospitalDetails?.BLS_ALS_Ambulance}}</td>
+                                    </tr>
+                                     <tr *ngIf="HospitalDetails?.ECG_Availability == 'Yes'">
+                                       <th>Where is the ECG machine located?</th>
+                                       <td>:</td>
+                                       <td>{{HospitalDetails?.ECG_Location}}</td>
+                                     </tr>
+                                     <tr *ngIf="HospitalDetails?.ECG_Availability == 'Yes'">
+                                       <th>Brand and model of ECG machine</th>
+                                       <td>:</td>
+                                       <td>{{HospitalDetails?.ECG_Brand_And_Model}}</td>
+                                     </tr>
+                                     <tr *ngIf="HospitalDetails?.ECG_Availability == 'Yes'">
+                                       <th>Are patch or bulb electrode used?</th>
+                                       <td>:</td>
+                                       <td>{{HospitalDetails?.Patch_Or_BulbElectrode}}</td>
+                                     </tr>     
+                                     <tr *ngIf="HospitalDetails?.ECG_Availability == 'Yes'">
+                                       <th>How many ECG`s are recorded per month</th>
+                                       <td>:</td>
+                                       <td>{{HospitalDetails?.NoOf_ECG_PerMonth}}</td>
+                                     </tr>
+                                     <tr>
+                                       <th>Are there doctors 24X7 in the Emergency Room?</th>
+                                       <td>:</td>
+                                       <td>{{HospitalDetails?.Doctors_24in7_EmergencyRoom}}</td>
+                                     </tr>         
+                                     <tr>
+                                       <th>Are there doctors 24X7 in the CCU?</th>
+                                       <td>:</td>
+                                       <td>{{HospitalDetails?.Doctors_24in7_CCU}}</td>
+                                     </tr>                            
+                                     <tr>
+                                       <th>Head of the Department</th>
+                                       <td>:</td>
+                                       <td>{{HospitalDetails?.Cardiology_Department_Head}}</td>
+                                     </tr>
+                                     <tr>
+                                       <th>Number of Cardiologists</th>
+                                       <td>:</td>
+                                       <td>{{HospitalDetails?.NoOf_Cardiologists}}</td>
+                                     </tr>
+                                     <tr>
+                                       <th>Total Number of General Physicians</th>
+                                       <td>:</td>
+                                       <td>{{HospitalDetails?.NoOf_GeneralPhysicians}}</td>
+                                     </tr>
+                                     <tr *ngIf="HospitalDetails?.Country.Country_Name === 'India'">
+                                      <th>Are you sign up with PMJAY?</th>
+                                      <td>:</td>
+                                      <td>{{HospitalDetails?.PMJAY_Availability}}</td>
+                                    </tr>
+                                   </ng-container>
+                                 </tbody>
+                             </table>
+                           </div>
+                           <div class="form-group  col-lg-5 col-md-12 ">
+                               <div class="map-canvas">
+                                 <agm-map #AgmMap [latitude]="latitude" [longitude]="longitude" [zoom]="zoom" [mapTypeControl]="true" [fullscreenControl]="true" [fitBounds]="true" >
+                                     <agm-marker [latitude]="latitude" [longitude]="longitude" [agmFitBounds]="true"></agm-marker>
+                                 </agm-map>
+                                 <!-- <img src="assets/images/sample-Coimbatore-City-Map.jpg"> -->
+                               </div>
+                           </div>
+                         </div>
+                       </div>
+                       <ng-container *ngIf="HospitalDetails?.Is_EMS == false || HospitalDetails?.Is_EMS == null">                      
+                       <div class="tabpane-title">
+                           <h5>Treatment Details</h5>
+                       </div>
+                       <div class="container-fluid">
+                           <div class="row">
+                                 <div class="form-group col-lg-8 col-md-12 div-overflow-auto">
+                             <table class="tbl-hospital-list-view treatment-details">
+                               <tbody>
+                                 <tr>
+                                   <th>Do you have cath lab in your hospital?</th>
+                                   <td>:</td>
+                                   <td>{{HospitalDetails?.CathLab_Availability}}</td>
+                                 </tr>
+                                 <tr *ngIf="HospitalDetails?.CathLab_Availability == 'No'">
+                                   <th>Closest hospital with a cath lab</th>
+                                   <td>:</td>
+                                   <td>{{HospitalDetails?.ClosestHospitals_with_CathLab}}</td>
+                                 </tr>
+                                 <tr *ngIf="HospitalDetails?.CathLab_Availability == 'Yes'">
+                                   <th>Is Cath Lab 24x7
+                                   </th>
+                                   <td>:</td>
+                                   <td>{{HospitalDetails?.CathLab_24_7}}</td>
+                                 </tr>
+                                 <tr>
+                                   <th>Cardiac / ICU Beds</th>
+                                   <td>:</td>
+                                   <td>{{HospitalDetails?.NoOf_ICU_Or_CCU_Beds}}</td>
+                                 </tr>
+                                 <tr *ngIf="HospitalDetails?.CathLab_Availability == 'Yes'">
+                                    <th>How many PCI done per month</th>
+                                    <td>:</td>
+                                    <td>{{HospitalDetails?.NoOf_PCI_Done_PerMonth}}</td>
+                                  </tr> 
+                                 <tr *ngIf="HospitalDetails?.CathLab_Availability == 'Yes'">
+                                   <th>Do you do Primary PCI?</th>
+                                   <td>:</td>
+                                   <td>{{HospitalDetails?.PCI_Availability}}</td>
+                                 </tr> 
+                                 <tr *ngIf="HospitalDetails?.PCI_Availability == 'Yes'">
+                                   <th>No. of Primary PCI`s done per month</th>
+                                   <td>:</td>
+                                   <td>{{HospitalDetails?.NoOf_PrimaryPCI_Done_PerMonth}}</td>
+                                 </tr> 
+                                 <!-- <tr>
+                                   <th>Mode of Transports used by STEMI patients ?</th>
+                                   <td>:</td>
+                                   <td>
+                                     <span *ngIf="HospitalDetails?.ModeOf_Transports_Used_ByPatients?.Government_Ambulance">  108, </span>
+                                     <span *ngIf="HospitalDetails?.ModeOf_Transports_Used_ByPatients?.Hospital_Ambulance"> Hospital Ambulance, </span>
+                                     <span *ngIf="HospitalDetails?.ModeOf_Transports_Used_ByPatients?.Private_Ambulance"> Private Ambulance, </span>
+                                     <span *ngIf="HospitalDetails?.ModeOf_Transports_Used_ByPatients?.Private_Vehicle"> Private Vehicle, </span>
+                                     <span *ngIf="HospitalDetails?.ModeOf_Transports_Used_ByPatients?.Public_Transport"> Public Transport </span>
+                                   </td>
+                                 </tr> -->
+                                 <tr>
+                                   <th>CCU Staff</th>
+                                   <td>:</td>
+                                   <td>{{HospitalDetails?.NoOf_CCUNurses}}</td>
+                                 </tr> 
+                                 <tr>
+                                   <th>Do you do thrombolysis</th>
+                                   <td>:</td>
+                                   <td>{{HospitalDetails?.Thrombolysis_Availability}}</td>
+                                 </tr>
+                                 <tr *ngIf="HospitalDetails?.Thrombolysis_Availability == 'Yes'">
+                                   <th>Type of Thrombolytic used</th>
+                                   <td>:</td>
+                                   <td>{{HospitalDetails?.TypeOf_Thrombolytic}}</td>
+                                 </tr>                                
+                                 <tr *ngIf="HospitalDetails?.Thrombolysis_Availability == 'Yes'">
+                                   <th>How many thrombolysis done per month?</th>
+                                   <td>:</td>
+                                   <td>{{HospitalDetails?.NoOf_Thrombolysed_patients_PerMonth}}</td>
+                                 </tr>
+                                 <tr *ngIf="HospitalDetails?.TypeOf_Thrombolytic.includes('streptokinase')">
+                                   <th>What % of patients are given streptokinase?</th>
+                                   <td>:</td>
+                                   <td>{{HospitalDetails?.PercentageOf_Streptokinase_patients}}%</td>
+                                 </tr>  
+                                 <tr *ngIf="HospitalDetails?.TypeOf_Thrombolytic.includes('tenecteplase')">
+                                   <th>What % of patients are given tenecteplase?</th>
+                                   <td>:</td>
+                                   <td>{{HospitalDetails?.PercentageOf_Tenecteplase_patients}}%</td>
+                                 </tr> 
+                                 <tr *ngIf="HospitalDetails?.TypeOf_Thrombolytic.includes('reteplase')">
+                                   <th>What % of patients are given reteplase?</th>
+                                   <td>:</td>
+                                   <td>{{HospitalDetails?.PercentageOf_Reteplase_patients}}%</td>
+                                 </tr> 
+                                 <tr *ngIf="HospitalDetails?.TypeOf_Thrombolytic.includes('others')">
+                                   <th>Others</th>
+                                   <td>:</td>
+                                   <td>{{HospitalDetails?.Thrombolytic_Other}}%</td>
+                                 </tr>
+                                 <tr *ngIf="HospitalDetails?.CathLab_Availability == 'Yes'">
+                                   <th>Is Pharmaco-Invasive therapy given for patients referred here after thrombolysis?</th>
+                                   <td>:</td>
+                                   <td>{{HospitalDetails?.If_PharmacoInvasive_Therapy}}</td>
+                                 </tr> 
+                                 <tr *ngIf="HospitalDetails?.If_PharmacoInvasive_Therapy == 'Yes'">
+                                   <th>No. of cases treated with Pharmaco-Invasive therapy per month</th>
+                                   <td>:</td>
+                                   <td>{{HospitalDetails?.NoOf_PharmacoInvasive_PerMonth}}</td>
+                                 </tr> 
+                               </tbody>
+                             </table>
+                           </div>
+                           <div class="form-group  col-lg-4 col-md-12">
+                           </div>
+                         </div> 
+                       </div>
+ 
+                       <div class="tabpane-title">
+                           <h5>STEMI Feedback</h5>
+                       </div>
+                       <div class="container-fluid">
+                           <div class="row">
+                                 <div class="form-group col-lg-8 col-md-12 div-overflow-auto">
+                             <table class="tbl-hospital-list-view treatment-details">
+                               <tbody>
+                                 <tr>
+                                   <th>Have you heard about STEMI Project</th>
+                                   <td>:</td>
+                                   <td>{{HospitalDetails?.Heard_About_Project}}</td>
+                                 </tr>
+                                 <tr>
+                                   <th>Are you willing to help STEMI patients receive timely care through this project?</th>
+                                   <td>:</td>
+                                   <td>{{HospitalDetails?.Help_Timely_Care_ToPatients}}</td>
+                                 </tr>
+                                 <tr>
+                                   <th>Additional Remarks</th>
+                                   <td>:</td>
+                                   <td>{{HospitalDetails?.Feedback_Remarks}}</td>
+                                 </tr>
+                               </tbody>
+                             </table>
+                           </div>
+                           <div class="form-group  col-lg-4 col-md-12">
+                           </div>
+                         </div>  
+                       </div>
+ 
+                       <!-- Cardiologist Contact Details -->                      
+                       <div class="tabpane-title">
+                           <h5>Cardiologist Contact Details</h5>
+                       </div>
+                       <div class="container-fluid">
+                           <div class="row">
+                                 <div class="form-group col-md-12 div-overflow-auto">
+                             <table class="table-stemi tbl-cardiologist">
+                               <thead>
+                                 <tr>
+                                   <th>Name</th>
+                                   <th>Phone</th>
+                                   <th>Email Address</th>
+                                   <th>Preferred Contact</th>
+                                 </tr>
+                               </thead>
+                               <tbody>
+                                  <ng-container *ngIf="HospitalDetails?.Cardiologist_Array && checkArray('Cardiologist_Array')">
+                                     <tr *ngFor="let CardiologistArray of HospitalDetails?.Cardiologist_Array">
+                                        <td>{{CardiologistArray?.Cardiologist_Name}}</td>
+                                        <td>{{CardiologistArray?.Cardiologist_Phone}}</td>
+                                        <td>{{CardiologistArray?.Cardiologist_Email}}</td>
+                                        <td>
+                                           <mat-icon *ngIf="CardiologistArray?.Cardiologist_Preferred_Contact">done</mat-icon>
+                                        </td>                                      
+                                     </tr>
+                                  </ng-container>
+                               </tbody>
+                             </table>
+                           </div>
+                         </div>                           
+                       </div>
+ 
+                       <!-- General Physicians Contact Details -->                     
+                       <div class="tabpane-title">
+                           <h5>General Physicians Contact Details</h5>
+                       </div>
+                       <div class="container-fluid">
+                           <div class="row">
+                           <div class="form-group col-md-12 div-overflow-auto">
+                             <table class="table-stemi tbl-general-physicians">
+                               <thead>
+                                 <tr>
+                                   <th>Name</th>
+                                   <th>Phone</th>
+                                   <th>Email Address</th>
+                                   <th>Preferred Contact</th>
+                                 </tr>
+                               </thead>
+                               <tbody>
+                                  <ng-container *ngIf="HospitalDetails?.GeneralPhysician_Array && checkArray('GeneralPhysician_Array')">
+                                     <tr *ngFor="let GeneralPhysicianArray of HospitalDetails?.GeneralPhysician_Array">
+                                        <td>{{GeneralPhysicianArray?.GeneralPhysician_Name}}</td>
+                                        <td>{{GeneralPhysicianArray?.GeneralPhysician_Phone}}</td>
+                                        <td>{{GeneralPhysicianArray?.GeneralPhysician_Email}}</td>
+                                        <td>
+                                           <mat-icon *ngIf="GeneralPhysicianArray?.GeneralPhysician_Preferred_Contact">done</mat-icon>
+                                        </td>
+                                     </tr>
+                                  </ng-container>
+                               </tbody>
+                             </table>
+                           </div>
+                         </div>                           
+                       </div>
+                       
+                       <!-- Co-Ordinators Contact Details -->                    
+                       <div class="tabpane-title">
+                           <h5>Hospital Administrator Contact Details</h5>
+                       </div>
+                       <div class="container-fluid">
+                           <div class="row">
+                                 <div class="form-group col-md-12 div-overflow-auto">
+                             <table class="table-stemi tbl-co-ordinators">
+                               <thead>
+                                 <tr>
+                                   <th>Name</th>
+                                   <th>Phone</th>
+                                   <th>Email Address</th>
+                                   <th>Preferred Contact</th>
+                                 </tr>
+                               </thead>
+                               <tbody>
+                                  <ng-container *ngIf="HospitalDetails?.CoOrdinators_Array && checkArray('CoOrdinators_Array')">
+                                     <tr *ngFor="let CoOrdinatorsArray of HospitalDetails?.CoOrdinators_Array">
+                                        <td>{{CoOrdinatorsArray?.CoOrdinators_Name}}</td>
+                                        <td>{{CoOrdinatorsArray?.CoOrdinators_Phone}}</td>
+                                        <td>{{CoOrdinatorsArray?.CoOrdinators_Email}}</td>
+                                        <td>
+                                           <mat-icon *ngIf="CoOrdinatorsArray?.CoOrdinators_Preferred_Contact">done</mat-icon>
+                                        </td>                                      
+                                     </tr> 
+                                  </ng-container>                            
+                               </tbody>
+                             </table>
+                           </div>
+                         </div>                           
+                       </div>
+ 
+                       <div class="tabpane-title">
+                         <h5>Patient Count Analysis</h5>
+                       </div>
+                       <div class="container-fluid">
+                           <div class="row">
+                                 <div class="form-group col-lg-8 col-md-12 div-overflow-auto">
+                                 <table class="tbl-hospital-list-view treatment-details">
+                                     <tbody>
+                                         <tr>
+                                           <th>No of STEMI Patients received per month</th>
+                                           <td>:</td>
+                                           <td>{{HospitalDetails?.NoOf_STEMI_Patients_PerMonth}}</td>
+                                         </tr>
+                                         <tr>
+                                           <th>Number of Direct Admission per month</th>
+                                           <td>:</td>
+                                           <td>{{HospitalDetails?.NoOf_Direct_STEMI_Patients_PerMonth}}</td>
+                                         </tr>
+                                         <tr>
+                                           <th>No of STEMI Referral patients received per month</th>
+                                           <td>:</td>
+                                           <td>{{HospitalDetails?.NoOf_Referral_STEMI_Patients_PerMonth}}</td>
+                                         </tr>
+                                         <tr>
+                                           <th>No. of STEMI cases per month referred from here to another hospital</th>
+                                           <td>:</td>
+                                           <td>{{HospitalDetails?.NoOf_STEMI_Cases_ReferredTo_PerMonth}}</td>
+                                         </tr>
+                                         <!-- <tr>
+                                           <th>No of STEMI patients referred here from another hospital per month</th>
+                                           <td>:</td>
+                                           <td>{{HospitalDetails?.NoOf_STEMI_Cases_ReferredFrom_PerMonth}}</td>
+                                         </tr> -->
+                                     </tbody>
+                                 </table>
+                               </div>
+                               <div class="form-group col-lg-4 col-md-12">
+                               </div>
+                             </div>  
+                       </div>
+                     <!-- Which Are The Hospitals Referring To This Centre? -->             
+                     <div class="tabpane-title">
+                         <h5>Which Are The Hospitals Referring To This Centre?</h5>
+                     </div>
+                     <div class="container-fluid">
+                           <div class="row">
+                                 <div class="form-group col-md-12 div-overflow-auto">
+                           <table class="table-stemi tbl-hospitals-referring">
+                             <thead>
+                               <tr>
+                                 <th>Hospital Name</th>
+                                 <th>Is there a cath lab in this hospital?</th>
+                                 <th>Which ambulance service used?</th>
+                                 <th>Remarks</th>
+                               </tr>
+                             </thead>
+                             <tbody>
+                               <ng-container *ngIf="HospitalDetails?.Hospitals_Refer_STEMI_Patients && checkArray('Hospitals_Refer_STEMI_Patients')">
+                                  <tr *ngFor="let HospitalReferringArray of HospitalDetails?.Hospitals_Refer_STEMI_Patients">
+                                     <td>{{HospitalReferringArray?.Referring_Hospital_Name}}</td>
+                                     <td>{{HospitalReferringArray?.Is_Cath_Lab}}</td>
+                                     <td>{{HospitalReferringArray?.Ambulance_Service}}</td>
+                                     <td>{{HospitalReferringArray?.Remarks}}</td>                                      
+                                  </tr>
+                               </ng-container>
+                             </tbody>
+                           </table>
+                         </div>
+                       </div>                           
+                     </div>
+ 
+                   <!-- Closest Hospital Doing PCI With Distance And Preference To Be Link -->    
+                     <div class="tabpane-title">
+                         <h5>Closest Hospital Doing PCI With Distance And Preference To Be Link</h5>
+                     </div>
+                     <div class="container-fluid">
+                           <div class="row">
+                                 <div class="form-group col-md-12 div-overflow-auto">
+                           <table class="table-stemi tbl-closest-hospital">
+                             <thead>
+                               <tr>
+                                 <th>Hospital Name</th>
+                                 <th>Address</th>
+                                 <th>Preference</th>
+                               </tr>
+                             </thead>
+                             <tbody>
+                               <ng-container *ngIf="HospitalDetails?.ClosetHospital_Array && checkArray('ClosetHospital_Array')">
+                                  <tr *ngFor="let ClosetHospitalArray of HospitalDetails?.ClosetHospital_Array">
+                                     <td>{{ClosetHospitalArray?.Closest_Hospital_Name}}</td>
+                                     <td>{{ClosetHospitalArray?.Closest_Hospital_Address}}</td>
+                                     <td>{{ClosetHospitalArray?.Closest_Hospital_Preference}}</td>                                 
+                                  </tr>   
+                               </ng-container>
+                             </tbody>
+                           </table>
+                         </div>
+                       </div>                           
+                     </div>
+                   </ng-container>
+                     </div>
+                     <!-- Go Back button -->
+                     <div class="row">
+                         <div class="col-sm-12">
+                               <a [routerLink]="['/Hospital-Management']" class="btn btn-outline-primary float-right save">GoBack</a>
+                         </div>
+                      </div>
+                 </div>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+ </section>
+   

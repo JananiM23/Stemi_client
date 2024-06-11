@@ -1,0 +1,59 @@
+.ECG-view {
+    height:150px;
+    width: 150px;
+}
+.UploadBtn{
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: 40px auto;
+    align-items: center;
+    /* max-width: 120px; */
+    max-width: 170px;
+    /* padding: 5px 10px; */
+    padding: 5px 10px;
+    background: linear-gradient(to right,rgb(148, 148, 148) 0,rgb(223, 223, 223) 100%);
+    color: black;
+    border-radius: 5px;
+ }
+ .UploadBtn.Uploaded{
+    background: linear-gradient(to right, #2f81d4 0, #59c5ef 100%);
+ }
+ .UploadViewBtn{
+    cursor: pointer;
+    margin-left: 15px;
+    font-weight: 500;
+    color: #1976d4;
+ }
+ 
+ .ECGView{
+   position: fixed;
+   left: 50%;
+   top: calc(50% + 25px);
+   transform: translate(-50%, -50%);
+   z-index: 10000;
+   max-height: calc(100% - 85px);
+   max-width: 100%;
+
+}
+.ECGView .CloseBtn{
+   position: absolute;
+    background: #a9a9a9;
+    width: 30px;
+    height: 30px;
+    display: block;
+    color: #fff;
+    cursor: pointer;
+    font-size: 25px;
+    line-height: 25px;
+    text-align: center;
+    border-radius: 50px;
+    top: -15px;
+    right: -15px;
+}
+.ECGView .ImgSection{
+   border: 2px solid #c8c8c8;
+}
+.ECGView .ImgSection img{
+   max-width: 100%;
+   max-height: 100%;
+}

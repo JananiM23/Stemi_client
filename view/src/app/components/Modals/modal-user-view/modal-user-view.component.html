@@ -1,0 +1,148 @@
+<section>
+  <div class="modal-body">
+     <form>
+        <div class="modal-header-title">
+           <h5> View User Details</h5>
+           <span class="modal-container-close" (click)="modalRef.hide()"><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+        </div>
+        <div class="container modal-content-body">
+           <div class="col-sm-12">
+              <div class="row no-margin">
+               <div class="form-group form-group-sm col-md-12">
+                  <div class="row">
+                   <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">User Type:</label>
+                   <div class="col-sm-12 col-md-8">
+                      {{Info?.User_Type | titlecase}}
+                   </div>
+                  </div>
+                 </div>
+                 <div class="form-group form-group-sm col-md-12" *ngIf="Info?.User_Type === 'D' || Info?.User_Type === 'CDA' ">
+                   <div class="row">
+                       <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">Doctor Registration ID:</label>
+                       <div class="col-sm-12 col-md-8">
+                          {{Info?.DocRegID | titlecase}}
+                       </div>
+                   </div>
+                 </div>
+                 <div class="form-group form-group-sm col-md-12">
+                  <div class="row">
+                   <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">Location:</label>
+                   <div class="col-sm-12 col-md-8">
+                      {{Info?.Location.Location_Name | titlecase}}
+                   </div>
+                  </div>
+                 </div>
+                  <div class="form-group form-group-sm col-md-12" *ngIf="Info?.Location !== '' && Info?.Location !== null && Info?.Cluster !== null">
+                     <div class="row">
+                      <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">Cluster Name:</label>
+                      <div class="col-sm-12 col-md-8">
+                        {{Info?.Cluster.Cluster_Name | titlecase}}
+                      </div>
+                     </div>                           
+                  </div>
+                  <div class="form-group form-group-sm col-md-12" *ngIf="Info?.Location !== '' && Info?.Location !== null && ( Info?.User_Type === 'CDA' || Info?.User_Type === 'CO' )  && Info?.ClustersArray.length > 0">
+                     <div class="row">
+                      <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">Clusters:</label>
+                      <div class="col-sm-12 col-md-8">
+                         <p *ngFor="let Clusters of Info?.ClustersArray; let i=index">
+                            {{i+1}}.{{Clusters?.Cluster_Name | titlecase}}
+                         </p>                           
+                      </div>
+                     </div>
+                  </div>
+
+                  <div class="form-group form-group-sm col-md-12" *ngIf="Info?.User_Type !== null && Info?.User_Type === 'PU' && Info?.Hospital !== null">
+                     <div class="row">
+                      <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">Hospital:</label>
+                      <div class="col-sm-12 col-md-8">
+                        {{Info?.Hospital.Hospital_Name | titlecase}} ({{Info?.Hospital?.Hospital_Role}})
+                      </div>
+                     </div>
+                  </div>
+
+                  <div class="form-group form-group-sm col-md-12" *ngIf="Info?.User_Type !== null && Info?.User_Type === 'D' && Info?.HospitalsArray.length > 0">
+                     <div class="row">
+                      <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">Hospitals:</label>
+                      <div class="col-sm-12 col-md-8">
+                         <p *ngFor="let Hospitals of Info?.HospitalsArray; let i=index">
+                            {{i+1}}.{{Hospitals?.Hospital_Name | titlecase}} ({{Hospitals?.Hospital_Role}})
+                         </p>
+                      </div>
+                     </div>
+                  </div>
+                  <div class="form-group form-group-sm col-md-12" *ngIf="Info?.User_Type === 'CDA'">
+                      <div class="row">
+                       <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">Alert Duration:</label>
+                       <div class="col-sm-12 col-md-8">
+                         {{Info?.Alert_Duration }} <span *ngIf="Info?.Alert_Duration !== ''">Min</span>
+                       </div>
+                      </div>
+                   </div>
+                    <div class="form-group form-group-sm col-md-12">
+                       <div class="row">
+                        <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">Username:</label>
+                        <div class="col-sm-12 col-md-8">
+                           {{Info?.User_Name | titlecase}}
+                        </div>
+                       </div>
+                    </div>
+                    <div class="form-group form-group-sm col-md-12">
+                      <div class="row">
+                       <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">Name:</label>
+                       <div class="col-sm-12 col-md-8">
+                          {{Info?.Name | titlecase}}
+                       </div>
+                      </div>
+                   </div>
+                   <div class="form-group form-group-sm col-md-12">
+                    <div class="row">
+                     <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">Email ID:</label>
+                     <div class="col-sm-12 col-md-8">
+                        {{Info?.Email | titlecase}}
+                     </div>
+                    </div>
+                   </div>
+                   <div class="form-group form-group-sm col-md-12">
+                    <div class="row">
+                     <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">Phone No:</label>
+                     <div class="col-sm-12 col-md-8">
+                        {{Info?.Phone | titlecase}}
+                     </div>
+                    </div>
+                   </div>
+                   <div class="form-group form-group-sm col-md-12">
+                    <div class="row">
+                     <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">Qualification:</label>
+                     <div class="col-sm-12 col-md-8">
+                        {{Info?.Qualification}}
+                     </div>
+                    </div>
+                   </div>
+                   <div class="form-group form-group-sm col-md-12">
+                    <div class="row">
+                     <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">Designation:</label>
+                     <div class="col-sm-12 col-md-8">
+                        {{Info?.Designation}}
+                     </div>
+                    </div>
+                   </div>
+                   <div class="form-group form-group-sm col-md-12">
+                     <div class="row">
+                      <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">User Access Type:</label>
+                      <div class="col-sm-12 col-md-8">
+                         {{Info?.onlyViewAccess === true ? 'View only' : 'View and Edit'}}
+                      </div>
+                     </div>
+                    </div>
+
+                 </div>
+           </div>               
+        </div>
+        <div class="modal-actions">          
+           <button type="submit" (click)="modalRef.hide()" class="modal-confirm btns-modal-action fill-left-to-right" aria-label="">
+             Close
+           </button>
+        </div>
+     </form>   
+  </div>
+</section>

@@ -1,0 +1,429 @@
+@import './assets/css/formwizard_with_progressBar.css';
+@import './assets/css/Overwrite-css-Material-Design.css';
+@import './assets/css/table_pagination.css';
+@import './assets/css/modal-overlay-popup.css';
+@import './assets/css/responsive.css';
+
+html,
+body {
+   height: 100%;
+}
+
+body {
+   margin: 0;
+   font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+*:focus,
+*:active,
+*:visited {
+   outline: none !important;
+}
+
+label {
+   margin-bottom: auto;
+   font-weight: 500;
+}
+
+.cdk-drag-preview {
+   z-index: 1003 !important;
+}
+
+.no-margin {
+   margin: 0 !important;
+}
+
+.margin-top0 {
+   margin-top: 0px !important;
+}
+
+.margin-top-10 {
+   margin-top: 10px;
+}
+
+.margin-bottom-10 {
+   margin-bottom: 10px;
+}
+.margin-bottom-20 {
+   margin-bottom: 20px !important;
+}
+
+.padding-right-0 {
+   padding-right: 0px;
+}
+
+.padding-left-10 {
+   padding-left: 10px;
+}
+
+.padding-left-20 {
+   padding-left: 20px;
+}
+
+.padding-right-10 {
+   padding-right: 10px;
+}
+
+.padding-right-20 {
+   padding-right: 20px;
+}
+
+.padding-0 {
+   padding: 0px !important;
+}
+
+.border-lft-0 {
+   border-left: 0 !important;
+}
+
+.padding-top-10 {
+   padding-top: 10px;
+}
+
+.label-txt-list {
+   line-height: 27px;
+}
+
+.line-ht-25 {
+   line-height: 25px;
+}
+
+.line-ht-35 {
+   line-height: 35px;
+}
+
+.line-ht-45 {
+   line-height: 45px;
+}
+
+.font-size-12 {
+   font-size: 12px;
+}
+
+.alignItem-center {
+   align-items: center !important;
+}
+
+.gm-style .gm-style-iw-d {
+   overflow-x: auto !important;
+}
+
+
+.pac-container {
+   border-top: none !important;
+   box-shadow: none !important;
+   overflow: visible !important;
+   margin-top: 11px;
+   background: transparent;
+}
+
+.pac-item {
+   line-height: 35px !important;
+   border-top: 1px solid #ececec !important;
+   font-size: 12px !important;
+   color: #828282b8 !important;
+   min-width: calc(100% + 20px);
+   background-color: #ffffff;
+   margin-left: -10px;
+   box-shadow: 4px 4px 10px #e0e0e0;
+}
+
+.pac-item:hover {
+   background-color: #e2e2e2 !important;
+}
+
+.pac-item.pac-item-selected {
+   background-color: #e2e2e2 !important;
+}
+
+.pac-icon {
+   margin-top: 10px;
+}
+
+.pac-icon-marker {
+   background-position: 15px -161px !important;
+}
+
+.pac-item-query {
+   color: #525252 !important;
+}
+
+.pac-logo:after {
+   min-width: calc(100% + 20px);
+   background-color: #ececec;
+   margin-left: -10px;
+   box-shadow: 4px 4px 10px 0px #e0e0e0;
+}
+
+/* Fixed Popup in this div in app-component.html */
+.fixed-bottom-popup {
+   position: fixed;
+   bottom: 30px;
+   width: 350px;
+   height: 80px;
+   z-index: 2;
+   right: 10px;
+   color: #fff;
+   padding: 15px;
+   background-image: linear-gradient(to right, #2f81d4 0, #59c5ef 100%);
+   opacity: 0.8;
+   border-radius: 5px;
+   display: none;
+}
+
+/* Scroll-bar CSS start*/
+::-webkit-scrollbar {
+   width: 6px;
+   height: 6px;
+}
+
+::-webkit-scrollbar-track {
+   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb:hover {
+   background: #9e9e9e;
+   cursor: move;
+}
+
+/* Handle on hover */
+/* Scroll-bar CSS end*/
+
+
+/* Create New button css start */
+.create-button-btn {
+   border: 1px solid;
+   font-weight: 400;
+   padding: 2px 10px;
+   font-size: 14px;
+   float: right;
+   position: relative;
+   top: -1px;
+   cursor: pointer;
+   border-radius: 20px;
+   background-image: linear-gradient(to right, #00a7e8 0, #0071e4 100%) !important;
+   right: 0px;
+   text-transform: uppercase;
+   letter-spacing: 1.3px;
+   color: #fff !important;
+}
+
+.create-button-btn:hover {
+   box-shadow: -2px 3px 5px 1px rgba(0,0,0,.3);
+   transition: .5s;
+   text-decoration: none;
+}
+
+.create-icon-btn {
+   display: none;
+}
+
+
+.fl-left {
+   float: left;
+}
+
+.fl-right {
+   float: right;
+}
+
+.flex-container {
+   display: flex;
+   align-items: stretch;
+   flex-wrap: wrap;
+}
+.loader-entry-page {
+   display: flex;
+   line-height: 41px;
+   top: 0;
+   min-height: 330px;
+   position: relative;
+}
+
+
+
+
+
+
+@media only screen and (max-width: 935px) {
+
+   .table-up-arrow i.fa.fa-arrow-circle-up,
+   .fa-arrow-circle-down {
+      display: none;
+   }
+
+   .tbl-loading-center {
+      top: 0px !important;
+      height: 100% !important;
+   }
+
+   .field-name {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+   }
+}
+
+@media only screen and (max-width: 767px) {
+   .pagination-wrapper {
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: space-around;
+      margin-bottom: 10px;
+   }
+
+   .pagination-wrapper .page-number,
+   .pagination-wrapper .table-go-page-entries {
+      justify-content: center;
+   }
+
+   .page-show-entires {
+      margin: 0 10px;
+   }
+
+   .create-button-btn {
+      display: none;
+   }
+
+   .create-icon-btn {
+      display: block;
+      float: right;
+      top: 0;
+      right: 0;
+      position: relative;
+   }
+
+   .create-icon-btn i.fa.fa-plus, .fa-file-excel-o, .fa-table {
+      background: #ffffff;
+      padding: 3px 5px;
+      color: #45a5e3;
+      /* border: 1px solid #efefef; */
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 18px;
+      margin: 0 4px;
+   }
+
+   table.tbl-hospital-list-view tr th:first-child {
+      min-width: 300px !important;
+      max-width: 100% !important;
+   }
+
+   table.tbl-hospital-list-view tr td:last-child {
+      min-width: 300px;
+      max-width: 100% !important;
+   }
+
+
+   .table-stemi .tbl-scroll {
+      min-width: 650px;
+      overflow: auto;
+   }
+}
+
+@media only screen and (max-width: 575px) {
+   .xs-tbl-entry-input {
+      width: 70%;
+   }
+
+   .xs-tbl-btn-filter {
+      width: 30%;
+   }
+
+
+   .tbl-stemi-default tr th,
+   .tbl-stemi-default tr td {
+      text-align: left;
+   }
+
+   .table-entries-and-sortby{
+      margin: 0;
+      width: 100%;
+   }
+   .table-entries-and-sortby label{
+      width: 100%;
+   }
+   .tbl-limits{ 
+      width: 100%;
+      margin: 0;
+      margin-bottom: 10px;
+   }
+
+   .filter-parent .filter-result {
+      width: 100%;
+  }
+}
+
+@media only screen and (max-width: 499px) {
+   ol.breadcrumb {
+      display: block;
+   }
+}
+
+@media only screen and (max-width: 991px) {
+   table.tbl-hospital-list-view tr th:first-child {
+      min-width: 380px;
+      max-width: 380px !important;
+      ;
+   }
+
+   /* Hospital-Listview */
+   .div-overflow-auto {
+      overflow: auto;
+   }
+
+   .tbl-hospital-list-view {
+      overflow: auto;
+      min-width: 650px;
+   }
+
+   table.tbl-hospital-list-view tr td:last-child {
+      min-width: 290px;
+   }
+
+   .tbl-cardiologist,
+   .tbl-general-physicians,
+   .tbl-co-ordinators,
+   .tbl-hospitals-referring,
+   .tbl-closest-hospital {
+      min-width: 700px;
+   }
+
+}
+
+@media only screen and (min-width: 1366px) {
+   table.tbl-hospital-list-view tr th:first-child {
+      max-width: 350px;
+      min-width: 350px;
+   }
+}
+
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+   .QR_un_visible textarea {
+      height: 267px;
+      min-height: 267px;
+      position: relative;
+   }
+
+}
+
+
+@media only screen and (max-width: 991px){
+   .hospital-create-parent {
+      display: flex;
+      flex-direction: column;
+   }
+   .hospital-create-parent .text-box-column{
+      order:2
+   }
+   .hospital-create-parent .map-box-column{
+      order:1
+   }
+}
+
+

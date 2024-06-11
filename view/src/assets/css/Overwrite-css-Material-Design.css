@@ -1,0 +1,294 @@
+.full-width,
+.tab-label-full .mat-tab-label {
+   width: 100%;
+}
+
+.mat-form-field-infix {
+   border-top: 0 !important;
+}
+
+.width-auto .mat-form-field-infix {
+   width: auto;
+   background: #e8f0fe;
+}
+
+.mat-datepicker-toggle {
+   background-image: url("../../assets/images/img-date.png");
+}
+
+/* material tab css overwrite */
+.mat-tab-label {
+   opacity: 1 !important;
+   color: #3a3a3a;
+   background: #efefef;
+   border-right: 3px solid #e3e3e5;
+}
+
+.mat-tab-label.mat-ripple.mat-tab-label-active {
+   color: #fff !important;
+   opacity: 1;
+   background-image: linear-gradient(to right, #ff0302 0%, #fc3a2b 100%);
+}
+
+.mat-tab-group.mat-primary .mat-ink-bar {
+   background: #e80a0a;
+}
+
+.mat-tab-label:hover {
+   color: #fff;
+   transition: all 0.4s;
+   z-index: 1;
+}
+
+.mat-tab-label::after {
+   display: block;
+   position: absolute;
+   top: 0;
+   left: 0;
+   bottom: 0;
+   right: 0;
+   margin: auto;
+   width: 100%;
+   height: 1px;
+   content: ".";
+   color: transparent;
+   background-image: linear-gradient(to right, #ff0302 0%, #fc3a2b 100%);
+   opacity: 0;
+   z-index: -1;
+   transition: all 0.4s;
+}
+
+.mat-tab-label:hover:after {
+   opacity: 1;
+   height: 100%;
+}
+
+.mat-tab-group.mat-primary .mat-ink-bar {
+   background: #e80a0a;
+   display: none;
+}
+
+.mat-tab-label.mat-tab-disabled:hover:after {
+   height: 0;
+   background: none;
+}
+.mat-tab-label.mat-tab-disabled:hover {
+   color: rgba(0,0,0,.38);
+   cursor: not-allowed;
+}
+
+/* material tab css overwrite */
+
+/* material sidebar css overwrite start*/
+.mat-drawer-container {
+   background: #edf5f8 !important;
+}
+
+mat-sidenav.mat-drawer.ng-tns-c3-0.ng-trigger.ng-trigger-transform.mat-drawer-side.ng-star-inserted {
+   min-width: 240px !important;
+   width: 100% !important;
+   max-width: 240px !important;
+}
+
+/* material sidebar css overwrite end*/
+
+/* Material Design Time modal div is overwrite start*/
+header.timepicker__header {
+   background-image: linear-gradient(to right, #ff0302 0%, #fc3a2b 100%);
+}
+
+.clock-face {
+   background-color: #efefefd4 !important;
+}
+
+span.clock-face__clock-hand {
+   background: red !important;
+}
+
+button.timepicker-button {
+   background-image: linear-gradient(to right, #2f81d4 0, #59c5ef 100%);
+   color: #fff !important;
+   font-weight: normal;
+   margin-right: 10px;
+}
+
+.clock-face__clock-hand_minute:before {
+   border: 4px solid #f69620 !important;
+}
+
+.clock-face__number > span.active {
+   color: #fff !important;
+   background-image: linear-gradient(to right, #2f81d4 0, #59c5ef 100%);
+}
+
+/* .mat-calendar-body-cell-content.mat-calendar-body-today {
+   background-image: linear-gradient(to right, #2f81d4 0, #59c5ef 100%);
+   color: #fff;
+   border: none;
+} */
+
+.mat-calendar-body-selected {
+   background-image: linear-gradient(to right, #2f81d4 0, #59c5ef 100%);
+   color: #fff; border: 0;
+}
+
+.mat-calendar-header {
+   color: #fff !important;
+   background-image: linear-gradient(to right, #ff0302 0%, #fc3a2b 100%);
+}
+
+.mat-calendar-arrow {
+   border-top-color: #fff;
+}
+
+.mat-calendar-next-button::after,
+.mat-calendar-previous-button::after {
+   border-color: #fff !important;
+}
+
+.mat-calendar-body-label {
+   color: #2196f3;
+}
+
+.timepicker-button > span {
+   font-weight: normal !important;
+}
+::ng-deep label.mat-checkbox-layout {
+   margin-bottom: 0 !important;
+}
+/* Material Design Time modal div is overwrite end*/
+
+
+.mat-form-field-suffix > .mat-icon{
+   font-size: 15px !important;
+   height: 17px !important;
+   width: 17px !important;
+}
+@media (orientation: landscape) {
+   .mat-datepicker-content-touch .mat-calendar {
+      width: 50vh !important;
+      height: 60vh !important;
+  }
+}
+
+
+.mat-form-field-appearance-fill .mat-form-field-label{
+   margin-top: 0px !important;
+}
+mat-error.mat-error-full {
+   margin-top: -18px;
+   font-size: 11px;
+}
+.mat-form-field-appearance-fill .mat-form-field-flex {
+   background-color: #e2e2e245 !important;
+}
+/* .mat-error {
+   display: inline-flex !important;
+} */
+
+mat-error{font-size: 11px !important;}
+
+.mat-checkbox-checked.mat-accent .mat-checkbox-background, .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {background-image: linear-gradient(to right, #0770db 0, #0ebcff 100%);background-color: transparent;;}
+.mat-checkbox:not(.mat-checkbox-disabled).mat-accent .mat-checkbox-ripple .mat-ripple-element {background: #0ebcff;}
+
+
+
+
+.mat-toolbar-row, .mat-toolbar-single-row {
+   height: 50px !important;
+}
+
+.mat-form-field-appearance-fill.mat-form-field-can-float .mat-input-server:focus+.mat-form-field-label-wrapper .mat-form-field-label,
+.mat-form-field-appearance-fill.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label{
+   -webkit-transform: translateY(-.9375em) scale(.75) !important;
+   transform: translateY(-.9375em) scale(.75) !important;
+}
+.mat-form-field-subscript-wrapper{
+   margin-top: .3em !important;
+}
+.mat-form-field-appearance-fill .mat-form-field-subscript-wrapper {
+   padding: 0em !important;
+}
+
+.mat-drawer.mat-drawer-side{
+   z-index: 1 !important;
+}
+mat-form-field.tbl-material-input .mat-form-field-wrapper {
+   padding-bottom: 1.34375em !important;
+    margin-bottom: -7px !important;
+    margin-top: 9px !important;
+}
+.tbl-general-physicians td .tbl-material-input .mat-form-field-subscript-wrapper{
+   font-size: 75%;
+   margin-top: 0px;
+   top: calc(100% - 1.79167em);
+}
+.cdk-overlay-container,
+.cdk-overlay-backdrop,
+.cdk-overlay-pane,
+.cdk-overlay-connected-position-bounding-box, .cdk-global-overlay-wrapper{
+   z-index: 1060 !important;
+}
+
+
+.mat-option.mat-active {
+   background: linear-gradient(to right,rgba(47, 129, 212) 0,rgba(89, 197, 239, 0.2) 100%);
+}
+.mat-option:hover:not(.mat-option-disabled) {
+   background: linear-gradient(to right,rgba(47, 129, 212, 0.2) 0,rgba(89, 197, 239) 100%);
+}
+.mat-option.mat-active:hover:not(.mat-option-disabled) {
+   background: linear-gradient(to right,rgba(47, 129, 212) 0,rgba(89, 197, 239) 100%);
+   color: #ffffff;
+}
+.mat-select-panel .mat-option.mat-selected:not(.mat-option-multiple) {
+   background: linear-gradient(to right,rgba(47, 129, 212) 0,rgba(89, 197, 239) 100%);
+}
+
+.mat-form-field-appearance-fill .mat-select-arrow-wrapper{transform: translateY(0%) !important;}
+
+.mat-form-field-type-mat-native-select.mat-form-field-disabled .mat-form-field-infix::after, .mat-input-element:disabled {
+   color: rgba(0, 0, 0, 0.7) !important;
+}
+.mat-select-disabled .mat-select-value {
+   color: rgba(0,0,0,.7) !important;
+}
+
+
+
+
+
+
+
+/* Disabled CSS */
+.YesOrNoButton.disabled {
+   pointer-events: none;
+}
+
+.mat-form-field-disabled .mat-form-field-wrapper .mat-form-field-flex {
+   border: 1px solid #eaeaea;
+   background-color: rgba(221, 221, 221, 0.45) !important;
+}
+.mat-select-disabled .mat-select-trigger .mat-select-arrow-wrapper {
+   opacity: 0;
+}
+.mat-form-field-disabled .mat-form-field-wrapper .mat-form-field-flex .mat-form-field-suffix {
+   display: none;
+}
+
+.mat-radio-button {
+	margin-right: 15px;
+	margin-bottom: 15px;
+}
+
+.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+	border-color: #0770db;
+}
+.mat-radio-button {
+	font-size: 13px;
+	font-weight: 400;
+}
+.mat-radio-button.mat-accent .mat-radio-inner-circle, .mat-radio-button.mat-accent .mat-radio-ripple .mat-ripple-element:not(.mat-radio-persistent-ripple), .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-persistent-ripple, .mat-radio-button.mat-accent:active .mat-radio-persistent-ripple{
+	background-image: linear-gradient(to right, #0770db 0, #0ebcff 100%);
+	background-color: transparent;
+}

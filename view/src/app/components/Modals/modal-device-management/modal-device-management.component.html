@@ -1,0 +1,81 @@
+<section *ngIf="Type && ( Type === 'Create' || Type === 'Edit')">
+   <div class="modal-body">
+      <form [formGroup]="DeviceForm" (ngSubmit)="onSubmit()">
+      <div class="modal-header-title">
+         <h5> {{Type}} Device</h5>
+         <span *ngIf="!Uploading" class="modal-container-close" (click)="modalRef.hide();"><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+      </div>
+      <div class="container modal-content-body">
+         <div class="col-sm-12">
+            <div class="row">                       
+               <div class="form-group col-lg-6 col-md-12">
+                  <div class="row">
+                     <label class="col-md-12 col-lg-4 col-form-label text-lg-right lbl-required">Device UID</label>
+                     <div class="col-md-12 col-lg-8">
+                        <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                           <input matInput formControlName="Device_UID" placeholder="Device UID">
+                           <mat-error *ngIf="DeviceForm.controls['Device_UID'].errors && DeviceForm.controls['Device_UID'].touched">
+                              <span *ngIf="DeviceForm.controls['Device_UID'].errors.required">Device UID is required</span>
+                              <ng-container *ngIf="!DeviceForm.controls['Device_UID'].errors.required">
+                                 <span *ngIf="DeviceForm.controls['Device_UID'].errors.DeviceUID_NotAvailable">Device UID Already Exist</span>                                       
+                              </ng-container>
+                           </mat-error>
+                        </mat-form-field>
+                     </div>
+                  </div>                           
+               </div>
+               <div class="form-group col-lg-6 col-md-12">
+                  <div class="row">
+                     <label class="col-md-12 col-lg-4 col-form-label text-lg-right lbl-required">Location</label>
+                     <div class="col-md-12 col-lg-8">
+                        <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                           <input matInput placeholder="Location" [matAutocomplete]="LocationAutocomplete" autocomplete="off" formControlName="Location" (blur)="AutocompleteBlur('Location')">
+                           <mat-autocomplete #LocationAutocomplete="matAutocomplete" [displayWith]="LocationDisplayName">
+                              <mat-option *ngFor="let Location of filteredLocationsList | async" [value]="Location"> {{Location.Location_Name}} </mat-option>
+                           </mat-autocomplete>
+                           <mat-error [innerHTML]="GetFormControlErrorMessage('Location')"></mat-error>
+                        </mat-form-field>
+                     </div>
+                  </div>
+               </div>                  
+               <div class="form-group form-group-sm col-sm-6" *ngIf="DeviceForm.controls['Location'].value !== null">
+                  <div class="row">
+                     <label class="col-md-12 col-lg-4 col-form-label text-lg-right lbl-required">Cluster</label>
+                     <div class="col-md-12 col-lg-8">
+                        <mat-form-field *ngIf="Type === 'Create' || (Type === 'Edit' && this.DeviceForm.controls.Location.valid)" class="full-width" [floatLabel]="'never'" appearance="fill">
+                           <input matInput placeholder="Cluster" [matAutocomplete]="ClusterAutocomplete" autocomplete="off" formControlName="Cluster" (blur)="AutocompleteBlur('Cluster')">
+                           <mat-autocomplete #ClusterAutocomplete="matAutocomplete" [displayWith]="ClusterDisplayName">
+                              <mat-option *ngFor="let Cluster of filteredClusterList | async" [value]="Cluster"> {{Cluster.Cluster_Name}} </mat-option>
+                           </mat-autocomplete>
+                           <mat-error [innerHTML]="GetFormControlErrorMessage('Cluster')"></mat-error>
+                        </mat-form-field>
+                     </div>
+                  </div>                          
+               </div> 
+               <div class="form-group form-group-sm col-sm-6" *ngIf="DeviceForm.controls['Cluster'].value !== null && DeviceForm.controls['Location'].value !== null">
+                  <div class="row">
+                     <label class="col-md-12 col-lg-4 col-form-label text-lg-right lbl-required">Hospital</label>
+                     <div class="col-md-12 col-lg-8">
+                        <mat-form-field *ngIf="Type === 'Create' || (Type === 'Edit' && this.DeviceForm.controls.Cluster.valid)" class="full-width" [floatLabel]="'never'" appearance="fill">
+                           <input matInput placeholder="Hospital" [matAutocomplete]="HospitalAutocomplete" autocomplete="off" formControlName="Hospital" (blur)="AutocompleteBlur('Hospital')">
+                           <mat-autocomplete #HospitalAutocomplete="matAutocomplete" [displayWith]="HospitalDisplayName">
+                              <mat-option *ngFor="let Hospital of filteredHospitalList | async" [value]="Hospital"> {{Hospital.Hospital_Name}} </mat-option>
+                           </mat-autocomplete>
+                           <mat-error [innerHTML]="GetFormControlErrorMessage('Hospital')"></mat-error>
+                        </mat-form-field>
+                     </div>
+                  </div>                          
+               </div>
+            </div>
+         </div>               
+      </div>
+      <div class="modal-actions">
+         <button type="submit" [disabled]="DeviceForm.status !== 'VALID'|| Uploading" class="modal-confirm btns-modal-action fill-left-to-right" [ngClass]="{'disabled': DeviceForm.status !== 'VALID'|| Uploading}">
+            <span *ngIf="Type === 'Create' && !Uploading">Submit</span>
+            <span *ngIf="Type === 'Edit' && !Uploading">Update</span>
+            <span *ngIf="Uploading"> Loading... </span>
+         </button>
+      </div>
+      </form>
+   </div>
+</section>

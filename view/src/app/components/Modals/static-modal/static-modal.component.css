@@ -1,0 +1,159 @@
+/* Modal Close button with animation start*/
+/* .close-container {
+    cursor: pointer;
+    margin-right: 20px;
+    margin-top: 5px;
+  }  
+  .leftright,.rightleft {
+    height: 4px;
+    width: 30px;
+    position: absolute;
+    margin-top: 0;
+    background-color: #F4A259;
+    border-radius: 2px;
+    transition: all .3s ease-in;
+  }
+  .leftright{
+    transform: rotate(45deg);
+  }  
+  .rightleft{
+    transform: rotate(-45deg);
+  }
+  .close-container:hover .leftright {
+    transform: rotate(-45deg);
+    background-color: #F25C66;
+  }
+  .close-container:hover .rightleft {
+    transform: rotate(45deg);
+    background-color: #F25C66;
+  } */
+  /* Modal close button with animation end */
+
+
+/* .swal2-icon {
+    position: relative;
+    box-sizing: content-box;
+    justify-content: center;
+    width: 5em;
+    height: 5em;
+    margin: 1.25em auto 1.875em;
+    zoom: normal;
+    border: .25em solid transparent;
+    border-radius: 50%;
+    line-height: 5em;
+    cursor: default;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.swal2-icon.swal2-question {
+    border-color: #FF9800;
+    color: #ff110e;
+}
+.swal2-title {
+    position: relative;
+    max-width: 100%;
+    margin: 0 0 .4em;
+    padding: 0;
+    color: #595959;
+    font-weight: 600;
+    text-align: center;
+    text-transform: none;
+    word-wrap: break-word;
+}
+.swal2-actions {
+    z-index: 1;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: 1.25em auto 0;
+}
+.swal2-icon.swal2-question::before {
+    content: "?";
+}
+.swal2-icon::before {
+    display: flex;
+    align-items: center;
+    height: 92%;
+    font-size: 3.75em;
+} */
+/* .swal2-styled.swal2-confirm {
+    border: 0;
+    border-radius: .25em;
+    background: initial;
+    background-color: #3085d6;
+    color: #fff;
+    font-size: 1.0625em;
+}
+.swal2-styled.swal2-cancel {
+    border: 0;
+    border-radius: .25em;
+    background: initial;
+    background-color: #aaa;
+    color: #fff;
+    font-size: 1.0625em;
+} */
+/* .swal2-styled:not([disabled]) {
+    cursor: pointer;
+}
+h5.swal2-title {
+    font-weight: 400 !important;
+    letter-spacing: 1px;
+}
+.spn-delete-text{color: red;
+    font-size: 22px;
+    letter-spacing: 0;
+}
+.swal2-styled{
+    margin: .3125em;
+    box-shadow: none;
+    font-weight: 500;
+    background: transparent;
+    border: 3px solid #efefef;
+    border-radius: 50px;
+    padding: 0.4rem 1.5rem;
+    font: 20px "Margarine", sans-serif;
+    outline: none;
+    position: relative;
+    letter-spacing: 1px;
+    z-index: 0;
+}
+button.swal2-confirm.swal2-styled:before, .swal2-cancel::before {
+    position: absolute;
+    content: "";
+    transition-duration: 0.3s;
+    z-index: -1;
+    top: 0;
+    bottom: auto;    
+    width: 0;
+    height: 100%;
+    opacity: 1;
+    border-radius: 50px;
+}
+button.swal2-confirm.swal2-styled.fill-left-to-right:before{
+    left: 0;
+}
+button.swal2-cancel.fill-right-to-left:before{
+    right: 0;    
+}
+button.swal2-confirm.swal2-styled:hover, .swal2-cancel:hover {
+    color: #ffffff;
+    background: transparent;
+    transition: color 0.3s ease, background 0s 0.3s ease;
+    z-index: 2;
+}
+button.swal2-confirm.swal2-styled:hover:before, .swal2-cancel:hover::before {
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    z-index: -1;
+}
+
+button.swal2-confirm.swal2-styled.fill-left-to-right::before {
+    background-image: linear-gradient(to right, #2f81d4 0%, #59c5ef 100%);
+}
+button.swal2-cancel.swal2-styled.fill-right-to-left:before {
+    background-image: linear-gradient(90deg, #ff1100, #ff9800 100%);
+} */

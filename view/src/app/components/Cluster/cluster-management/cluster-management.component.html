@@ -1,0 +1,256 @@
+<div class="row no-margin">
+   <div class="nav-container">
+      <nav aria-label="breadcrumb">
+         <ol class="breadcrumb pink lighten-2">
+            <li class="breadcrumb-item">
+               <a class="page-title">Home</a>
+            </li>
+            <li class="breadcrumb-item active">
+               <i class="fa fa-angle-right fa-6" aria-hidden="true"></i>
+               <a class="page-title">Cluster Management</a>
+            </li>
+         </ol>
+      </nav>
+      <span class="head-notify view-all-entries">All Records</span>
+   </div>
+ </div>
+
+ <section>
+   <div class="card">
+     <div class="card-block">
+       <div class="tabpane-title">
+           <h5 class="section-title">Cluster Management</h5>
+           <a class="create-button-btn animated fadeInDown" (click)="CreateCluster()">Create New</a>
+           <a class="create-icon-btn animated fadeInDown" (click)="CreateCluster()">
+            <i class="fa fa-plus"></i>
+         </a>
+       </div>
+      
+         <div class="row no-margin">
+            <div class="col-sm-12 col-md-2">
+               <div class="table-entries-and-sortby">
+                  <label>Limits
+                     <mat-form-field class="full-width tbl-limits" [floatLabel]="'never'" appearance="fill">
+                        <mat-select [(ngModel)]="LimitCount" (ngModelChange)="Pagination_Action(1)">
+                           <mat-option [value]="5">5</mat-option>
+                           <mat-option [value]="10">10</mat-option>
+                           <mat-option [value]="25">25</mat-option>
+                           <mat-option [value]="50">50</mat-option>
+                           <mat-option [value]="100">100</mat-option>
+                        </mat-select>
+                     </mat-form-field>
+                  </label>
+               </div>
+            </div>
+            <div class="col-sm-12 col-sm-12 col-md-10">
+                  <div class="table-filter">
+                     <div class="filter-icon" (click)="openFilterModal(template)" matTooltip="Filter"><span><i class="fa fa-filter" aria-hidden="true"></i></span></div>
+                     <div class="filter-parent">
+                     <ng-container *ngFor="let Filter of FiltersArray; let i=index" >
+                        <div *ngIf="Filter.Active" class="filter-result">
+                           <div class="filter-info">
+                              <span class="label"> {{Filter.DisplayName}} </span>
+                              <span *ngIf="Filter.Type !== 'Object' && Filter.Key !== 'HospitalName'" class="value"> {{ (Filter.Value.length > 25) ? (Filter.Value | slice:0:25) + '..' : (Filter.Value) }} </span>
+                              <span *ngIf="Filter.Type === 'Object' && Filter.Key === 'Location'" class="value"> {{ Filter.Value.Location_Name }} </span>
+                              <span *ngIf="Filter.Type === 'Object' && Filter.Key === 'HospitalName'" class="value"> {{ Filter.Value.Hospital_Name }} </span>
+                           </div>
+                           <span class="Filter-close">
+                              <i class="fa fa-close" (click)="RemoveFilter(i)"></i>
+                           </span>
+                        </div>
+                     </ng-container>
+                     
+                  </div>
+               </div>
+            </div>
+         </div>           
+         <div class="col-md-12">
+            <div class="table-responsive">
+               <table #TableSection class="tbl-stemi-default tbl-location-mgmnt" cellpadding="0" cellspacing="0" border="0">
+                  <thead #TableHeaderSection>
+                     <tr>
+                        <th>S.No</th>
+                        <th *ngFor="let Header of THeaders;let i=index">
+                           <div class="column-title"> {{Header.Name}} 
+                              <span>
+                                 <i class="material-icons" (click)="Short_Change(i)" [ngClass]="{'active': Header.If_Short, 'rotateZ-A': Header.Condition === 'Descending' }">sort</i>
+                              </span>
+                           </div>
+                        </th>
+                        <th>Actions</th>
+                     </tr>
+                  </thead>
+                  <div class="table-up-arrow"><i class="fa fa-arrow-circle-up animated infinite fadeInUp"></i></div>
+                  <tbody #TableBodySection class="tbl-content">
+                     <ng-container *ngIf="ClusterDetails.length > 0">                        
+                        <tr *ngFor="let ClusterInfo of ClusterDetails;let i=index">
+                              <td>{{ SerialNoAddOn+i+1 }}</td>
+                              <td>{{ClusterInfo?.Cluster_Name}}</td>
+                              <td>{{ClusterInfo?.Cluster_Type | titlecase }}</td>
+                              <td>{{ClusterInfo?.Cluster_Code | number:'2.0'}}</td>
+                              <td>
+                                 <ng-container *ngIf="ClusterInfo.Cluster_Type === 'single' || ClusterInfo.Cluster_Type === 'multiple'">
+                                    {{ClusterInfo?.Hospital?.Hospital_Name }}
+                                 </ng-container>
+                                 <ng-container *ngIf="ClusterInfo.Cluster_Type === 'multiple' || ClusterInfo.Cluster_Type === 'advanced'">
+                                    {{ClusterInfo?.HospitalsArray[0].Hospital_Name}}
+                                    {{ ClusterInfo?.HospitalsArray?.length > 1 ?  ' (+' + (ClusterInfo?.HospitalsArray?.length - 1) + ') Others' : '' }}
+                                 </ng-container>
+                                 <ng-container *ngIf="ClusterInfo.Cluster_Type === 'virtual'">
+                                    -
+                                 </ng-container>
+                              </td>                           
+                              <td>{{ClusterInfo?.Location.Location_Name | titlecase}}</td>                           
+                              <td>{{ClusterInfo?.Active_Status ? 'Active' : 'Inactive'}}</td>
+                              <td>
+                                 <div class="action-icon-parent">
+                                    <span class="col-action-icon bk-clr-warning" (click)="EditCluster(i)" matTooltip="Edit"><i class="fa fa fa-pencil" aria-hidden="true" ></i></span>
+                                    <span class="col-action-icon bk-clr-info" (click)="ViewCluster(i)" matTooltip="View"><i class="fa fa-eye" aria-hidden="true"></i></span>                                    
+                                 </div>
+                              </td>
+                        </tr>                          
+                     <div class="table-down-arrow"><i class="fa fa-arrow-circle-down animated infinite fadeInDown"></i></div>
+                     </ng-container> 
+                     <tr *ngIf="ClusterDetails.length === 0">
+                        <td colspan="9"> No Records Found.... </td>
+                     </tr> 
+                  </tbody>
+                  <div #TableLoaderSection class="tbl-loading-center">
+                     <div id="inTurnFadingTextG">
+                        <div id="inTurnFadingTextG_1" class="inTurnFadingTextG">L</div>
+                        <div id="inTurnFadingTextG_2" class="inTurnFadingTextG">O</div>
+                        <div id="inTurnFadingTextG_3" class="inTurnFadingTextG">A</div>
+                        <div id="inTurnFadingTextG_4" class="inTurnFadingTextG">D</div>
+                        <div id="inTurnFadingTextG_5" class="inTurnFadingTextG">I</div>
+                        <div id="inTurnFadingTextG_6" class="inTurnFadingTextG">N</div>
+                        <div id="inTurnFadingTextG_7" class="inTurnFadingTextG">G</div>
+                        <div id="inTurnFadingTextG_8" class="inTurnFadingTextG">.</div>
+                        <div id="inTurnFadingTextG_9" class="inTurnFadingTextG">.</div>
+                        <div id="inTurnFadingTextG_10" class="inTurnFadingTextG">.</div>
+                     </div>
+                  </div>
+               </table>
+            </div>
+         </div>
+
+         <div class="pagination-wrapper margin-top-10">
+            <div class="table-go-page-entries">
+               <label>Go page
+                  <mat-form-field class="width-auto" style="padding: 0px 10px 0px 6px;">
+                     <input matInput type="number" autocomplete="off" class="input-go-entries" min="1" max="{{PagesArray[PagesArray.length - 1]?.Value}}" [(ngModel)]="GoToPage">
+                  </mat-form-field>
+                  <button class="go-search-entries" [disabled]="!(GoToPage > 0 && GoToPage <= PagesArray[PagesArray.length - 1]?.Value)" [ngClass]="{'disabled': !(GoToPage > 0 && GoToPage <= PagesArray[PagesArray.length - 1]?.Value)}" matTooltip="Go to Page" (click)="Pagination_Action(GoToPage)" >GO</button>
+               </label>
+            </div>
+            <div class="page-show-entires">
+               <div class="txt-show-records" [innerHTML]="ShowingText"></div>
+            </div>
+            <div class="page-number">
+               <ul class="pagination hidden-xs">
+                  <li>
+                     <a class="{{PagePrevious['Class']}}" (click)="Pagination_Action(PagePrevious['Value'])" matTooltip="Previous">
+                        <p><i class="fa fa-angle-double-left" aria-hidden="true"></i></p>
+                     </a>
+                  </li>
+                  <li *ngFor="let Page of PagesArray; let i=index" class="{{Page.Class}}" [ngClass]="{'active': Page.Active}" (click)="Pagination_Action(Page.Value)" > 
+                     <a><p>{{Page.Text}}</p></a>
+                  </li> 
+                  <li>
+                     <a class="{{PageNext['Class']}}" (click)="Pagination_Action(PageNext['Value'])" matTooltip="Next">
+                        <p><i class="fa fa-angle-double-right" aria-hidden="true"></i></p>
+                     </a>
+                  </li>
+               </ul>
+               <ul class="pagination visible-xs">
+                  <li><a ><p><i class="fa fa-angle-double-left" aria-hidden="true"></i></p></a></li>
+                  <li><a ><p><i class="fa fa-angle-double-right" aria-hidden="true"></i></p></a></li>
+               </ul>  
+            </div>                     
+         </div>                 
+         
+      </div>
+   </div>
+ </section>
+
+ <ng-template #template>
+      <div class="modal-body">
+         <div class="modal-header-title">
+            <h5>Cluster Filters</h5>
+            <span class="modal-container-close" (click)="modalReference.hide();"><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+         </div>   
+         <div class="container modal-content-body">
+            <form [formGroup]="FilterFGroup">
+               <div class="col-sm-12">
+                  <div class="row">
+                     <div class="form-group col-lg-6 col-md-12">
+                        <div class="row">
+                           <label class="col-sm-12 col-md-4 col-form-label text-lg-right">Cluster Name</label>
+                           <div class="col-sm-12 col-md-8">
+                              <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                 <input matInput formControlName="ClusterName" placeholder="Cluster Name">                                 
+                              </mat-form-field>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="form-group col-lg-6 col-md-12">
+                        <div class="row">
+                           <label class="col-sm-12 col-md-4 col-form-label text-lg-right">Cluster Code</label>
+                           <div class="col-sm-12 col-md-8">
+                              <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                 <input matInput formControlName="ClusterCode" placeholder="Cluster Code">                                 
+                              </mat-form-field>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="form-group col-lg-6 col-md-12">
+                        <div class="row align-items-center">
+                           <label class="col-sm-12 col-md-4 col-form-label text-lg-right">Cluster Type</label>
+                           <div class="col-sm-12 col-md-8">
+                              <mat-form-field class="full-width" appearance="fill">
+                                 <mat-select formControlName="ClusterType" placeholder="Cluster Type">
+                                    <mat-option >Select Type</mat-option>
+                                    <mat-option value="virtual">Virtual</mat-option>
+                                    <mat-option value="single">Single</mat-option>
+                                    <mat-option value="multiple">Multiple</mat-option>
+                                    <mat-option value="advanced">Advanced</mat-option>
+                                 </mat-select>
+                              </mat-form-field>                              
+                           </div>
+                        </div>
+                     </div>
+                     <div class="form-group col-lg-6 col-md-12">
+                        <div class="row align-items-center">
+                           <label class="col-sm-12 col-md-4 col-form-label text-lg-right">Hospital</label>
+                           <div class="col-sm-12 col-md-8">
+                              <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                 <input matInput formControlName="HospitalName" [matAutocomplete]="HospitalAutocomplete" placeholder="Hospital Name" (blur)="AutocompleteBlur('HospitalName')">
+                                 <mat-autocomplete #HospitalAutocomplete="matAutocomplete" [displayWith]="HospitalDisplayName">
+                                    <mat-option *ngFor="let Hospital of filteredHospitalsList | async" [value]="Hospital"> {{Hospital.Hospital_Name}} </mat-option>
+                                 </mat-autocomplete>
+                              </mat-form-field>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="form-group col-lg-6 col-md-12">
+                        <div class="row align-items-center">
+                           <label class="col-sm-12 col-md-4 col-form-label text-lg-right">Location</label>
+                           <div class="col-sm-12 col-md-8">
+                              <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                 <input matInput formControlName="Location" [matAutocomplete]="LocationAutocomplete" placeholder="Location" (blur)="AutocompleteBlur('Location')">
+                                 <mat-autocomplete #LocationAutocomplete="matAutocomplete" [displayWith]="LocationDisplayName">
+                                    <mat-option *ngFor="let Location of filteredLocationsList | async" [value]="Location"> {{Location.Location_Name}} </mat-option>
+                                 </mat-autocomplete>
+                              </mat-form-field>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </form>
+         </div>
+         <div class="modal-actions">
+            <button type="button"  *ngIf="FilterFGroupStatus" (click)="ResetFilters()" class="modal-confirm btns-modal-action fill-right-to-left" aria-label="">Reset</button>
+            <button type="button" [disabled]="!FilterFGroupStatus" [ngClass]="{'disabled': !FilterFGroupStatus}" (click)="SubmitFilters()" class="modal-confirm btns-modal-action fill-left-to-right" aria-label="">Search</button>
+         </div>
+      </div>
+   </ng-template>

@@ -1,0 +1,70 @@
+.tbl-stemi-default tbody tr.hi-red {
+   background-color: rgb(252, 137, 137);
+}
+.tbl-stemi-default tbody tr.hi-red:hover {
+   border-bottom-color: rgb(252, 137, 137) !important;
+}
+.tbl-stemi-default tbody tr.hi-yellow {
+   background-color: rgb(254, 218, 112);
+}
+.tbl-stemi-default tbody tr.hi-yellow:hover {
+   border-bottom-color: rgb(254, 218, 112) !important;
+}
+.tbl-stemi-default tbody tr.hi-green {
+   background-color: rgb(134, 182, 134);
+}
+.tbl-stemi-default tbody tr.hi-green:hover {
+   border-bottom-color: rgb(134, 182, 134) !important;
+}
+.moreAddons{
+   grid-template-columns: auto auto;
+   display: grid;
+   justify-content: space-between;
+}
+.moreAddons.three-grids{
+   grid-template-columns: auto auto auto;
+}
+.moreAddons .recordsInfo{
+   text-align: right;
+   display: grid;
+   grid-template-columns: auto auto auto auto;
+   column-gap: 20px;
+}
+.moreAddons .recordsInfo span{
+   color: rgba(0,0,0,.87);
+    padding: 2px 10px;
+    background-image: linear-gradient(to right, #2f81d4 0, #59c5ef 100%);
+    border-radius: 25px;
+    letter-spacing: 0.4px;
+    border: 1px solid #357ae8;
+    font-weight: 500;
+    cursor: pointer;
+}
+.moreAddons .recordsInfo span:hover {
+   box-shadow: 2px 3px 2px #004b9a;
+}
+.data-export{
+   margin-right: 15px;
+   border-radius: 26px;
+   padding: 2px 10px;
+   background-image: linear-gradient(to right,rgba(47, 129, 212, 0.3) 0,#59c5ef 100%);
+   letter-spacing: 0.4px;
+   border: 1px solid #357ae8;
+   color: #fff;
+   font-weight: 500;
+   cursor: pointer;
+}
+.data-export:hover{
+   box-shadow: 2px 3px 2px #004b9a;
+   color: rgba(0,0,0,.87);
+   background: #ffffff;
+   border: 1px solid #357ae8;
+}
+.data-export span{
+   display: flex;
+   align-items: center;
+}
+.data-export span i{
+   font-size: 18px;
+   padding-right: 6px;
+}

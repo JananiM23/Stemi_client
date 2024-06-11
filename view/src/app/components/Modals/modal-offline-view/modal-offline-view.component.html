@@ -1,0 +1,314 @@
+<section>
+  <div class="modal-body">
+     <form>
+        <div class="modal-header-title">
+           <h5> View Offline Patient Details</h5>
+           <span class="modal-container-close" (click)="modalRef.hide()"><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+        </div>
+        <div class="container modal-content-body">
+           <div class="row">
+              <div class="col-md-6">
+                  <div class="form-group form-group-sm col-md-12">
+                        <div class="row">
+                         <label class="col-sm-12  col-md-5 text-lg-right lbl">Patient Name:</label>
+                         <div class="col-sm-12  col-md-7">
+                            {{Info?.Patient_Name | titlecase}}
+                         </div>
+                        </div>
+                     </div>
+                     <div class="form-group form-group-sm col-md-12">
+                       <div class="row">
+                        <label class="col-sm-12  col-md-5 text-lg-right lbl">Patient Age :</label>
+                        <div class="col-sm-12  col-md-7">
+                           {{Info?.Patient_Age  }}
+                        </div>
+                       </div>
+                    </div>
+                    <div class="form-group form-group-sm col-md-12">
+                     <div class="row">
+                      <label class="col-sm-12  col-md-5 text-lg-right lbl">Patient Gender :</label>
+                      <div class="col-sm-12  col-md-7">
+                         {{Info?.Patient_Gender | titlecase}}
+                      </div>
+                     </div>
+                    </div>
+                    <div class="form-group form-group-sm col-md-12">
+                     <div class="row">
+                      <label class="col-sm-12  col-md-5 text-lg-right lbl">Admission Type :</label>
+                      <div class="col-sm-12  col-md-7">
+                         {{Info?.Admission_Type | titlecase}}
+                      </div>
+                     </div>
+                    </div>
+                    <div class="form-group form-group-sm col-md-12">
+                     <div class="row">
+                      <label class="col-sm-12  col-md-5 text-lg-right lbl">User Name:</label>
+                      <div class="col-sm-12  col-md-7">
+                         {{Info?.UserInfo?.Name | titlecase}}
+                      </div>
+                     </div>
+                    </div>
+                    
+                    <div class="form-group form-group-sm col-md-12">
+                     <div class="row">
+                      <label class="col-sm-12  col-md-5 text-lg-right lbl">Symptoms Chest Discomfort :</label>
+                      <div class="col-sm-12  col-md-7">
+                        {{Info?.Symptoms?.Chest_Discomfort | titlecase}}  
+                      </div>
+                     </div>
+                    </div>  
+                     
+                    <!-- <div class="form-group form-group-sm col-md-12">
+                     <div class="row">
+                      <label class="col-sm-12  col-md-5 text-lg-right lbl">Duration Of Pain :</label>
+                      <div class="col-sm-12  col-md-7">
+                         <span *ngIf="Info?.Symptoms?.Duration_of_Pain === null">
+                              {{Info?.Symptoms?.Duration_of_Pain }}  
+                         </span>
+                         <span *ngIf="Info?.Symptoms?.Duration_of_Pain">
+                              {{Info?.Symptoms?.Duration_of_Pain | date: 'd-MMM-y, HH:mm'}}  
+                         </span>
+                      </div>
+                     </div>
+                    </div>   -->
+               
+                    <div class="form-group form-group-sm col-md-12">
+                     <div class="row">
+                      <label class="col-sm-12  col-md-5 text-lg-right lbl">Location Of Pain :</label>
+                      <div class="col-sm-12  col-md-7">
+                         {{Info?.Symptoms?.Location_of_Pain | titlecase}}
+                      </div>
+                     </div>
+                    </div>
+              </div>
+              <div class="col-md-6">
+                  <div class="form-group form-group-sm col-md-12">
+                        <div class="row">
+                        <label class="col-sm-12  col-md-5 text-lg-right lbl">Currrent ECG File :</label>
+                        <div class="col-sm-12  col-md-7">
+                        <span class="UploadBtn" (click)="EcgView(template)" >
+                           <i class="material-icons"> photo_size_select_actual </i>
+                           <span>View ECG </span>
+                        </span>
+                        </div>
+                        </div>
+                  </div>  
+                  
+                  <div class="form-group form-group-sm col-md-12">
+                        <div class="row">
+                          <label class="col-sm-12  col-md-5 text-lg-right lbl"> ECG Taken Time :</label>
+                          <div class="col-sm-12  col-md-7">                              
+                             <span> {{Info?.ECG_Taken_date_time | date: 'd-MMM-y, HH:mm' }}</span>
+                          </div>
+                        </div>
+                  </div>    
+  
+                <div class="row" *ngFor="let RiskFactors of Info?.Risk_Factors">
+                     <div class="form-group form-group-sm col-md-12">
+                        <div class="row">
+                        <label class="col-sm-12  col-md-5 text-lg-right lbl">Diabetes :</label>
+                        <div class="col-sm-12  col-md-7">
+                          {{RiskFactors?.Diabetes | titlecase}}
+                        </div>
+                        </div>
+                 </div>                   
+                  <div class="form-group form-group-sm col-md-12">
+                        <div class="row">
+                        <label class="col-sm-12  col-md-5 text-lg-right lbl">Family History of IHD :</label>
+                        <div class="col-sm-12  col-md-7">
+                          {{RiskFactors?.Family_History_of_IHD | titlecase}}
+                        </div>
+                        </div>
+                  </div> 
+  
+                     <div class="form-group form-group-sm col-md-12">
+                        <div class="row">
+                        <label class="col-sm-12  col-md-5 text-lg-right lbl">High Cholesterol :</label>
+                        <div class="col-sm-12  col-md-7">
+                          {{RiskFactors?.High_Cholesterol | titlecase}}
+                        </div>
+                        </div>
+                     </div> 
+  
+                     <div class="form-group form-group-sm col-md-12">
+                        <div class="row">
+                        <label class="col-sm-12  col-md-5 text-lg-right lbl">Hypertension :</label>
+                        <div class="col-sm-12  col-md-7">
+                          {{RiskFactors?.Hypertension | titlecase}}
+                        </div>
+                        </div>
+                     </div> 
+  
+                     <div class="form-group form-group-sm col-md-12">
+                        <div class="row">
+                        <label class="col-sm-12  col-md-5 text-lg-right lbl">Previous History of IHD :</label>
+                        <div class="col-sm-12  col-md-7">
+                          {{RiskFactors?.Previous_History_of_IHD | titlecase}}
+                        </div>
+                        </div>
+                     </div>
+  
+                    <div class="form-group form-group-sm col-md-12">
+                      <div class="row">
+                        <label class="col-sm-12  col-md-5 text-lg-right lbl">Smoker :</label>
+                        <div class="col-sm-12  col-md-7">
+                           {{RiskFactors?.Smoker === 'Non_Smoker' ? 'Non Smoker' : RiskFactors?.Smoker === 'Current_Smoker' ? 'Current Smoker' : '' }}
+                              <!-- {{RiskFactors?.Smoker | titlecase}} -->
+                        </div>
+                      </div>
+                    </div>
+              </div>
+               </div>
+           </div>     
+           <!-- <div class="col-sm-12">
+              <div class="row no-margin">                     
+                    <div class="form-group form-group-sm col-md-12">
+                       <div class="row">
+                        <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">Patient Name:</label>
+                        <div class="col-sm-12 col-md-8">
+                           {{Info?.Patient_Name | titlecase}}
+                        </div>
+                       </div>
+                    </div>
+                    <div class="form-group form-group-sm col-md-12">
+                      <div class="row">
+                       <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">Patient Age :</label>
+                       <div class="col-sm-12 col-md-8">
+                          {{Info?.Patient_Age  }}
+                       </div>
+                      </div>
+                   </div>
+                   <div class="form-group form-group-sm col-md-12">
+                    <div class="row">
+                     <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">Patient Gender :</label>
+                     <div class="col-sm-12 col-md-8">
+                        {{Info?.Patient_Gender | titlecase}}
+                     </div>
+                    </div>
+                   </div>
+                   <div class="form-group form-group-sm col-md-12">
+                    <div class="row">
+                     <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">Admission Type:</label>
+                     <div class="col-sm-12 col-md-8">
+                        {{Info?.Admission_Type | titlecase}}
+                     </div>
+                    </div>
+                   </div>
+                   
+                   <div class="form-group form-group-sm col-md-12">
+                    <div class="row">
+                     <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">Symptoms Chest Discomfort :</label>
+                     <div class="col-sm-12 col-md-8">
+                        {{Info?.Symptoms?.Chest_Discomfort | titlecase}}  
+                     </div>
+                    </div>
+                   </div>  
+                    
+                   <div class="form-group form-group-sm col-md-12">
+                    <div class="row">
+                     <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">Duration Of Pain :</label>
+                     <div class="col-sm-12 col-md-8">
+                        {{Info?.Symptoms?.Duration_of_Pain | date: 'd-MMM-y, HH:mm'  }}  
+                     </div>
+                    </div>
+                   </div>  
+              
+                   <div class="form-group form-group-sm col-md-12">
+                    <div class="row">
+                     <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">Location Of Pain:</label>
+                     <div class="col-sm-12 col-md-8">
+                        {{Info?.Symptoms?.Location_of_Pain | titlecase}}
+                     </div>
+                    </div>
+                   </div>
+                   <div class="form-group form-group-sm col-md-12">
+                      <div class="row">
+                      <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">Stemi Status:</label>
+                      <div class="col-sm-12 col-md-8">
+                        {{Info?.Stemi_Status | titlecase}}
+                      </div>
+                      </div>
+                   </div>                  
+                   <div class="form-group form-group-sm col-md-12">
+                      <div class="row">
+                      <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">Currrent ECG File :</label>
+                      <div class="col-sm-12 col-md-8">
+                        <input #fileInput type='file' (change)="onFileChange($event)"  accept=".PNG, .png, JPEG, .jpeg, JPG, .jpg, .GIF, .gif">
+                      </div>
+                      </div>
+                   </div>    
+
+              <div class="row" *ngFor="let RiskFactors of Info?.Risk_Factors">
+                   <div class="form-group form-group-sm col-md-12">
+                      <div class="row">
+                      <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">Diabetes:</label>
+                      <div class="col-sm-12 col-md-8">
+                        {{RiskFactors?.Diabetes | titlecase}}
+                      </div>
+                      </div>
+                   </div>                   
+                   <div class="form-group form-group-sm col-md-12">
+                      <div class="row">
+                      <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">Family History of IHD:</label>
+                      <div class="col-sm-12 col-md-8">
+                        {{RiskFactors?.Family_History_of_IHD | titlecase}}
+                      </div>
+                      </div>
+                   </div> 
+
+                   <div class="form-group form-group-sm col-md-12">
+                      <div class="row">
+                      <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">High Cholesterol:</label>
+                      <div class="col-sm-12 col-md-8">
+                        {{RiskFactors?.High_Cholesterol | titlecase}}
+                      </div>
+                      </div>
+                   </div> 
+
+                   <div class="form-group form-group-sm col-md-12">
+                      <div class="row">
+                      <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">Hypertension:</label>
+                      <div class="col-sm-12 col-md-8">
+                        {{RiskFactors?.Hypertension | titlecase}}
+                      </div>
+                      </div>
+                   </div> 
+
+                   <div class="form-group form-group-sm col-md-12">
+                      <div class="row">
+                      <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">Previous History of IHD:</label>
+                      <div class="col-sm-12 col-md-8">
+                        {{RiskFactors?.Previous_History_of_IHD | titlecase}}
+                      </div>
+                      </div>
+                   </div>
+
+                  <div class="form-group form-group-sm col-md-12">
+                    <div class="row">
+                      <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">Smoker:</label>
+                      <div class="col-sm-12 col-md-8">
+                        {{RiskFactors?.Smoker | titlecase}}
+                      </div>
+                    </div>
+                  </div>
+              </div>
+               </div>
+           </div>     -->                 
+       </div>
+        <div class="modal-actions">          
+           <button type="submit" (click)="modalRef.hide()" class="modal-confirm btns-modal-action fill-left-to-right" aria-label="">
+            Close
+           </button>
+        </div>
+     </form>   
+  </div>
+
+  <ng-template #template>
+      <div class="ECGView">
+         <span class="CloseBtn" (click)="modalReference.hide();"> x </span>
+         <div class="ImgSection">
+            <img [ngStyle]="{'max-height': screenHeight + 'px', 'max-width': screenWidth + 'px' }" src="{{Info?.Current_ECG_File}}" alt="">
+         </div>
+      </div>
+</ng-template>
+</section>

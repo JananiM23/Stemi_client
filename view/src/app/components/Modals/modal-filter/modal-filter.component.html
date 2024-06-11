@@ -1,0 +1,191 @@
+<div class="modal-body">
+    <div class="modal-header-title">
+      <h5>Search Filters</h5>
+      <span class="modal-container-close" (click)="ModalRef.hide();"><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+   </div>   
+    <div class="container modal-content-body">
+       <div class="col-sm-12">
+            <div class="row no-margin">
+                  <div class="form-group form-group-sm col-sm-6">
+                      <div class="row">
+                            <label class="col-sm-12 col-md-5 col-form-label text-lg-right">Patient Name</label>
+                            <div class="col-sm-12 col-md-7">
+                              <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                  <input matInput placeholder="Patient Name:">
+                                </mat-form-field>
+                            </div>
+                      </div>
+                  </div>
+      
+                  <div class="form-group form-group-sm col-sm-6">
+                      <div class="row">
+                            <label class="col-sm-12 col-md-5 col-form-label text-lg-right">Patient ID</label>
+                            <div class="col-sm-12 col-md-7">
+                              <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                  <input matInput placeholder="Patient ID:">
+                                </mat-form-field>
+                            </div>
+                      </div>
+                  </div>
+      
+                  <div class="form-group form-group-sm col-sm-6">
+                      <div class="row">
+                            <label class="col-sm-12 col-md-5 col-form-label text-lg-right">From Date</label>
+                            <div class="col-sm-12 col-md-7">
+                              <mat-form-field class="full-width column-date" appearance="fill" >
+                                  <input  matInput  placeholder="Date">
+                                  <mat-icon matSuffix>event</mat-icon>
+                                  <mat-datepicker touchUi></mat-datepicker>
+                                  <mat-error></mat-error>
+                            </mat-form-field>
+                            </div>
+                      </div>
+                  </div>
+      
+                  <div class="form-group form-group-sm col-sm-6">
+                      <div class="row">
+                            <label class="col-sm-12 col-md-5 col-form-label text-lg-right">To Date</label>
+                            <div class="col-sm-12 col-md-7">
+                                <mat-form-field class="full-width column-time" appearance="fill">
+                                    <input matInput placeholder="Time">
+                                    <mat-icon matSuffix>access_time</mat-icon>
+                                    <ngx-material-timepicker></ngx-material-timepicker>
+                                 </mat-form-field>
+                            </div>
+                      </div>
+                  </div>
+      
+                  <div class="form-group form-group-sm col-sm-6">
+                      <div class="row">
+                            <label class="col-sm-12 col-md-5 col-form-label text-lg-right">STEMI Status</label>
+                            <div class="col-sm-12 col-md-7">
+                              <mat-form-field class="full-width" appearance="fill">
+                                  <mat-select  placeholder="Select">
+                                        <mat-option value="">Select Types</mat-option>
+                                        <mat-option value="">All</mat-option>
+                                        <mat-option value="Y">Confirmed</mat-option>
+                                        <mat-option value="N">Non Stemi</mat-option>
+                                        <mat-option value="IC">In Conclusive</mat-option>
+                                        <mat-option value="NC">Not Confirmed </mat-option> 
+                                  </mat-select>
+                              </mat-form-field>
+                            </div>
+                      </div>
+                  </div>
+      
+                  <div class="form-group form-group-sm col-sm-6">
+                      <div class="row">
+                            <label class="col-sm-12 col-md-5 col-form-label text-lg-right">Select Hospital</label>
+                            <div class="col-sm-12 col-md-7">
+                              <mat-form-field class="full-width" appearance="fill">
+                                  <mat-select  placeholder="Select">
+                                        <mat-option value="">Select Types</mat-option>
+                                        <mat-option value="A">A Hospital</mat-option>
+                                        <mat-option value="B">B Hospital</mat-option>
+                                        <mat-option value="C">C Hospital</mat-option>
+                                        <mat-option value="D">D Hospital</mat-option>
+                                        <mat-option value="E">EMS</mat-option>
+                                  </mat-select>
+                              </mat-form-field>
+                            </div>
+                      </div>
+                  </div>
+      
+                  <div class="form-group form-group-sm col-sm-6">
+                      <div class="row">
+                            <label class="col-sm-12 col-md-5 col-form-label text-lg-right">Transfer to</label>
+                            <div class="col-sm-12 col-md-7">
+                              <mat-form-field class="full-width" appearance="fill">
+                                  <mat-select  placeholder="Select">
+                                      <mat-option value="">Select Transfer To</mat-option>
+                                      <mat-option value="N">Home</mat-option>
+                                      <mat-option value="O">Non-STEMI</mat-option>
+                                  </mat-select>
+                              </mat-form-field>
+                            </div>
+                      </div>
+                  </div>
+      
+                  <div class="form-group form-group-sm col-sm-6">
+                      <div class="row">
+                            <label class="col-sm-12 col-md-5 col-form-label text-lg-right">DataType</label>
+                            <div class="col-sm-12 col-md-7">
+                              <mat-form-field class="full-width" appearance="fill">
+                                  <mat-select  placeholder="Select">
+                                        <mat-option value="">Select Types</mat-option>
+                                        <mat-option value="">All</mat-option>
+                                        <mat-option value="PRE">PRE</mat-option>
+                                        <mat-option value="POST">POST</mat-option>
+                                  </mat-select>
+                              </mat-form-field>
+                            </div>
+                      </div>
+                  </div>
+      
+                  <div class="form-group form-group-sm col-sm-6">
+                      <div class="row">
+                            <label class="col-sm-12 col-md-5 col-form-label text-lg-right">Clusters</label>
+                            <div class="col-sm-12 col-md-7">
+                              <mat-form-field class="full-width" appearance="fill">
+                                  <mat-select  placeholder="Select">
+                                      <mat-option value="">Select Cluster</mat-option>
+                                      <mat-option value="135">Kongunad Hospital</mat-option>
+                                      <mat-option value="136">A HOSPITAL PPTS</mat-option>
+                                      <mat-option value="137">Hero DMC Heart Institute</mat-option>
+                                      <mat-option value="142">Test A hospital</mat-option>
+                                      <mat-option value="143">Test B hospital</mat-option>
+                                      <mat-option value="146">Test H1</mat-option>
+                                      <mat-option value="147">Test H2</mat-option>
+                                  </mat-select>
+                              </mat-form-field>
+                            </div>
+                      </div>
+                  </div>
+      
+                  <div class="form-group form-group-sm col-sm-6">
+                      <div class="row">
+                            <label class="col-sm-12 col-md-5 col-form-label text-lg-right">Registered Hospital</label>
+                            <div class="col-sm-12 col-md-7">
+                              <mat-form-field class="full-width" appearance="fill">
+                                  <mat-select  placeholder="Select">
+                                        <mat-option value="">Select Types</mat-option>
+                                        <mat-option value="">Select Hospital</mat-option>
+                                        <mat-option value="643">Kongunad Hospital</mat-option>
+                                        <mat-option value="644">GP Hospital</mat-option>
+                                        <mat-option value="645">Surya Hospital</mat-option>
+                                        <mat-option value="646">emriganapathy</mat-option>
+                                        <mat-option value="649">A HOSPITAL PPTS</mat-option>
+                                        <mat-option value="650">D hospital</mat-option>
+                                        <mat-option value="651">E Hospital</mat-option>
+                                        <mat-option value="652">Hero DMC Heart Institute</mat-option>
+      
+                                        <mat-option value="653">Shree Raghunath Hospital</mat-option>
+                                        <mat-option value="655">Ambulance 1</mat-option>
+                                        <mat-option value="659">Geethasree Hospitals</mat-option>
+                                        <mat-option value="660">Vimal Jyothi Hospital</mat-option>
+                                        <mat-option value="661">TESPA CALIBRATION CENTRE</mat-option>
+                                        <mat-option value="669">Test A hospital</mat-option>
+                                        <mat-option value="670">Test B hospital</mat-option>
+                                        <mat-option value="671">Test C hospital</mat-option>
+                                        <mat-option value="672">Test D hospital</mat-option>
+                                        <mat-option value="673">Test E hospital</mat-option>
+                                        <mat-option value="679">Test H1</mat-option>
+                                        <mat-option value="681">Test H2</mat-option>
+                                        <mat-option value="688">Vimal Jyothi Hospital</mat-option>
+                                  </mat-select>
+                              </mat-form-field>
+                            </div>
+                      </div>
+                  </div>
+      
+      
+               </div>
+       </div>
+   </div>
+
+    <div class="modal-actions">
+      <button type="button" class="modal-confirm btns-modal-action fill-right-to-left" aria-label="" >Reset</button>
+      <button type="button" class="modal-confirm btns-modal-action fill-left-to-right disabled" aria-label="" >Search</button>
+    </div>
+</div>
+  

@@ -1,0 +1,190 @@
+<section *ngIf="PageLoaded && Type && ( Type === 'Create' || Type === 'Edit')">
+   <div class="modal-body">
+      <form [formGroup]="ClusterForm" (ngSubmit)="onSubmit()">
+         <div class="modal-header-title">
+            <h5>{{Type}} Cluster </h5>
+            <span *ngIf="!Uploading" class="modal-container-close" (click)="modalRef.hide()"><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+         </div>
+         <div class="container modal-content-body">
+            <div class="col-sm-12">
+               <div class="row no-margin">                     
+                  <div class="form-group form-group-sm col-md-12">
+                     <div class="row">
+                        <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl-required">Location</label>
+                        <div class="col-sm-12 col-md-8">
+                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                              <input matInput placeholder="Location" [matAutocomplete]="LocationAutocomplete" autocomplete="off" formControlName="Location" (blur)="AutocompleteBlur('Location')">
+                              <mat-autocomplete #LocationAutocomplete="matAutocomplete" [displayWith]="LocationDisplayName">
+                                 <mat-option *ngFor="let Location of filteredLocationsList | async" [value]="Location"> {{Location.Location_Name}} </mat-option>
+                              </mat-autocomplete>
+                              <mat-error [innerHTML]="GetFormControlErrorMessage('Location')"></mat-error>
+                           </mat-form-field>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="form-group form-group-sm col-md-12" *ngIf="LastSelectedLocation !== null && ClusterForm.controls['Location'].value !=='' && ClusterForm.controls['Location'].value !==null">
+                     <div class="row">
+                        <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl-required">Cluster Name</label>
+                        <div class="col-sm-12 col-md-8">
+                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                              <input matInput formControlName="Cluster_Name" placeholder="Cluster Name">
+                              <mat-error *ngIf="ClusterForm.controls['Cluster_Name'].errors && !ClusterForm.controls['Cluster_Name'].pristine">
+                                 <span *ngIf="ClusterForm.controls['Cluster_Name'].errors.required">Cluster Name is required</span>
+                                 <span *ngIf="ClusterForm.controls['Cluster_Name'].errors.AlphaNumericSpaceHyphenError">Please Enter Only Alphabets, Numerics, Space and Hyphen!</span>
+                                 <ng-container *ngIf="!ClusterForm.controls['Cluster_Name'].errors.required">
+                                    <span *ngIf="ClusterForm.controls['Cluster_Name'].errors.ClusterName_NotAvailable">Cluster Name Already Exist</span>                                       
+                                 </ng-container>
+                              </mat-error>
+                           </mat-form-field>
+                        </div>
+                     </div>                           
+                  </div>
+                  <!-- <div class="form-group form-group-sm col-md-12" *ngIf="LastSelectedLocation !== null && ClusterForm.controls['Location'].value !=='' && ClusterForm.controls['Location'].value !==null">
+                     <div class="row">
+                        <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl-required">Data Type</label>
+                        <div class="col-sm-12 col-md-8">
+                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                              <mat-select formControlName="Data_Type">
+                                 <mat-option >Select Data type</mat-option>                                       
+                                 <mat-option value="pre">Pre</mat-option>
+                                 <mat-option value="post">Post</mat-option>
+                              </mat-select>
+                              <mat-error [innerHTML]="GetFormControlErrorMessage('Data_Type')"></mat-error>
+                           </mat-form-field>
+                        </div>
+                     </div> 
+                  </div>     -->
+
+                  <!-- Siva Dynamic changes -->
+
+                  <div class="form-group form-group-sm col-md-12" *ngIf="LastSelectedLocation !== null && ClusterForm.controls['Location'].value !=='' && ClusterForm.controls['Location'].value !==null">
+                     <div class="row">
+                        <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl-required">Data Type </label>
+                        <div class="col-sm-12 col-md-8">
+                              <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                 <mat-select formControlName="Data_Type" (selectionChange)="DataTypeChange($event.value)" placeholder='Select Data Type'>
+                                    <mat-option >Select Data Type</mat-option>
+                                    <mat-option *ngFor="let Type of DataType; let i=index" [value]="Type.Key">{{Type.Name}}</mat-option>                                          
+                                 </mat-select>
+                                 <mat-error [innerHTML]="GetFormControlErrorMessage('Data_Type')"></mat-error>
+                              </mat-form-field>
+                        </div>
+                     </div>
+                  </div> 
+
+                  <div class="form-group form-group-sm col-md-12" *ngIf="ClusterForm.controls['Data_Type'].value === 'post' && Type === 'Create'">
+                     <div class="row">
+                        <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl-required">Post Date</label>
+                        <div class="col-sm-12 col-md-8">
+                              <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                 <input formControlName="Post_Date" (click)="Post_Date.open()" matInput [matDatepicker] ="Post_Date" placeholder="Date">
+                                 <mat-icon (click)="Post_Date.open()" matSuffix >event</mat-icon>
+                                 <mat-datepicker touchUi #Post_Date></mat-datepicker>
+                                 <mat-error [innerHTML]="GetFormControlErrorMessage('Post_Date')"></mat-error>
+                              </mat-form-field>
+                        </div>
+                     </div>
+                  </div> 
+                  <div class="form-group form-group-sm col-md-12" *ngIf="ViewEnable === true && Type === 'Edit'">
+                     <div class="row">
+                        <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl-required">Post Date</label>
+                        <div class="col-sm-12 col-md-8">
+                              <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                 <input formControlName="Post_Date" (click)="Post_Date.open()" matInput [matDatepicker] ="Post_Date" placeholder="Date">
+                                 <mat-icon (click)="Post_Date.open()" matSuffix >event</mat-icon>
+                                 <mat-datepicker touchUi #Post_Date></mat-datepicker>
+                                 <mat-error [innerHTML]="GetFormControlErrorMessage('Post_Date')"></mat-error>
+                              </mat-form-field>
+                        </div>
+                     </div>
+                  </div>                     
+                  <div class="form-group form-group-sm col-md-12" *ngIf="LastSelectedLocation !== null && ClusterForm.controls['Location'].value !=='' && ClusterForm.controls['Location'].value !==null">
+                     <div class="row">
+                        <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl-required">Cluster Type</label>
+                        <div class="col-sm-12 col-md-8">
+                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                              <mat-select formControlName="Cluster_Type" (selectionChange)="checkClusterType($event.value)">
+                                 <mat-option >Select type</mat-option>                                       
+                                 <mat-option value="virtual">Virtual</mat-option>
+                                 <mat-option value="single">Single</mat-option>
+                                 <mat-option value="multiple">Multiple</mat-option>
+                                 <mat-option value="advanced">Advanced Cluster</mat-option>
+                              </mat-select>
+                              <mat-error [innerHTML]="GetFormControlErrorMessage('Cluster_Type')"></mat-error>
+                           </mat-form-field>
+                        </div>
+                     </div> 
+                  </div>
+
+                  <div class="form-group form-group-sm col-md-12" *ngIf="ClusterForm.controls['Cluster_Type'].value==='single' || ClusterForm.controls['Cluster_Type'].value==='multiple'">
+                     <div class="row">
+                        <label class="col-sm-12 col-md-4 col-form-label text-lg-right" [ngClass]="{'lbl-required': ClusterForm.controls['Cluster_Type'].value==='single'}">
+                           <ng-container *ngIf="ClusterForm.controls['Cluster_Type'].value==='multiple'"> Primary </ng-container>
+                           Hospital
+                        </label>
+                        <div class="col-sm-12 col-md-8">
+                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                              <input matInput placeholder="{{HospitalList.length > 0 ? '' : 'No Hospitals on Queue' }}" [matAutocomplete]="HospitalAutocomplete" autocomplete="off" formControlName="Hospital" (blur)="AutocompleteBlur('Hospital')">
+                              <mat-autocomplete #HospitalAutocomplete="matAutocomplete" [displayWith]="HospitalDisplayName">
+                                 <mat-option *ngFor="let Hospital of filteredHospitalsList | async" [value]="Hospital"> {{Hospital.Hospital_Name}} </mat-option>
+                              </mat-autocomplete>
+                              <mat-error [innerHTML]="GetFormControlErrorMessage('Hospital')"></mat-error>
+                           </mat-form-field>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="form-group form-group-sm col-md-12" *ngIf="ClusterForm.controls['Cluster_Type'].value==='multiple' || ClusterForm.controls['Cluster_Type'].value==='advanced'">
+                     <div class="row">
+                        <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl-required">
+                           <ng-container *ngIf="ClusterForm.controls['Cluster_Type'].value==='multiple'"> Secondary </ng-container>
+                           Hospitals</label>
+                        <div class="col-sm-12 col-md-8">
+                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                              <mat-select placeholder="{{TempHospitalList.length > 0 ? '' : 'No Hospitals on Queue' }}" formControlName="HospitalsArray" multiple>
+                                 <mat-select-trigger [innerHTML]="GeMultipleSelectDisplayContent('HospitalsArray')"></mat-select-trigger>
+                                 <mat-option *ngFor="let Name of TempHospitalList; let i=index" [value]="Name._id">{{ Name.Hospital_Name }}</mat-option>
+                              </mat-select>
+                              <mat-error [innerHTML]="GetFormControlErrorMessage('HospitalsArray')"></mat-error>
+                           </mat-form-field>
+                        </div>
+                     </div>
+                  </div>
+                                    
+                  <div class="form-group col-lg-6 col-md-12"  *ngIf="LastSelectedLocation !== null && ClusterForm.controls['Location'].value !=='' && ClusterForm.controls['Location'].value !==null">
+                     <div class="row">
+                        <div class="col-md-12 col-lg-12">
+                           <mat-checkbox (ngModelChange)="DuplicateConditionChange()" formControlName="IfControlPanelDuplicate"> Duplicate Controls From Another Cluster </mat-checkbox>
+                        </div>
+                     </div>                          
+                  </div>
+
+                  <div class="form-group form-group-sm col-md-12" *ngIf="ClusterForm.controls['IfControlPanelDuplicate'].value === true">
+                     <div class="row">
+                        <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl-required"> Duplicate From </label>
+                        <div class="col-sm-12 col-md-8">
+                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                              <input matInput placeholder="Cluster" [matAutocomplete]="DuplicateFromAutocomplete" autocomplete="off" formControlName="DuplicateFrom" (blur)="AutocompleteBlur('DuplicateFrom')">
+                              <mat-autocomplete #DuplicateFromAutocomplete="matAutocomplete" [displayWith]="DuplicateClusterDisplayName">
+                                 <mat-option *ngFor="let PreviousCluster of filteredPreviousClusterList | async" [value]="PreviousCluster"> {{PreviousCluster.Cluster_Name}} </mat-option>
+                              </mat-autocomplete>
+                              <mat-error [innerHTML]="GetFormControlErrorMessage('DuplicateFrom')"></mat-error>
+                           </mat-form-field>
+                        </div>
+                     </div>
+                  </div>
+
+
+               </div>
+            </div>               
+         </div>
+         <div class="modal-actions">          
+            <button type="submit" [disabled]="ClusterForm.status !== 'VALID' || Uploading" class="modal-confirm btns-modal-action fill-left-to-right" [ngClass]="{'disabled': ClusterForm.status !== 'VALID' || Uploading}" aria-label="">
+               <span *ngIf="Type === 'Create' && !Uploading">Create</span>
+               <span *ngIf="Type === 'Edit' && !Uploading">Update</span>
+               <span *ngIf="Uploading"> Loading... </span>
+            </button>
+         </div>
+      </form>   
+   </div>
+</section>

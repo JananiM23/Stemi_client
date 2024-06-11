@@ -1,0 +1,197 @@
+<div>
+   <div class="nav-container">
+      <nav aria-label="breadcrumb">
+         <ol class="breadcrumb pink lighten-2">
+            <li class="breadcrumb-item">
+               <a class="page-title">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+               <i class="fa fa-angle-right fa-6" aria-hidden="true"></i>
+               <a *ngIf="!ActiveSection.If_Active" class="page-title"> Control Panel</a>
+               <a *ngIf="ActiveSection.If_Active" (click)="GoBack()" class="page-title"> Control Panel</a>
+            </li>
+            <li *ngIf="ActiveSection.If_Active" class="breadcrumb-item">
+               <i class="fa fa-angle-right fa-6" aria-hidden="true"></i>
+               <a class="page-title"> {{ActiveSection.Sub_Category_Name}} </a>
+            </li>
+         </ol>
+      </nav>
+      <span *ngIf="FilterForm.controls['If_Default'].value" class="head-notify view-all-entries"> Default </span>
+      <span  *ngIf="!FilterForm.controls['If_Default'].value" class="head-notify view-all-entries"> {{LocationDisplayName(FilterForm.controls['Location'].value)}} / {{ClusterDisplayName(FilterForm.controls['Cluster'].value)}}</span>
+   </div>
+</div>
+
+
+<div>
+   <div class="grid-section">
+      <form class="form-ui" [formGroup]="FilterForm">
+         <div class="row">
+            <div class="col-md-4">
+               <label>Location :</label>
+               <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                  <input matInput placeholder="Location" [matAutocomplete]="LocationAutocomplete" autocomplete="off" formControlName="Location" (blur)="AutocompleteBlur('Location')">
+                  <mat-autocomplete #LocationAutocomplete="matAutocomplete" [displayWith]="LocationDisplayName">
+                     <mat-option *ngFor="let Location of filteredLocationsList | async" [value]="Location"> {{Location.Location_Name}} </mat-option>
+                  </mat-autocomplete>
+               </mat-form-field>
+            </div>
+            <div class="col-md-4">
+               <label>Cluster :</label>
+               <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                  <input matInput placeholder="Cluster" [matAutocomplete]="ClusterAutocomplete" autocomplete="off" formControlName="Cluster" (blur)="AutocompleteBlur('Cluster')">
+                  <mat-autocomplete #ClusterAutocomplete="matAutocomplete" [displayWith]="ClusterDisplayName" >
+                     <mat-option *ngFor="let Cluster of filteredClustersList | async" [value]="Cluster" > {{Cluster.Cluster_Name}} </mat-option>
+                  </mat-autocomplete>
+               </mat-form-field>
+            </div>
+            <div class="col-md-4 text-right" style="line-height: 70px;">
+               <mat-checkbox [labelPosition]="'before'" (change)="LoadDefault($event)" formControlName="If_Default"> Default Control </mat-checkbox>
+            </div>
+         </div>
+      </form>
+      <div *ngIf="!ActiveSection.If_Active" class="grid-list">
+         <ng-container *ngFor="let Category of CategoriesAndSubCategories; let i=index">
+            <div class="grid" *ngFor="let Sub_Category of Category.Sub_Categories; let j=index" (click)="SectionActivate(i, j)">
+               <p> {{Sub_Category.Name}} </p>
+               <hr>
+               <p> {{Category.Category_Name}} </p>
+            </div>
+         </ng-container>
+      </div>
+   </div>
+   <div *ngIf="ActiveSection.If_Active" class="list-section">
+      <div class="Select-All-Section">
+         <div></div>
+         <div> <mat-checkbox [(ngModel)]="AllVisibility" (ngModelChange)="AllVisibilityChange($event)"> All Visibility </mat-checkbox> </div>
+         <div> <mat-checkbox [(ngModel)]="AllMandatory" (ngModelChange)="AllMandatoryChange($event)"> All Mandatory </mat-checkbox> </div>
+         <div> <mat-checkbox [(ngModel)]="AllValidation" (ngModelChange)="AllValidationChange($event)"> All Validation </mat-checkbox> </div>
+      </div>
+      <form [formGroup]="FormGroup">
+         <ul class="main-ul">
+            <ng-container formArrayName="FormArray">
+               <ng-container *ngFor="let Form of FormGroup.controls['FormArray']['controls']; let i = index" [formGroupName]="i">
+                  <li class="main-li" *ngIf="i >= ActiveSection.Skip && i < ActiveSection.limit">
+                     <div class="main-div"> 
+                        <div class="name"> {{Form.value.Name}} </div>
+                        <div> <mat-checkbox formControlName="Visibility" (ngModelChange)="VisibilityChange($event, i)" > Visibility </mat-checkbox> </div>
+                        <div> <mat-checkbox formControlName="Mandatory" (ngModelChange)="AllMandatoryCheck()" *ngIf="Form.value.Visibility"> Mandatory </mat-checkbox> </div>
+                        <div> <mat-checkbox formControlName="Validation" *ngIf="Form.value.Visibility" (ngModelChange)="ValidationChange($event, i)"  > Validation </mat-checkbox> </div>
+                     </div>
+                     <div class="expand-div" *ngIf="Form.value.Visibility" [ngClass]="{'expand-active': Form.value.Validation}">
+                        <div  class="expand-div-initial"> 
+                           <mat-checkbox formControlName="If_Validation_Control_Array" (ngModelChange)="ValidationControlArrayChange($event, i)"> Type Of Validation </mat-checkbox>
+                           <mat-form-field *ngIf="Form.value.If_Validation_Control_Array" style="height: 70px" appearance="outline">
+                              <mat-label>Select Validations</mat-label>
+                              <mat-select formControlName="Validation_Control_Array" multiple [sortComparator]='MultiSelectOrderKeep'>
+                                 <mat-select-trigger [innerHTML]="GetValidationArrayMultipleSelectDisplayContent(i)"></mat-select-trigger>
+                                 <mat-option *ngFor="let Validation of Validation_Filter(Form.value.Type)" [value]="Validation._id"> {{Validation.Name}} <span [innerHTML]="GetValidationArrayMultipleSelectOrderNo(i, Validation._id )"> </span> </mat-option>
+                              </mat-select>
+                              <mat-error> {{GetFormControlErrorMessage('Validation_Control_Array', i)}} </mat-error>
+                           </mat-form-field>
+                        </div>
+                        <div class="expand-div-initial" *ngIf="Form.value.Type === 'Number'">
+                           <mat-checkbox formControlName="If_Min_Number_Restriction" (ngModelChange)="MinNumberRestrictionChange($event, i)"> Minimum Value </mat-checkbox>
+                           <mat-form-field *ngIf="Form.value.If_Min_Number_Restriction" style="height: 70px" appearance="outline">
+                              <mat-label>Minimum Value</mat-label>
+                              <input type="number" formControlName="Min_Number_Value" matInput placeholder="Minimum Value">
+                              <mat-error> {{GetFormControlErrorMessage('Min_Number_Value', i)}} </mat-error>
+                           </mat-form-field>
+                        </div>
+                        <div class="expand-div-initial" *ngIf="Form.value.Type === 'Number'">
+                           <mat-checkbox formControlName="If_Max_Number_Restriction" (ngModelChange)="MaxNumberRestrictionChange($event, i)"> Maximum Value </mat-checkbox>
+                           <mat-form-field *ngIf="Form.value.If_Max_Number_Restriction" style="height: 70px"appearance="outline">
+                              <mat-label>Maximum Value</mat-label>
+                              <input type="number" formControlName="Max_Number_Value" matInput placeholder="Maximum Value">
+                              <mat-error> {{GetFormControlErrorMessage('Max_Number_Value', i)}} </mat-error>
+                           </mat-form-field>
+                        </div>
+                        <div class="expand-div-initial" *ngIf="Form.value.Type === 'Number'">
+                           <mat-checkbox formControlName="If_Min_Number_Field_Restriction" (ngModelChange)="MinNumberFieldRestrictionChange($event, i)"> Any Minimum Field Validation </mat-checkbox>
+                           <mat-form-field *ngIf="Form.value.If_Min_Number_Field_Restriction" style="height: 70px" appearance="outline">
+                              <mat-label>Select Validation Field</mat-label>
+                              <mat-select formControlName="Min_Number_Field" >
+                                 <mat-option *ngFor="let Fields of Field_Filter(i) | ControlPanelOptionsFilter: Form.value.Type" [value]="Fields._id"> {{Fields.Name}} </mat-option>
+                              </mat-select>
+                              <mat-error> {{GetFormControlErrorMessage('Min_Number_Field', i)}} </mat-error>
+                           </mat-form-field>
+                        </div>
+                        <div class="expand-div-initial" *ngIf="Form.value.Type === 'Number'">
+                           <mat-checkbox formControlName="If_Max_Number_Field_Restriction" (ngModelChange)="MaxNumberFieldRestrictionChange($event, i)"> Any Maximum Field Validation </mat-checkbox>
+                           <mat-form-field *ngIf="Form.value.If_Max_Number_Field_Restriction" style="height: 70px" appearance="outline">
+                              <mat-label>Select Validation Field</mat-label>
+                              <mat-select formControlName="Max_Number_Field">
+                                 <mat-option *ngFor="let Fields of Field_Filter(i) | ControlPanelOptionsFilter: Form.value.Type" [value]="Fields._id"> {{Fields.Name}} </mat-option>
+                              </mat-select>
+                              <mat-error> {{GetFormControlErrorMessage('Max_Number_Field', i)}} </mat-error>
+                           </mat-form-field>
+                        </div>
+                        <div class="expand-div-initial" *ngIf="Form.value.Type === 'Date' && !Form.value.If_Min_Date_Array_Available">
+                           <mat-checkbox formControlName="If_Min_Date_Restriction" (ngModelChange)="MinDateFieldRestrictionChange($event, i)"> Any Minimum Date Field Validation </mat-checkbox>
+                           <mat-form-field *ngIf="Form.value.If_Min_Date_Restriction" style="height: 70px" appearance="outline">
+                              <mat-label>Select Validation Field</mat-label>
+                              <mat-select formControlName="Min_Date_Field">
+                                 <mat-option *ngFor="let Fields of Field_Filter(i) | ControlPanelOptionsFilter: Form.value.Type" [value]="Fields._id"> {{Fields.Name}} </mat-option>
+                              </mat-select>
+                              <mat-error> {{GetFormControlErrorMessage('Min_Date_Field', i)}} </mat-error>
+                           </mat-form-field>
+                        </div>
+                        <div class="expand-div-initial" *ngIf="Form.value.Type === 'Date' && !Form.value.If_Max_Date_Array_Available">
+                           <mat-checkbox formControlName="If_Max_Date_Restriction" (ngModelChange)="MaxDateFieldRestrictionChange($event, i)"> Any Maximum Date Field Validation </mat-checkbox>
+                           <mat-form-field *ngIf="Form.value.If_Max_Date_Restriction" style="height: 70px" appearance="outline">
+                              <mat-label>Select Validation Field</mat-label>
+                              <mat-select formControlName="Max_Date_Field">
+                                 <mat-option *ngFor="let Fields of Field_Filter(i) | ControlPanelOptionsFilter: Form.value.Type" [value]="Fields._id"> {{Fields.Name}} </mat-option>
+                              </mat-select>
+                              <mat-error> {{GetFormControlErrorMessage('Max_Date_Field', i)}} </mat-error>
+                           </mat-form-field>
+                        </div>
+                        <div class="expand-div-initial" *ngIf="Form.value.Type === 'Date' && !Form.value.If_Min_Date_Restriction">
+                           <mat-checkbox formControlName="If_Min_Date_Array_Available" (ngModelChange)="MinDateArrayRestrictionChange($event, i)"> Any Minimum Date Field Validation More than One </mat-checkbox>
+                           <mat-form-field *ngIf="Form.value.If_Min_Date_Array_Available" style="height: 70px" appearance="outline">
+                              <mat-label>Select Validation Field</mat-label>
+                              <mat-select formControlName="Min_Date_Array" multiple [sortComparator]='MultiSelectOrderKeep'>
+                                 <mat-select-trigger [innerHTML]="GetMinDateArrayMultipleSelectsDisplayContent(i)"></mat-select-trigger>
+                                 <mat-option *ngFor="let Fields of Field_Filter(i) | ControlPanelOptionsFilter: Form.value.Type" [value]="Fields._id"> {{Fields.Name}} <span [innerHTML]="GetMinDateArrayMultipleSelectsOrderNo(i, Fields._id )"> </span> </mat-option>
+                              </mat-select>
+                              <mat-error> {{GetFormControlErrorMessage('Min_Date_Array', i)}} </mat-error>
+                           </mat-form-field>
+                        </div>
+                        <div class="expand-div-initial" *ngIf="Form.value.Type === 'Date' && !Form.value.If_Max_Date_Restriction">
+                           <mat-checkbox formControlName="If_Max_Date_Array_Available" (ngModelChange)="MaxDateArrayRestrictionChange($event, i)"> Any Maximum Date Field Validation More than One </mat-checkbox>
+                           <mat-form-field *ngIf="Form.value.If_Max_Date_Array_Available" style="height: 70px" appearance="outline">
+                              <mat-label>Select Validation Field</mat-label>
+                              <mat-select formControlName="Max_Date_Array" multiple [sortComparator]='MultiSelectOrderKeep'>
+                                 <mat-select-trigger [innerHTML]="GetMaxDateArrayMultipleSelectsDisplayContent(i)"></mat-select-trigger>
+                                 <mat-option *ngFor="let Fields of Field_Filter(i) | ControlPanelOptionsFilter: Form.value.Type" [value]="Fields._id"> {{Fields.Name}} <span [innerHTML]="GetMaxDateArrayMultipleSelectsOrderNo(i, Fields._id )"> </span> </mat-option>
+                              </mat-select>
+                              <mat-error> {{GetFormControlErrorMessage('Max_Date_Array', i)}} </mat-error>
+                           </mat-form-field>
+                        </div>
+                     </div>
+                  </li>
+               </ng-container>
+
+            </ng-container>
+         </ul>
+      </form>
+   </div>
+   <br>
+   <br>
+
+   <div *ngIf="FormChangesDetection || ActiveSection.If_Active" class="fixed-submit-section">
+      <button *ngIf="ConfigEnable === true" (click)="IDConfig()" type="button" mat-raised-button color="primary" class="animated fadeInDown">
+         <span> Id Proof Config </span> 
+      </button>
+      <button *ngIf="!FormUpdateLoading" type="button" (click)="GoBack()" mat-raised-button color="primary" class="animated fadeInDown">
+         <span> Go Back </span> 
+      </button>
+      <button *ngIf="FormChangesDetection && (FilterForm.getRawValue().If_Default === null || FilterForm.getRawValue().If_Default === true)" type="button" [disabled]="FormUpdateLoading" (click)="UpdateForm()" mat-raised-button color="primary" class="animated fadeInDown">
+         <span *ngIf="!FormUpdateLoading"> Update Changes </span> 
+         <span *ngIf="FormUpdateLoading"> Updating... </span> 
+      </button>
+      <button *ngIf="FormChangesDetection && FilterForm.getRawValue().If_Default === false" type="button" [disabled]="FormUpdateLoading" (click)="UpdateClusterBasedForm()" mat-raised-button color="primary" class="animated fadeInDown">
+         <span *ngIf="!FormUpdateLoading"> Update Changes </span> 
+         <span *ngIf="FormUpdateLoading"> Updating... </span> 
+      </button>
+   </div>
+</div>

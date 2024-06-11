@@ -1,0 +1,219 @@
+<section>
+  <div class="modal-body">
+     <form>
+        <div class="modal-header-title">
+           <h5> View Cardio Patient Info</h5>
+           <span class="modal-container-close" (click)="modalRef.hide()"><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+        </div>
+        <div class="container modal-content-body">
+          <div class="row">
+            <div class="col-md-6">
+                  <div class="form-group form-group-sm col-md-12">
+                        <div class="row">
+                         <label class="col-sm-12  col-md-5 text-lg-right lbl">Patient Name:</label>
+                         <div class="col-sm-12  col-md-7">
+                            {{Info?.Patient_Name | titlecase}}
+                         </div>
+                        </div>
+                     </div>
+                     <div class="form-group form-group-sm col-md-12">
+                       <div class="row">
+                        <label class="col-sm-12  col-md-5 text-lg-right lbl">Patient Age :</label>
+                        <div class="col-sm-12  col-md-7">
+                           {{Info?.Patient_Age}}
+                        </div>
+                       </div>
+                    </div>
+                    <div class="form-group form-group-sm col-md-12">
+                     <div class="row">
+                      <label class="col-sm-12  col-md-5 text-lg-right lbl">Patient Gender :</label>
+                      <div class="col-sm-12  col-md-7">
+                         {{Info?.Patient_Gender | titlecase}}
+                      </div>
+                     </div>
+                    </div>
+                    <div class="form-group form-group-sm col-md-12">
+                     <div class="row">
+                      <label class="col-sm-12  col-md-5 text-lg-right lbl">Admission Type :</label>
+                      <div class="col-sm-12  col-md-7">
+                         {{Info?.Admission_Type | titlecase}}
+                      </div>
+                     </div>
+                    </div>
+
+                    <div class="form-group form-group-sm col-md-12">
+                      <div class="row">
+                       <label class="col-sm-12  col-md-5 text-lg-right lbl">User Name:</label>
+                       <div class="col-sm-12  col-md-7">
+                          {{Info?.UserInfo?.Name | titlecase}}
+                       </div>
+                      </div>
+                     </div>
+                    
+                    <div class="form-group form-group-sm col-md-12">
+                     <div class="row">
+                      <label class="col-sm-12  col-md-5 text-lg-right lbl">Symptoms Chest Discomfort :</label>
+                      <div class="col-sm-12  col-md-7">
+                        {{Info?.Symptoms?.Chest_Discomfort | titlecase}}  
+                      </div>
+                     </div>
+                    </div>  
+                     
+                    <!-- <div class="form-group form-group-sm col-md-12">
+                     <div class="row">
+                      <label class="col-sm-12  col-md-5 text-lg-right lbl">Duration Of Pain :</label>
+                      <div class="col-sm-12  col-md-7">
+                         {{Info?.Symptoms?.Duration_of_Pain | date: 'd-MMM-y, HH:mm'}}  
+                      </div>
+                     </div>
+                    </div>   -->
+               
+                    <div class="form-group form-group-sm col-md-12">
+                     <div class="row">
+                      <label class="col-sm-12  col-md-5 text-lg-right lbl">Location Of Pain :</label>
+                      <div class="col-sm-12  col-md-7">
+                         {{Info?.Symptoms?.Location_of_Pain}}
+
+                        <!-- {{Info?.Symptoms?.Location_of_Pain === 'R_Arm' ? 'R Arm' : Info?.Symptoms?.Location_of_Pain === 'L_Arm' ? 'L Arm' : Info?.Symptoms?.Location_of_Pain === 'Jaw' ? 'Jaw' :  Info?.Symptoms?.Location_of_Pain === 'Retrosternal' ? 'Retrosternal' : '' }}                                    -->
+                      </div>
+                     </div>
+                    </div>
+
+                    <div class="form-group form-group-sm col-md-12">
+                        <div class="row">
+                         <label class="col-sm-12  col-md-5 text-lg-right lbl">Stemi Status:</label>
+                         <div class="col-sm-12  col-md-7">
+                           {{Info?.Stemi_Status === 'Stemi_Ask_Cardiologist' ? 'Ask Cardiologist' : Info?.Stemi_Status === 'Retake_ECG' ? 'Retake ECG': '' }}
+                          </div>
+                        </div>
+                    </div>
+            </div>
+            <div class="col-md-6">
+                      <div class="form-group form-group-sm col-md-12">
+                         <div class="row">
+                         <label class="col-sm-12  col-md-5 text-lg-right lbl">Entry From :</label>
+                         <div class="col-sm-12  col-md-7">
+                           {{Info?.EntryFrom | titlecase}}
+                         </div>
+                       </div>
+                    </div> 
+
+                  <div class="form-group form-group-sm col-md-12">
+                      <div class="row">
+                        <label class="col-sm-12  col-md-5 text-lg-right lbl">Currrent ECG File :</label>
+                        <div class="col-sm-12  col-md-7">
+                        <span class="UploadBtn" (click)="EcgView(template)" >
+                           <i class="material-icons"> photo_size_select_actual </i>
+                           <span>View ECG </span>
+                        </span>
+                        </div>
+                      </div>
+                  </div> 
+
+                  <div class="form-group form-group-sm col-md-12">
+                        <div class="row">
+                          <label class="col-sm-12  col-md-5 text-lg-right lbl"> ECG Taken Time :</label>
+                          <div class="col-sm-12  col-md-7">                              
+                             <span> {{Info?.ECG_Taken_date_time | date: 'd-MMM-y, HH:mm' }}</span>
+                         
+                          </div>
+                        </div>
+                    </div>     
+  
+                  <div class="row" *ngFor="let RiskFactors of Info?.Risk_Factors">
+                     <div class="form-group form-group-sm col-md-12">
+                        <div class="row">
+                        <label class="col-sm-12  col-md-5 text-lg-right lbl">Diabetes :</label>
+                        <div class="col-sm-12  col-md-7">
+                          {{RiskFactors?.Diabetes | titlecase}}
+                        </div>
+                      </div>
+                 </div>                   
+                  <div class="form-group form-group-sm col-md-12">
+                        <div class="row">
+                        <label class="col-sm-12  col-md-5 text-lg-right lbl">Family History of IHD :</label>
+                        <div class="col-sm-12  col-md-7">
+                          {{RiskFactors?.Family_History_of_IHD | titlecase}}
+                        </div>
+                        </div>
+                  </div> 
+  
+                     <div class="form-group form-group-sm col-md-12">
+                        <div class="row">
+                        <label class="col-sm-12  col-md-5 text-lg-right lbl">High Cholesterol :</label>
+                        <div class="col-sm-12  col-md-7">
+                          {{RiskFactors?.High_Cholesterol | titlecase}}
+                        </div>
+                        </div>
+                     </div> 
+  
+                     <div class="form-group form-group-sm col-md-12">
+                        <div class="row">
+                        <label class="col-sm-12  col-md-5 text-lg-right lbl">Hypertension :</label>
+                        <div class="col-sm-12  col-md-7">
+                          {{RiskFactors?.Hypertension | titlecase}}
+                        </div>
+                        </div>
+                     </div> 
+  
+                     <div class="form-group form-group-sm col-md-12">
+                        <div class="row">
+                        <label class="col-sm-12  col-md-5 text-lg-right lbl">Previous History of IHD :</label>
+                        <div class="col-sm-12  col-md-7">
+                          {{RiskFactors?.Previous_History_of_IHD | titlecase}}
+                        </div>
+                        </div>
+                     </div>
+  
+                    <div class="form-group form-group-sm col-md-12">
+                      <div class="row">
+                        <label class="col-sm-12  col-md-5 text-lg-right lbl">Smoker :</label>
+                        <div class="col-sm-12  col-md-7">
+                          {{RiskFactors?.Smoker === 'Non_Smoker' ? 'Non Smoker' : RiskFactors?.Smoker === 'Current_Smoker' ? 'Current Smoker' : '' }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+          </div>
+           
+        </div>
+        <div class="modal-actions">          
+           <button type="submit" (click)="modalRef.hide()" class="modal-confirm btns-modal-action fill-left-to-right" aria-label="">
+            Close
+           </button>
+        </div>
+     </form>   
+  </div>
+
+  <ng-template #template>
+      <div class="ECGView">
+         <span class="CloseBtn" (click)="modalReference.hide();"> x </span>
+         <div class="ImgSection">
+            <img [ngStyle]="{'max-height': screenHeight + 'px', 'max-width': screenWidth + 'px' }" src="{{Info?.Current_ECG_File}}" alt="">
+         </div>
+      </div>
+   </ng-template>
+
+
+  <!-- <ng-template #template>
+      <div class="modal-body">
+         <span class="modal-container-close" (click)="modalReference.hide();"><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+         <div class="container modal-content-body">
+            <div class="col-sm-12">
+               <div class="row">
+                  <div class="form-group col-lg-6 col-md-12">
+                     <div class="row">
+                        <div class="col-md-12 col-lg-8">
+                           <img src="{{Info?.Current_ECG_File}}">
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+</ng-template> -->
+  
+</section>
+

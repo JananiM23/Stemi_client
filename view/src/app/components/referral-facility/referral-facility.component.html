@@ -1,0 +1,229 @@
+<div class="row no-margin">
+	<div class="nav-container">
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb pink lighten-2">
+				<li class="breadcrumb-item">
+					<a class="page-title">Home</a>
+				</li>
+				<li class="breadcrumb-item active">
+					<i class="fa fa-angle-right fa-6" aria-hidden="true"></i>
+					<a class="page-title">Referral Facilities Management</a>
+				</li>
+			</ol>
+		</nav>
+		<span class="head-notify view-all-entries">All Records</span>
+	</div>
+ </div>
+ <section>
+	<div class="card">
+	  <div class="card-block">
+		 <div class="tabpane-title">
+			  <h5 class="section-title">Referral Facilities</h5>
+			  <a class="create-button-btn animated fadeInDown" (click)="CreateReferralFacility()">Create New</a>
+			  <a class="create-icon-btn animated fadeInDown" (click)="CreateReferralFacility()"><i class="fa fa-plus"></i></a>
+		 </div>
+		  <div class="row no-margin">
+			  <div class="col-sm-12 col-md-2">
+				  <div class="table-entries-and-sortby">
+					  <label>Limits
+						  <mat-form-field class="full-width tbl-limits" [floatLabel]="'never'" appearance="fill">
+							  <mat-select [(ngModel)]="LimitCount" (ngModelChange)="Pagination_Action(1)">
+								  <mat-option [value]="5">5</mat-option>
+								  <mat-option [value]="10">10</mat-option>
+								  <mat-option [value]="25">25</mat-option>
+								  <mat-option [value]="50">50</mat-option>
+								  <mat-option [value]="100">100</mat-option>
+							  </mat-select>
+						  </mat-form-field>
+					  </label>
+				  </div>
+			  </div>
+			  <div class="col-sm-12 col-md-10">
+				  <div class="table-filter">
+					  <div class="filter-icon" (click)="openFilterModal(template)" matTooltip="Filter"><span><i class="fa fa-filter" aria-hidden="true"></i></span></div>
+					  <div class="filter-parent">
+						  <ng-container *ngFor="let Filter of FiltersArray; let i=index" >
+							  <div *ngIf="Filter.Active" class="filter-result">
+								  <div class="filter-info">
+									  <span class="label"> {{Filter.DisplayName}} </span>
+									  <span *ngIf="Filter.Type !== 'Date'" class="value"> {{ (Filter.Value.length > 25) ? (Filter.Value | slice:0:25) + '..' : (Filter.Value) }} </span>
+									  <span *ngIf="Filter.Type === 'Date'" class="value"> {{ Filter.Value | date:'d-M-y' }} </span>
+								  </div>
+								  <span class="Filter-close">
+									  <i class="fa fa-close" (click)="RemoveFilter(i)"></i>
+								  </span>
+							  </div>
+						  </ng-container>
+					  </div>
+				  </div>
+			  </div>
+		  </div>
+		  
+		  <div class="col-md-12">
+			  <div class="table-responsive">
+				  <table #TableSection class="tbl-stemi-default tbl-patients-records" cellpadding="0" cellspacing="0" border="0">
+					  <thead #TableHeaderSection>
+						  <tr>
+							  <th>S.No</th>
+							  <th *ngFor="let Header of THeaders;let i=index">
+								  <div class="column-title"> {{Header.Name}} 
+									  <span>
+										  <i class="material-icons" (click)="Short_Change(i)" [ngClass]="{'active': Header.If_Short, 'rotateZ-A': Header.Condition === 'Descending' }">sort</i>
+									  </span>
+								  </div>
+							  </th>
+							  <th>Actions</th>
+						  </tr>
+					  </thead>
+					  <tbody #TableBodySection class="tbl-content">
+						  <ng-container *ngIf="ReferralFacilitiesListData.length > 0">
+							  <tr class="odd" *ngFor="let ReferralInfo of ReferralFacilitiesListData;let i=index">
+								  <td>{{SerialNoAddOn+i+1}}</td>
+								  <td>{{ReferralInfo?.Hospital_Name}}</td>
+								  <td>{{ReferralFacilityName(ReferralInfo?.Hospital_Type)}}</td>
+								  <td>{{ReferralInfo?.Hospital_Address}}</td>
+								  <td>{{ReferralInfo?.createdAt | date: 'd-MMM-y, HH:mm'}}</td>
+								  <td>
+									  <div class="action-icon-parent">
+										  <span class="col-action-icon bk-clr-warning" (click)="EditReferralFacility(i)" matTooltip="Edit"><i class="fa fa-pencil" aria-hidden="true"></i></span>
+									  </div>                                
+								  </td>
+							  </tr>
+						  </ng-container>
+						  <tr *ngIf="ReferralFacilitiesListData.length === 0">
+							  <td colspan="6"> No Records Found.... </td>
+						  </tr>                 
+					  </tbody>
+					  <div #TableLoaderSection class="tbl-loading-center">
+						  <div id="inTurnFadingTextG">
+							  <div id="inTurnFadingTextG_1" class="inTurnFadingTextG">L</div>
+							  <div id="inTurnFadingTextG_2" class="inTurnFadingTextG">O</div>
+							  <div id="inTurnFadingTextG_3" class="inTurnFadingTextG">A</div>
+							  <div id="inTurnFadingTextG_4" class="inTurnFadingTextG">D</div>
+							  <div id="inTurnFadingTextG_5" class="inTurnFadingTextG">I</div>
+							  <div id="inTurnFadingTextG_6" class="inTurnFadingTextG">N</div>
+							  <div id="inTurnFadingTextG_7" class="inTurnFadingTextG">G</div>
+							  <div id="inTurnFadingTextG_8" class="inTurnFadingTextG">.</div>
+							  <div id="inTurnFadingTextG_9" class="inTurnFadingTextG">.</div>
+							  <div id="inTurnFadingTextG_10" class="inTurnFadingTextG">.</div>
+						  </div>
+					  </div>
+				  </table>
+				  </div>
+		  </div>
+		  <div class="pagination-wrapper margin-top-10">
+			  <div class="table-go-page-entries">
+				  <label>Go page
+					  <mat-form-field class="width-auto" style="padding: 0px 10px 0px 6px;">
+						  <input matInput type="number" autocomplete="off" class="input-go-entries" min="1" max="{{PagesArray[PagesArray.length - 1]?.Value}}" [(ngModel)]="GoToPage">
+					  </mat-form-field>
+					  <button class="go-search-entries" [disabled]="!(GoToPage > 0 && GoToPage <= PagesArray[PagesArray.length - 1]?.Value)" [ngClass]="{'disabled': !(GoToPage > 0 && GoToPage <= PagesArray[PagesArray.length - 1]?.Value)}" matTooltip="Go to Page" (click)="Pagination_Action(GoToPage)" >GO</button>
+				  </label>
+			  </div>
+			  <div class="page-show-entires">
+				  <div class="txt-show-records" [innerHTML]="ShowingText"></div>
+			  </div>
+			  <div class="page-number">
+				  <ul class="pagination hidden-xs">
+					  <li>
+						  <a class="{{PagePrevious['Class']}}" (click)="Pagination_Action(PagePrevious['Value'])" matTooltip="Previous">
+							  <p><i class="fa fa-angle-double-left" aria-hidden="true"></i></p>
+						  </a>
+					  </li>
+					  <li *ngFor="let Page of PagesArray; let i=index" class="{{Page.Class}}" [ngClass]="{'active': Page.Active}" (click)="Pagination_Action(Page.Value)" > 
+						  <a><p>{{Page.Text}}</p></a>
+					  </li> 
+					  <li>
+						  <a class="{{PageNext['Class']}}" (click)="Pagination_Action(PageNext['Value'])" matTooltip="Next">
+							  <p><i class="fa fa-angle-double-right" aria-hidden="true"></i></p>
+						  </a>
+					  </li>
+				  </ul>
+				  <ul class="pagination visible-xs">
+					  <li><a ><p><i class="fa fa-angle-double-left" aria-hidden="true"></i></p></a></li>
+					  <li><a ><p><i class="fa fa-angle-double-right" aria-hidden="true"></i></p></a></li>
+				  </ul>  
+			  </div>                     
+		  </div>
+	  </div>
+  </div>  
+</section>
+
+
+
+<ng-template #template>
+	  <div class="modal-body">
+		  <div class="modal-header-title">
+			  <h5>Referral Facility Filters</h5>
+			  <span class="modal-container-close" (click)="modalReference.hide();"><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+		  </div>   
+		  <div class="container modal-content-body">
+			  <form [formGroup]="FilterFGroup">
+				  <div class="col-sm-12">
+					  <div class="row">
+						  <div class="form-group col-lg-6 col-md-12">
+							  <div class="row">
+								  <label class="col-md-12 col-lg-4 col-form-label text-lg-right">Hospital Name</label>
+								  <div class="col-md-12 col-lg-8">
+									  <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+										  <input matInput formControlName="Hospital_Address" autocomplete="off" placeholder="Hospital Name">
+									  </mat-form-field>
+								  </div>
+							  </div>
+						  </div>
+						  <div class="form-group col-lg-6 col-md-12">
+							  <div class="row">
+								  <label class="col-md-12 col-lg-4 col-form-label text-lg-right">Hospital Type</label>
+								  <div class="col-md-12 col-lg-8">
+									  <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+										<mat-select formControlName="Hospital_Type" placeholder="Select Hospital Type">
+											<mat-option *ngFor="let Type of HospitalTypes; let i=index" [value]="Type.Key">{{Type.Name}}</mat-option>                                          
+										</mat-select>
+									  </mat-form-field>
+								  </div>
+							  </div>
+						  </div>
+						  <div class="form-group col-lg-6 col-md-12">
+							<div class="row">
+								<label class="col-md-12 col-lg-4 col-form-label text-lg-right">Hospital Address</label>
+								<div class="col-md-12 col-lg-8">
+									<mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+										<input matInput formControlName="Hospital_Address" autocomplete="off" placeholder="Hospital Address">
+									</mat-form-field>
+								</div>
+							</div>
+						</div>
+						  <div class="form-group col-lg-6 col-md-12">
+							  <div class="row">
+								  <label class="col-md-12 col-lg-4 col-form-label text-lg-right">From Date</label>
+								  <div class="col-md-12 col-lg-8">
+									  <mat-form-field (click)="pickerOne.open()" class="full-width column-date" appearance="fill" >
+										  <input formControlName="FromDate" autocomplete="off" matInput [matDatepicker]="pickerOne" placeholder="From Date" (keypress)="NotAllow()" (keydown)="ClearInput($event)">
+										  <mat-icon matSuffix>event</mat-icon>
+										  <mat-datepicker #pickerOne touchUi></mat-datepicker>
+									  </mat-form-field>
+								  </div>
+							  </div>
+						  </div>
+						  <div class="form-group col-lg-6 col-md-12">
+							  <div class="row">
+								  <label class="col-md-12 col-lg-4 col-form-label text-lg-right">To Date</label>
+								  <div class="col-md-12 col-lg-8">
+									  <mat-form-field (click)="pickerTwo.open()" class="full-width column-time" appearance="fill">
+										  <input formControlName="ToDate" autocomplete="off" matInput [matDatepicker]="pickerTwo" placeholder="To Date" (keypress)="NotAllow()" (keydown)="ClearInput($event)">
+										  <mat-icon matSuffix>event</mat-icon>
+										  <mat-datepicker #pickerTwo touchUi></mat-datepicker>
+									  </mat-form-field>
+								  </div>
+							  </div>
+						  </div>
+					  </div>
+				  </div>
+			  </form>
+		  </div>
+		  <div class="modal-actions">
+			  <button *ngIf="FilterFGroupStatus" type="button" (click)="ResetFilters()" class="modal-confirm btns-modal-action fill-right-to-left" aria-label="">Reset</button>
+			  <button type="button" [disabled]="!FilterFGroupStatus" [ngClass]="{'disabled': !FilterFGroupStatus}" (click)="SubmitFilters()" class="modal-confirm btns-modal-action fill-left-to-right" aria-label="">Search</button>
+		  </div>
+	  </div>
+  </ng-template>

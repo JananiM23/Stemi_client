@@ -1,0 +1,379 @@
+<div class="row">
+   <div class="nav-container">
+      <nav aria-label="breadcrumb">
+         <ol class="breadcrumb pink lighten-2">
+            <li class="breadcrumb-item">
+               <a class="page-title">Home</a>
+            </li>
+            <li class="breadcrumb-item active">
+               <i class="fa fa-angle-right fa-6" aria-hidden="true"></i>
+               <a class="page-title">Cluster-Mapping</a>
+            </li>
+         </ol>
+      </nav>
+      <span class="head-notify view-all-entries">Cluster Mapping</span>
+   </div>
+</div>
+
+<section>
+   <div class="row">
+      <div class="tab-pane-container">
+         <div class="portlet-tab">
+            <div class="portlet-tab-panelbody">
+               <!-- Hospital Details -->
+               <div class="hospital-details">
+                  <div class="tabpane-title">
+                     <h5>Cluster Mapping</h5>
+                  </div>
+                  <div class="container-fluid">
+                     <form [formGroup]="FilterForm">
+                        <div class="row">
+                           <label class="col-sm-2 col-form-label text-lg-right">Location :</label>
+                           <div class="col-md-3">
+                              <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                 <input matInput placeholder="Location" [matAutocomplete]="LocationAutocomplete" autocomplete="off" formControlName="Location" (blur)="AutocompleteBlur('Location')">
+                                 <mat-autocomplete #LocationAutocomplete="matAutocomplete" [displayWith]="LocationDisplayName">
+                                    <mat-option *ngFor="let Location of filteredLocationsList | async" [value]="Location"> {{Location.Location_Name}} </mat-option>
+                                 </mat-autocomplete>
+                              </mat-form-field>
+                           </div>
+                           <label class="col-sm-2 col-form-label text-lg-right">Cluster :</label>
+                           <div class="col-md-3">
+                              <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                 <input matInput placeholder="Cluster" [matAutocomplete]="ClusterAutocomplete" autocomplete="off" formControlName="Cluster" (blur)="AutocompleteBlur('Cluster')">
+                                 <mat-autocomplete #ClusterAutocomplete="matAutocomplete" [displayWith]="ClusterDisplayName">
+                                    <mat-option *ngFor="let Cluster of filteredClustersList | async" [value]="Cluster"> {{Cluster.Cluster_Name}} </mat-option>
+                                 </mat-autocomplete>
+                              </mat-form-field>
+                           </div>
+                        </div>
+                     </form>
+
+                     <!-- Map displaying area -->
+                     <div class="map-canvas">
+                        <agm-map #AgmMap
+                                 [latitude]="latitude"
+                                 [longitude]="longitude"
+                                 [zoom]="zoom"
+                                 [mapTypeControl]="true"
+                                 [styles]="mapStyles"
+                                 [fullscreenControl]="true">
+                           <ng-container *ngFor="let Marker of MarkersData; let i=index">
+                              <agm-marker [latitude]="Marker.Latitude"
+                                          [longitude]="Marker.Longitude"
+                                          [iconUrl]="Marker.Icon"
+                                          [markerClickable]="true"
+                                          (markerClick)="OpenInfoWindow(i)">
+                                 <agm-info-window [isOpen]="Marker.ShowInfo" (infoWindowClose)="CloseInfoWindow(i)" [disableAutoPan]="false">
+                                    <div class="custom-info-window" [ngStyle]="{'min-height': (Marker.ConnectConfirm || Marker.RemoveConfirm) ? '135px' : 'auto', 'min-width': InfoWindowFullscreen ? '350px' : 'auto'  }">
+                                       <p class="HosName">
+                                          {{Marker?.Data?.Hospital_Name}}
+                                          <span class="InfoFullScreen">
+                                             <i *ngIf="ModalService.getModalsCount() === 0" matTooltip="Full View" (click)="openModal(hospitalHubList)" class="material-icons"> open_in_new </i>
+                                             <i *ngIf="!InfoWindowFullscreen" matTooltip="Expand" (click)="InfoWindowFullscreen = true" class="material-icons"> fullscreen </i>
+                                             <i *ngIf="InfoWindowFullscreen" matTooltip="Collapse" (click)="InfoWindowFullscreen = false" class="material-icons"> fullscreen_exit </i>
+                                          </span>
+                                       </p>
+                                       <ng-container *ngIf="InfoWindowFullscreen">
+                                          <p class="HosAddress"> {{Marker?.Data.Address}} </p>
+                                          <p *ngIf="ClusterDetails?.Cluster_Type === 'virtual'" class="centerLink">
+                                             <span *ngIf="!Marker.If_ClusterLinked" (click)="Marker.ConnectConfirm = true;" > Connect To this Cluster </span>
+                                             <span *ngIf="Marker.If_ClusterLinked" (click)="Marker.RemoveConfirm = true;" class="remove" > Remove From this Cluster </span>
+                                          </p>
+                                             <ng-container *ngIf="Marker.ShowConnected_Route">
+                                                <p class="SubMenu"> Connected Hub : </p>
+                                                <div class="Hubs">
+                                                   <div class="HubsSectionOne">
+                                                      <img [src]="FindIconUrl(Marker?.Connected_Route?.Route_Data?.To_Data.Hospital_Role, 'Tick')">
+                                                   </div>
+                                                   <div class="HubsSectionTwo">
+                                                      <span class="HubName">{{Marker?.Connected_Route?.Route_Data?.To_Data?.Hospital_Name}}</span>
+                                                      <div class="HubDistance">
+                                                         <span>
+                                                            <i class="material-icons">directions_car</i>
+                                                            {{Marker?.Connected_Route?.Route_Data?.Distance}}
+                                                         </span>
+                                                         <span>
+                                                            <i class="material-icons">schedule</i>
+                                                            {{Marker?.Connected_Route?.Route_Data?.Duration}}
+                                                         </span>
+                                                      </div>
+                                                   </div>
+                                                   <div class="HubsSectionThree">
+                                                      <i (click)="Marker.RemoveConfirm = true;" class="remove material-icons">highlight_off</i>
+                                                   </div>
+                                                </div>
+                                             </ng-container>
+                                             <ng-container *ngIf="Marker.ShowPossible_Routes">
+                                                <p class="SubMenu"> 
+                                                   {{!Marker.ShowConnected_Route && !Marker.If_Spokes ? 'To' : 'Other' }} Hub{{Marker.Possible_Routes.length > 1 ? 's' : ''}} :
+                                                   <span *ngIf="Marker.Routes_Type === 'Connected' && !Marker.If_Spokes && Marker.ShowConnected_Route" class="AllRoutes" (click)="ShowAllRoutes(i)" > Show All Routes </span>
+                                                   <span *ngIf="Marker.Routes_Type === 'AllPossiblesAndConnected' && !Marker.If_Spokes && Marker.ShowConnected_Route" class="AllRoutes" (click)="HideOtherRoutes(i)" > Hide Other Routes </span>
+                                                </p>
+                                                <div class="Hospital-Lists">
+                                                   <div *ngFor="let Possible_Route of Marker.Possible_Routes; let j=index" class="Hubs" [ngClass]="{'Best': Possible_Route.Others?.BestRoute}" >
+                                                      <div class="HubsSectionOne">
+                                                         <ng-container *ngIf="ClusterDetails?.Cluster_Type !== 'advanced'">
+                                                            <img [src]="FindIconUrl(Possible_Route?.Route_Data?.To_Data.Hospital_Role, 'Tick')">
+                                                         </ng-container>
+                                                         <ng-container *ngIf="ClusterDetails?.Cluster_Type === 'advanced'">
+                                                            <img [src]="FindIconUrl('Tire2', 'Tick')">
+                                                         </ng-container>
+                                                      </div>
+                                                      <div class="HubsSectionTwo">
+                                                         <span class="HubName">{{Possible_Route?.Route_Data?.To_Data?.Hospital_Name}}</span>
+                                                         <div class="HubDistance">
+                                                            <span>
+                                                               <i class="material-icons">directions_car</i>
+                                                               {{Possible_Route?.Route_Data?.Distance}}
+                                                            </span>
+                                                            <span>
+                                                               <i class="material-icons">schedule</i>
+                                                               {{Possible_Route?.Route_Data?.Duration}}
+                                                            </span>
+                                                         </div>
+                                                      </div>
+                                                      <div class="HubsSectionThree">
+                                                         <i *ngIf="!Marker.ShowConnected_Route && ClusterDetails?.Cluster_Type !== 'advanced'" (click)="Marker.ConnectConfirm = true; ConfirmationData.SubIndex = j" class="material-icons">check_circle_outline</i>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </ng-container>
+                                             <ng-container *ngIf="Marker.If_Spokes ">
+                                                <p class="SubMenu"> Connected Spoke{{Marker.Spokes.length > 1 ? 's' : ''}} : </p>
+                                                <div class="Hospital-Lists">
+                                                   <div *ngFor="let Spoke of Marker.Spokes; let j=index" class="Hubs">
+                                                      <div class="HubsSectionOne">
+                                                         <img [src]="FindIconUrl(Spoke?.Route_Data?.To_Data.Hospital_Role, 'Tick')">
+                                                      </div>
+                                                      <div class="HubsSectionTwo">
+                                                         <span class="HubName">{{Spoke?.Route_Data?.To_Data?.Hospital_Name}}</span>
+                                                         <div class="HubDistance">
+                                                            <span>
+                                                               <i class="material-icons">directions_car</i>
+                                                               {{Spoke?.Route_Data?.Distance}}
+                                                            </span>
+                                                            <span>
+                                                               <i class="material-icons">schedule</i>
+                                                               {{Spoke?.Route_Data?.Duration}}
+                                                            </span>
+                                                         </div>
+                                                      </div>
+                                                      <div class="HubsSectionThree">
+                                                         <!-- <i class="material-icons">check_circle_outline</i> -->
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </ng-container>
+                                             <ng-container *ngIf="Marker.If_AllRoutes ">
+                                                <br>
+                                                <p class="SubMenu"> All Hospital{{Marker.All_Routes.length > 1 ? 's' : ''}} : </p>
+                                                <div class="Hospital-Lists">
+                                                   <div *ngFor="let Route of Marker.All_Routes; let j=index" class="Hubs">
+                                                      <div class="HubsSectionOne">
+                                                         <img [src]="FindIconUrl(Route?.Route_Data?.To_Data.Hospital_Role, Route?.Route_Data?.To_Data.If_Cluster_Mapped ? 'Tick' : '')">
+                                                      </div>
+                                                      <div class="HubsSectionTwo">
+                                                         <span class="HubName">{{Route?.Route_Data?.To_Data?.Hospital_Name}}</span>
+                                                         <div class="HubDistance">
+                                                            <span>
+                                                               <i class="material-icons">directions_car</i>
+                                                               {{Route?.Route_Data?.Distance}}
+                                                            </span>
+                                                            <span>
+                                                               <i class="material-icons">schedule</i>
+                                                               {{Route?.Route_Data?.Duration}}
+                                                            </span>
+                                                         </div>
+                                                      </div>
+                                                      <div class="HubsSectionThree">
+                                                         <!-- <i class="material-icons">check_circle_outline</i> -->
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             </ng-container>
+                                       </ng-container>
+                                       <div *ngIf="Marker.ConnectConfirm || Marker.RemoveConfirm" class="MiniConfirmation">
+                                          <div class="ModelVerticalCenter">
+                                             <div *ngIf="Marker.ConnectConfirm" class="ConnectCluster">
+                                                <div class="modal-icon-circle">
+                                                   <i class="material-icons clr-success">check_circle_outline</i>
+                                                </div>
+                                                <h5 class="modal-title">Are You Sure !</h5>
+                                                <h6 class="modal-sub-info"> You Want to <span class="clr-success animated fadeInDown infinite"> Connect To </span> this Cluster?</h6>
+                                                <div class="modal-actions">
+                                                   <button type="button" (click)="Marker.ConnectConfirm = false; ConfirmationData.SubIndex = null" class="modal-cancel btns-modal-action fill-right-to-left pull-left" >No</button>
+                                                   <button type="button" (click)="AddHospitalToCluster(i)" class="modal-confirm btns-modal-action fill-left-to-right">Yes</button>
+                                                </div>
+                                             </div>
+                                             <div *ngIf="Marker.RemoveConfirm" class="RemoveCluster">
+                                                <div class="modal-icon-circle">
+                                                   <i class="material-icons clr-warning">highlight_off</i>
+                                                </div>
+                                                <h5 class="modal-title">Are You Sure!</h5>
+                                                <h6 class="modal-sub-info"> You Want to <span class="clr-warning animated fadeInDown infinite"> Remove From </span> this Cluster</h6>
+                                                <div class="modal-actions">
+                                                   <button type="button" (click)="Marker.RemoveConfirm = false" class="modal-cancel btns-modal-action fill-right-to-left pull-left" >No</button>
+                                                   <button type="button" (click)="RemoveHospitalFromCluster(i)" class="modal-confirm btns-modal-action fill-left-to-right">Yes</button>
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </agm-info-window>
+                              </agm-marker>
+                              <ng-container *ngIf="Marker.Routes_Type !== '' && (Marker.ShowConnected_Route || Marker.ShowPossible_Routes || Marker.If_Spokes || Marker.If_AllRoutes)">
+                                 <ng-container *ngIf="(Marker.Routes_Type === 'AllPossibles' || Marker.Routes_Type === 'AllPossiblesAndConnected') && Marker.ShowPossible_Routes">
+                                    <agm-direction *ngFor="let Possible_Route of Marker.Possible_Routes; let j=index"
+                                                   [visible]="Possible_Route.Visible"
+                                                   [origin]="Possible_Route.Route_From"
+                                                   [destination]="Possible_Route.Route_To"
+                                                   (onResponse)="onResponsePossible(i, j, $event)"
+                                                   [renderOptions]="Possible_Route.RenderOptions">
+                                    </agm-direction>
+                                 </ng-container>
+                                 <ng-container *ngIf="Marker.Routes_Type === 'AllSpokes' && Marker.If_Spokes">
+                                    <agm-direction *ngFor="let Spoke of Marker.Spokes; let j=index"
+                                                   [visible]="Spoke.Visible"
+                                                   [origin]="Spoke.Route_From"
+                                                   [destination]="Spoke.Route_To"
+                                                   (onResponse)="onResponseSpoke(i, j, $event)"
+                                                   [renderOptions]="Spoke.RenderOptions">
+                                    </agm-direction>
+                                 </ng-container>
+                                 <ng-container *ngIf="Marker.Routes_Type === 'All' && Marker.If_AllRoutes">
+                                    <agm-direction *ngFor="let Route of Marker.All_Routes; let j=index"
+                                                   [visible]="Route.Visible"
+                                                   [origin]="Route.Route_From"
+                                                   [destination]="Route.Route_To"
+                                                   (onResponse)="onResponseAll(i, j, $event)"
+                                                   [renderOptions]="Route.RenderOptions">
+                                    </agm-direction>
+                                 </ng-container>
+                                 <ng-container *ngIf="(Marker.Routes_Type === 'Connected' || Marker.Routes_Type === 'AllPossiblesAndConnected') && Marker.ShowConnected_Route">
+                                    <agm-direction [origin]="Marker.Connected_Route.Route_From"
+                                                   [visible]="Marker.Connected_Route.Visible"
+                                                   [destination]="Marker.Connected_Route.Route_To"
+                                                   (onResponse)="onResponseConnect(i, $event)"
+                                                   [renderOptions]="Marker.Connected_Route.RenderOptions">
+                                    </agm-direction>
+                                 </ng-container>
+                              </ng-container>
+                           </ng-container>
+                        </agm-map>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</section>
+
+<ng-template #hospitalHubList>
+   <ng-container *ngFor="let Marker of MarkersData; let i=index">
+      <div *ngIf="Marker.ShowInfo" id="ModalDom" class="modal-body">
+         <div class="container modal-content-body no-margin hubList-container">
+            <div class="hospital-address">
+               <h5> {{Marker?.Data?.Hospital_Name}}
+                  <i *ngIf="DownloadBtn" (click)="DownloadIMG('Image', Marker?.Data?.Hospital_Name)" matTooltip="Download Image" class="material-icons">photo_library</i>
+                  <i *ngIf="DownloadBtn" (click)="DownloadIMG('PDF', Marker?.Data?.Hospital_Name)" matTooltip="Download PDF" class="material-icons">picture_as_pdf</i>
+               </h5>
+               <address>{{Marker?.Data?.Address}} </address>
+            </div>
+            <div class="hospital-hub-list">
+               <ng-container *ngIf="Marker.ShowConnected_Route">
+                  <p class="SubMenu"> Connected Hub : </p>
+                  <div class="hubs">
+                        <div class="HubsSectionOne">
+                           <img [src]="FindIconUrl(Marker?.Connected_Route?.Route_Data?.To_Data.Hospital_Role, 'Tick')">
+                        </div>
+                        <div class="HubsSectionTwo">
+                           <span class="HubName"> {{Marker?.Connected_Route?.Route_Data?.To_Data?.Hospital_Name}} </span>
+                           <div class="HubDistance"> {{Marker?.Connected_Route?.Route_Data?.To_Data?.Address}} </div>
+                        </div>
+                        <div class="HubsSectionThree">
+                           <span ><mat-icon svgIcon="car"></mat-icon>
+                              <span class="duration-km-time"> {{Marker?.Connected_Route?.Route_Data?.Distance}} </span>
+                           </span>
+                           <span><mat-icon svgIcon="schedule"></mat-icon>
+                              <span class="duration-km-time"> {{Marker?.Connected_Route?.Route_Data?.Duration}} </span>
+                           </span>
+                        </div>
+                  </div>
+               </ng-container>
+               <ng-container *ngIf="Marker.ShowPossible_Routes">
+                  <p class="SubMenu"> {{!Marker.ShowConnected_Route && !Marker.If_Spokes ? 'To' : 'Other' }} Hub{{Marker.Possible_Routes.length > 1 ? 's' : ''}} : </p>
+                  <div *ngFor="let Possible_Route of Marker.Possible_Routes; let j=index" class="hubs">
+                     <div class="HubsSectionOne">
+                        <ng-container *ngIf="ClusterDetails?.Cluster_Type !== 'advanced'">
+                           <img [src]="FindIconUrl(Possible_Route?.Route_Data?.To_Data.Hospital_Role, 'Tick')">
+                        </ng-container>
+                        <ng-container *ngIf="ClusterDetails?.Cluster_Type === 'advanced'">
+                           <img [src]="FindIconUrl('Tire2', 'Tick')">
+                        </ng-container>
+                     </div>
+                     <div class="HubsSectionTwo">
+                        <span class="HubName"> {{Possible_Route?.Route_Data?.To_Data?.Hospital_Name}} </span>
+                        <div class="HubDistance"> {{Possible_Route?.Route_Data?.To_Data?.Address}} </div>
+                     </div>
+                     <div class="HubsSectionThree">
+                        <span ><mat-icon svgIcon="car"></mat-icon>
+                           <span class="duration-km-time"> {{Possible_Route?.Route_Data?.Distance}} </span>
+                        </span>
+                        <span><mat-icon svgIcon="schedule"></mat-icon>
+                           <span class="duration-km-time"> {{Possible_Route?.Route_Data?.Duration}} </span>
+                        </span>
+                     </div>
+                  </div>
+               </ng-container>
+               <ng-container *ngIf="Marker.If_Spokes">
+                  <p class="SubMenu"> Connected Spoke{{Marker.Spokes.length > 1 ? 's' : ''}} :  </p>
+                  <div *ngFor="let Spoke of Marker.Spokes; let j=index" class="hubs">
+                     <div class="HubsSectionOne">
+                        <img [src]="FindIconUrl(Spoke?.Route_Data?.To_Data.Hospital_Role, 'Tick')">
+                     </div>
+                     <div class="HubsSectionTwo">
+                        <span class="HubName"> {{Spoke?.Route_Data?.To_Data?.Hospital_Name}} </span>
+                        <div class="HubDistance"> {{Spoke?.Route_Data?.To_Data?.Address}} </div>
+                     </div>
+                     <div class="HubsSectionThree">
+                        <span ><mat-icon svgIcon="car"></mat-icon>
+                           <span class="duration-km-time"> {{Spoke?.Route_Data?.Distance}} </span>
+                        </span>
+                        <span><mat-icon svgIcon="schedule"></mat-icon>
+                           <span class="duration-km-time"> {{Spoke?.Route_Data?.Duration}} </span>
+                        </span>
+                     </div>
+                  </div>
+               </ng-container>
+               <ng-container *ngIf="Marker.If_AllRoutes">
+                  <p class="SubMenu"> All Hospital{{Marker.All_Routes.length > 1 ? 's' : ''}} :  </p>
+                  <div *ngFor="let Route of Marker.All_Routes; let j=index" class="hubs">
+                     <div class="HubsSectionOne">
+                        <img [src]="FindIconUrl(Route?.Route_Data?.To_Data.Hospital_Role, Route?.Route_Data?.To_Data.If_Cluster_Mapped ? 'Tick' : '')">
+                     </div>
+                     <div class="HubsSectionTwo">
+                        <span class="HubName"> {{Route?.Route_Data?.To_Data?.Hospital_Name}} </span>
+                        <div class="HubDistance"> {{Route?.Route_Data?.To_Data?.Address}} </div>
+                     </div>
+                     <div class="HubsSectionThree">
+                        <span>
+                           <mat-icon svgIcon="car"></mat-icon>
+                           <span class="duration-km-time"> {{Route?.Route_Data?.Distance}} </span>
+                        </span>
+                        <span>
+                           <mat-icon svgIcon="schedule"></mat-icon>
+                           <span class="duration-km-time"> {{Route?.Route_Data?.Duration}} </span>
+                        </span>
+                     </div>
+                  </div>
+               </ng-container>
+            </div>
+         </div>
+         <div *ngIf="DownloadBtn" (click)="modalReference.hide()" class="close-button-hub">
+            <i class="material-icons">close</i>
+         </div>
+      </div>
+   </ng-container>
+</ng-template>

@@ -1,0 +1,33 @@
+ul.sub-list-items.drugs-before-PCI li {
+   width: 200px;
+}
+
+ul.checklist-fields li {
+   margin-top: 8px;
+   line-height: 17px;
+}
+
+span.small-btn.add,
+.small-btn.remove {
+   padding: 2px 5px;
+   border-radius: 5px;
+   margin-right: 6px;
+   line-height: 32px;
+   cursor: pointer;
+}
+span.small-btn.add {
+   background: linear-gradient(40deg, #ffd86f, #fc6262);
+}
+span.small-btn.remove {
+   background-image: linear-gradient(to right, #ff0302 0%, #fc3a2b 100%);
+}
+span.small-btn i.fa.fa-plus,
+i.fa.fa-minus {
+   color: #fff;
+}
+
+ul.anti-thrombotics.sub-list-items li.route-text {width: 55px;}
+
+ul.sub-list-items li{width: 165px !important;}
+ul.grouped-date-time li{display: inline-block;padding: 0 10px;margin: 0;}
+.RSP-pci-mgt-CABG-sec{position: relative; margin-left: -110px;}

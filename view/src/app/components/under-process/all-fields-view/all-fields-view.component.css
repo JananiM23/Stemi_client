@@ -1,0 +1,12 @@
+
+.Field{
+   color: #989898;
+   font-weight: 400;
+   font-size: 14px;
+}
+.Field span {
+   color: #0035ff;
+   font-weight: 500;
+   font-size: 14px;
+   letter-spacing: 0.5px;
+}

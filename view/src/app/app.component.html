@@ -1,0 +1,279 @@
+<div class="fixed-bottom-popup animated fadeInRight">
+   <p>Fixed Popup</p>
+</div>
+
+
+<ng-container *ngFor="let Toastr of ToastrList; let i=index">
+   <div class="Toastr_Message animated bounceInDown" [ngClass]="Toastr.Type" [style.top.px]="Toastr.Top">
+      <div class="loader"></div>
+      <div class="Message_Icon">
+         <i *ngIf="Toastr.Type === 'Success'" class="material-icons">check_circle</i>
+         <i *ngIf="Toastr.Type === 'Info'" class="material-icons">info</i>
+         <i *ngIf="Toastr.Type === 'Warning'" class="material-icons">error</i>
+         <i *ngIf="Toastr.Type === 'Error'" class="material-icons">cancel</i>
+      </div>
+      <div class="Message">
+         <h6 class="Title"> {{Toastr.Type}} Message </h6>
+         <h6 class="body"> {{Toastr.Message | slice:0:42}} {{Toastr.Message?.length > 42 ? '...' : ' ' }} </h6>
+      </div>
+      <div class="Message_Close" (click)="HideToastr(i)">
+         <i class="material-icons">close</i>
+      </div>
+   </div>
+</ng-container>
+
+<mat-toolbar *ngIf="UserLoggedIn">
+   <div class="brand-logo">
+      <img src="assets/stemi-sa.jpg" alt="Stemi Logo" height="50px" width="240px" style="padding: 0px 30px;" />
+   </div>
+   <span class="toggle-sidenav" (click)="SideNavToggle()">
+      <i matTooltip="Menus" class="material-icons">list </i>
+   </span>
+
+   <!--Toolbar right side Icons links-->
+   <div class="nav-icons header-main-menu">
+       <!-- <a [routerLink]="['/Login']" class="active"> 
+         <span class="dot blink"> <img src="assets/images/01-alarm.png"/></span></a> -->
+      
+      <a *ngIf="ShowNotification">
+         <span class="dot">
+            <span class="NotifyCount">{{NotifyCount}}</span>
+            <img (click)="NotifyPanelToggle(); GetNotificationList(); GetNotifyCount()" matTooltip="Notifications" src="assets/images/02-bell.png"/> 
+            <div class="notify-panel" [style.display]="ShowNotifyPanel ? 'block' : 'none'">
+               <div class="arrow-up"></div>
+               <div class="notify-header">
+                  <div class="fl-left"> Notifications </div>
+                  <div class="fl-right"><b>{{Notification.length}}</b> </div>
+               </div>
+               <div class="notify-content-body">
+                  <ng-container>
+                     <ul class="notify-list notification_sub_list">
+                        <li class="notify-un-read UnClickable" *ngFor="let Notify of Notification" [ngClass]="{'Clickable': Notify?.Confirmed_PatientId && Notify?.Confirmed_PatientId !== null }">
+                           <p *ngIf="Notify?.Notification_Type === 'AskingRepeat_ECG_ByDoctor'" class="notify-msg">
+                              Doctor Asking New ECG for Patient: 
+                              <span>{{ Notify?.Patient_ID?.Patient_Name }}</span>,
+                              Age: 
+                              <span>{{ Notify?.Patient_ID?.Patient_Age }}</span>,
+                              Gender: 
+                              <span>{{ Notify?.Patient_ID?.Patient_Gender }}</span>,
+                           </p>
+                           <p *ngIf="Notify?.Notification_Type === 'New_BPL_Record'" class="notify-msg">
+                              New BPL ECG for Patient: 
+                              <span>{{ Notify?.BPL_ID?.Patient_Name }}</span>,
+                              Age: 
+                              <span>{{ Notify?.BPL_ID?.Patient_Age }}</span>,
+                              Gender: 
+                              <span>{{ Notify?.BPL_ID?.Patient_Gender }}</span>,
+                           </p>
+                           <p *ngIf="Notify?.Notification_Type === 'Stemi_Confirmed_ByDoctor'" (click)="Redirect(Notify.Confirmed_PatientId); View_Notification(Notify._id)" class="notify-msg">
+                              Doctor STEMI Confirmed for Patient: 
+                              <span>{{ Notify?.Patient_ID?.Patient_Name }}</span>,
+                              Age: 
+                              <span>{{ Notify?.Patient_ID?.Patient_Age }}</span>,
+                              Gender: 
+                              <span>{{ Notify?.Patient_ID?.Patient_Gender }}</span>,
+                           </p>
+                           <p *ngIf="Notify?.Notification_Type === 'STEMI_Patient_Transfer'" (click)="Redirect(Notify.Confirmed_PatientId._id); View_Notification(Notify._id)" class="notify-msg">
+                              Patient: 
+                              <span>{{ Notify?.Confirmed_PatientId?.Patient_Name }}</span>,
+                              Age: 
+                              <span>{{ Notify?.Confirmed_PatientId?.Patient_Age }}</span>,
+                              Gender: 
+                              <span>{{ Notify?.Confirmed_PatientId?.Patient_Gender }}</span>,
+                              Transferred to your Hospital.
+                           </p>
+                           <span *ngIf="!Notify?.Message_Viewed" class="new-badge animated fadeIn infinite"></span>
+                           <span class="notify-dateTime">
+                           <time>{{ Notify?.createdAt | dateAgo}}</time>
+                           </span>
+                        </li>
+                     </ul>
+                  </ng-container>           
+               </div>
+               <div class="notify-footer">
+                  <div class="fl-right notify-text-hover" (click)="DeleteNotification()"> Delete All Read </div>
+               </div>
+            </div>
+         </span>
+      </a>
+
+      <a *ngIf="ECGView" (click)="ViewECG()"> <span class="dot"> <img matTooltip="ECG Files" src="assets/images/03-waves.png"/> </span> </a>
+      <!-- <a [routerLink]="['/Login']" class=""> <span class="dot"> <img src="assets/images/04-plus.png"/> </span> </a>  -->
+      <a (click)="LogOut()" class="logout"> <span class="dot"> <img  matTooltip="LogOut" src="assets/images/05-logout.png"/> </span> </a> 
+   </div>
+
+</mat-toolbar>
+
+<mat-sidenav-container class="example-container" [hasBackdrop]="false">
+   <mat-sidenav #SideNav [fixedInViewport]="true" [fixedTopGap]="50" [mode]="SideNameMode">
+      <div class="col-md-12 no-padding">
+         <div class="userprofile">
+            <span> Logged in as </span>
+            <span class="User"> {{UserInfo?.Name}} </span>
+         </div>
+      </div>
+      <div class="col-md-12 no-padding">
+         <div class="stemi-main-menus">
+            <ul>
+               <ng-container *ngIf="!ECGView">
+                  <li *ngIf="UserInfo?.User_Type === 'PU' && UserInfo?.Hospital?.If_Cluster_Mapped && !UserInfo?.onlyViewAccess"> 
+                     <a [routerLink]="['/Patient-Manage']" routerLinkActive="active" >
+                        <div class="menu-list">
+                           <img src="assets/images/menu-white-patient-create.png" class="clr-white">
+                           <img src="assets/images/menu-gray-patient-create.png" class="clr-gray">
+                           <span>Patient Create</span>
+                        </div>
+                     </a> 
+                  </li>
+               </ng-container>
+               
+               <ng-container *ngIf="ECGView">
+                  <li *ngIf="UserInfo?.User_Type === 'PU' && UserInfo?.Hospital?.If_Cluster_Mapped && !UserInfo?.onlyViewAccess"> 
+                     <a (click)="ResetURL()" [routerLink]="['/Patient-Manage']">
+                        <div class="menu-list">
+                           <img src="assets/images/menu-white-patient-create.png" class="clr-white">
+                           <img src="assets/images/menu-gray-patient-create.png" class="clr-gray">
+                           <span>Patient Create</span>
+                        </div>
+                     </a> 
+                  </li>
+               </ng-container>
+               <!-- <li> 
+                  <a [routerLink]="['/Patient-Print']" routerLinkActive="active">
+                     <div class="menu-list">
+                        <img src="assets/images/patient-entry.png">
+                        <span>Patient Print view</span>
+                     </div>
+                  </a> 
+               </li> -->
+               <li> 
+                  <a [routerLink]="['/Patient-Records']" routerLinkActive="active" [ngClass]="{'active': ECGView}">
+                     <div class="menu-list">
+                        <img src="assets/images/menu-white-patient-record.png" class="clr-white">
+                        <img src="assets/images/menu-gray-patient-record.png" class="clr-gray">
+                        <span>Patient Records</span>
+                     </div>
+                  </a>
+               </li>
+               <!-- <li *ngIf="UserInfo?.User_Type === 'SA' || UserInfo?.User_Type === 'CO'">
+                  <a [routerLink]="['/Offline-Management']" routerLinkActive="active">
+                     <div class="menu-list"> <img src="assets/images/offline-white.png" class="clr-white">
+                        <img src="assets/images/offline.png" class="clr-gray"> <span> Offline Records</span>
+                     </div>
+                  </a>
+               </li> -->
+               <!-- <li *ngIf="UserInfo?.User_Type === 'SA' || UserInfo?.User_Type === 'CO' || UserInfo?.User_Type === 'PU' ">
+                  <a [routerLink]="['/AskCardiologist-Management']" routerLinkActive="active">
+                     <div class="menu-list"> <img src="assets/images/ask-cardiologist-white.png" class="clr-white">
+                        <img src="assets/images/ask-cardiologist.png" class="clr-gray"> <span> Ask Cardiologist List</span>
+                     </div>
+                  </a>
+               </li> -->
+               <!-- <li *ngIf="UserInfo?.User_Type === 'SA' || UserInfo?.User_Type === 'CO' || UserInfo?.User_Type === 'PU' ">
+                  <a [routerLink]="['/BPL-Records']" routerLinkActive="active">
+                     <div class="menu-list"> <img src="assets/images/BPL-white.png" class="clr-white">
+                        <img src="assets/images/BPL-black.png" class="clr-gray"> <span> BPL Records</span>
+                     </div>
+                  </a>
+               </li> -->
+               <li *ngIf="UserInfo?.User_Type === 'SA'"> 
+                  <a [routerLink]="['/Location-Management']" routerLinkActive="active">
+                     <div class="menu-list">
+                        <img src="assets/images/menu-white-location-management.png" class="clr-white">
+                        <img src="assets/images/menu-gray-location-management.png" class="clr-gray">
+                        <span>Location Management</span>
+                     </div>
+                  </a> 
+               </li>
+               <li *ngIf="UserInfo?.User_Type === 'SA' || UserInfo?.User_Type === 'CO'"> 
+                  <a [routerLink]="['/Hospital-Management']" routerLinkActive="active">
+                     <div class="menu-list">
+                        <img src="assets/images/menu-white-hospital-management.png" class="clr-white">
+                        <img src="assets/images/menu-gray-hospital-management.png" class="clr-gray">
+                        <span>Hospital Management</span>
+                     </div>
+                  </a> 
+               </li>
+               <li *ngIf="UserInfo?.User_Type === 'SA'"> 
+                  <a [routerLink]="['/cluster-Management']" routerLinkActive="active">
+                     <div class="menu-list">
+                        <img src="assets/images/menu-white-cluster-management.png" class="clr-white">
+                        <img src="assets/images/menu-gray-cluster-management.png" class="clr-gray">
+                        <span>Cluster Management</span>
+                     </div>
+                  </a> 
+               </li>
+               <li *ngIf="UserInfo?.User_Type === 'SA'"> 
+                  <a [routerLink]="['/Cluster-Mapping']" routerLinkActive="active">
+                     <div class="menu-list">
+                        <img src="assets/images/menu-white-cluster-mapping.png" class="clr-white">
+                        <img src="assets/images/menu-gray-cluster-mapping.png" class="clr-gray">
+                        <span>Cluster Mapping</span>
+                     </div>
+                  </a> 
+               </li>
+               <!-- <li *ngIf="UserInfo?.User_Type === 'SA'"> 
+                  <a [routerLink]="['/Device-Management']" routerLinkActive="active">
+                     <div class="menu-list">
+                        <img src="assets/images/device-white.png" class="clr-white">
+                        <img src="assets/images/device-gray.png" class="clr-gray">
+                        <span>Device Management</span>
+                     </div>
+                  </a> 
+               </li> -->
+               <li *ngIf="UserInfo?.User_Type === 'SA'"> 
+                  <a [routerLink]="['/User-Management']" routerLinkActive="active">
+                     <div class="menu-list">
+                        <img src="assets/images/menu-white-user-management.png" class="clr-white">
+                        <img src="assets/images/menu-gray-user-management.png" class="clr-gray">
+                        <span>User Management</span>
+                     </div>
+                  </a> 
+               </li>
+               <li *ngIf="UserInfo?.User_Type === 'SA'"> 
+                  <a [routerLink]="['/Form-Management']" routerLinkActive="active">
+                     <div class="menu-list">
+                        <img src="assets/images/menu-white-control-panel.png" class="clr-white">
+                        <img src="assets/images/menu-gray-control-panel.png" class="clr-gray">
+                        <span> Control Panel</span>
+                     </div>
+                  </a> 
+               </li>
+					<li *ngIf="UserInfo?.User_Type === 'SA'"> 
+                  <a [routerLink]="['/Referral-Facility']" routerLinkActive="active">
+                     <div class="menu-list">
+                        <img src="assets/images/ask-cardiologist-white.png" class="clr-white">
+                        <img src="assets/images/ask-cardiologist.png" class="clr-gray">
+                        <span>Referral Facility</span>
+                     </div>
+                  </a> 
+               </li>
+               <!-- <li> 
+                  <a [routerLink]="['/All-Fields']" routerLinkActive="active">
+                     <div class="menu-list">
+                        <img src="assets/images/patient-entry.png">
+                        <span>All Fields</span>
+                     </div>
+                  </a> 
+               </li> -->
+               <li   class="mbl-menu log-out"> 
+                  <a (click)="LogOut()">
+                     <div class="menu-list">
+                        <img src="assets/images/menu-white-logout.png" class="clr-white">
+                        <img src="assets/images/menu-gray-logout.png" class="clr-gray">
+                        <span> LogOut</span>
+                     </div>
+                  </a> 
+               </li>
+            </ul>
+         </div>
+      </div>
+		<p *ngIf="UserLoggedIn" class="copyright"> Copyright © 2022 <a target="_blank" href="https://www.pptssolutions.com/">PPTS</a>.®</p>
+   </mat-sidenav>
+   <mat-sidenav-content [ngStyle]="{ 'padding': UserLoggedIn ? '20px 30px 30px 30px' : '0px', 'margin-top': UserLoggedIn ? '50px' : '0px'}">
+      <router-outlet></router-outlet>
+		<p *ngIf="!UserLoggedIn" class="copyright"> Copyright © 2022 <a target="_blank" href="https://www.pptssolutions.com/">PPTS</a>.®</p>
+   </mat-sidenav-content>
+</mat-sidenav-container>
+
+

@@ -1,0 +1,97 @@
+<section *ngIf="FormLoaded">
+   <div class="modal-body">
+      <div class="modal-header-title">
+         <h5> ID Proof Config</h5>
+         <span *ngIf="!Uploading" class="modal-container-close" (click)="modalRef.hide();"><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+      </div>
+      <div class="container modal-content-body">
+         <div class="col-sm-12">
+            <div class="row">
+               <ng-container *ngIf="Category === 'Default'" >
+                  <div *ngIf="NewIdInput" class="form-group col-md-6">
+                     <div class="row">
+                        <label class="col-sm-12 col-md-4 col-form-label text-lg-right">Proof Name</label>
+                        <div class="col-sm-12 col-md-8">
+                           <form [formGroup]="NewIdAddForm">
+                              <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                                 <input matInput formControlName="Name" placeholder="Id-Proof Name" autocomplete="off"> 
+                                 <mat-error [innerHTML]="GetFormControlErrorMessage('Name')"></mat-error>
+                              </mat-form-field>
+                           </form>
+                        </div>
+                     </div>
+                  </div>
+                  <div *ngIf="!NewIdInput" class="form-group col-sm-3">
+                     <label> Add New Id-Proof</label>
+                     <span class="btn-add-plus" ><i class="fa fa-plus"  (click)="AddNewIdProof()"></i></span>
+                  </div>
+                  <div *ngIf="NewIdInput" class="form-group col-sm-6" style="text-align: right">
+                     <button type="button" (click)="SubmitNewIdProof()" [disabled]="NewIdAddForm.status !== 'VALID'|| Uploading" class="modal-confirm btns-modal-action fill-left-to-right" [ngClass]="{'disabled': NewIdAddForm.status !== 'VALID'|| Uploading}">
+                        <span *ngIf="!Uploading"> Submit New Id-Proof </span>
+                        <span *ngIf="Uploading"> Loading... </span>
+                     </button>
+                  </div>
+               </ng-container>
+
+
+               <div *ngIf="Category === 'Default'"  class="table-responsive">
+                  <table class="tbl-stemi-default tbl-patients-records" cellpadding="0" cellspacing="0" border="0">
+                     <thead>
+                        <tr>
+                           <th>S.No</th>
+                           <th> ID Proof </th>
+                           <th >Actions</th>
+                        </tr>
+                     </thead>   
+                     <div class="table-up-arrow"><i class="fa fa-arrow-circle-up animated infinite fadeInUp"></i></div>  
+                     <tbody  class="tbl-content">
+                        <tr class="odd" *ngFor="let item of ConfigList; let i=index">
+                           <td>{{i+1}}</td>
+                           <td>{{item.Name}} </td>
+                           <td>
+                              <div class="action-icon-parent" >
+                                 <span class="col-action-icon bk-clr-default" (click)="DeleteIdProof(i)" matTooltip="Delete"><i class="fa fa-trash" aria-hidden="true"></i></span>
+                              </div>
+                           </td>
+                        </tr>
+                     </tbody>  
+                  </table>
+               </div>
+
+               <form [formGroup]="ClusterConfigForm" class="col-sm-12">
+                  <div *ngIf="Category === 'Cluster'"  class="table-responsive">
+                     <table class="tbl-stemi-default tbl-patients-records" cellpadding="0" cellspacing="0" border="0">
+                        <thead>
+                           <tr>
+                              <th>S.No</th>
+                              <th> ID Proof </th>
+                              <th> Visibility </th>
+                           </tr>
+                        </thead>
+                        <div class="table-up-arrow"><i class="fa fa-arrow-circle-up animated infinite fadeInUp"></i></div>
+                        <tbody  class="tbl-content">
+                           <ng-container formArrayName="Config_Details">
+                              <tr class="odd" *ngFor="let item of getFArray().controls; let i=index" [formGroupName]="i" >
+                                 <td>{{i+1}}</td>
+                                 <td> {{item.value.Name}} </td>
+                                 <td>
+                                    <div> <mat-checkbox  formControlName="Visibility"> </mat-checkbox> </div>
+                                 </td>
+                              </tr>
+                           </ng-container>
+                        </tbody>  
+                     </table>
+                  </div>
+               </form>
+               
+            </div>
+         </div>               
+      </div>
+      <div *ngIf="Category === 'Cluster'" class="modal-actions">
+         <button type="button" (click)="Submit()" [disabled]="ClusterConfigForm.status !== 'VALID'|| Uploading" class="modal-confirm btns-modal-action fill-left-to-right" [ngClass]="{'disabled': ClusterConfigForm.status !== 'VALID'|| Uploading}">
+            <span *ngIf="!Uploading">Submit</span>
+            <span *ngIf="Uploading"> Loading... </span>
+         </button>
+      </div>
+   </div>
+</section>

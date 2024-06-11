@@ -1,0 +1,30 @@
+span.time {padding: 0 5px;}
+
+
+
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (min-width : 320px) and (max-width : 575px) {
+    .xs-label-responsive{width: 50%;}
+    .xs-input-responsive{width: 45%;}
+}
+
+
+
+.print-back-button{ margin: 0 15px;}
+.print-back-button:after {
+   clear: both;
+   display: block;
+   content: "";
+}
+
+.print-back-button div:hover {
+   box-shadow: -2px 3px 5px 1px rgba(0, 0, 0, 0.3);
+   transition: 0.5s;
+   background: #fff;
+}
+.print-back-button div {
+   padding: 8px;
+   background: lightgrey;
+   border-radius: 3px;
+   transition: 0.5s;
+}

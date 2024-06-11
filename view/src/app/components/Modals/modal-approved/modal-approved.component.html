@@ -1,0 +1,18 @@
+
+<div class="modal-body">
+   <div class="modal-header-title">
+      <h5>Confirmation</h5>
+      <span class="modal-container-close" (click)="ModalRef.hide();"><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+   </div>   
+   <div class="" style="padding: 10px 0 20px 0;">
+      <div class="modal-icon-circle">
+         <i class="material-icons clr-{{ColorCode}}">{{Icon}}</i>
+      </div>
+      <h5 class="modal-title">Are You Sure !</h5>
+      <h6 class="modal-sub-info">{{TextOne}} <span class="clr-{{ColorCode}} animated fadeInDown infinite">{{TextTwo}} </span> {{TextThree}}</h6>
+   </div>
+   <div class="modal-actions">
+      <button type="button" class="modal-cancel btns-modal-action fill-right-to-left pull-left" (click)="Cancel();">No</button>
+      <button type="button" class="modal-confirm btns-modal-action fill-left-to-right" (click)="Proceed();">Yes</button>
+   </div>
+</div>

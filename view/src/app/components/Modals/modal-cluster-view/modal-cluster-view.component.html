@@ -1,0 +1,98 @@
+<section>
+  <div class="modal-body">
+     <form>
+        <div class="modal-header-title">
+           <h5> View Cluster Details</h5>
+           <span class="modal-container-close" (click)="modalRef.hide()"><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+        </div>
+        <div class="container modal-content-body">
+           <div class="col-sm-12">
+              <div class="row">                     
+                    <div class="form-group form-group-sm col-md-12">
+                       <div class="row">
+                        <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">Location:</label>
+                        <div class="col-sm-12 col-md-8">
+                           {{Info?.Location?.Location_Name | titlecase}}
+                        </div>
+                       </div>
+                    </div>
+                    <div class="form-group form-group-sm col-md-12" *ngIf="Info?.Location !== '' && Info?.Location !== null">
+                       <div class="row">
+                        <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">Data Type:</label>
+                        <div class="col-sm-12 col-md-8">
+                          {{Info?.Data_Type | titlecase}}
+                        </div>
+                       </div>
+                    </div>
+                    <div class="form-group form-group-sm col-md-12" *ngIf="Info?.Location !== '' && Info?.Location !== null && Info?.Data_Type === 'post'">
+                     <div class="row">
+                      <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">Date:</label>
+                      <div class="col-sm-12 col-md-8">
+                        {{Info?.Post_Date | date: 'd-MMM-y'}}
+                      </div>
+                     </div>
+                  </div>
+                    <div class="form-group form-group-sm col-md-12" *ngIf="Info?.Location !== '' && Info?.Location !== null">
+                        <div class="row">
+                        <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">Cluster Name:</label>
+                        <div class="col-sm-12 col-md-8">
+                           {{Info?.Cluster_Name | titlecase}}
+                        </div>
+                        </div>                           
+                     </div>
+                    <div class="form-group form-group-sm col-md-12" *ngIf="Info?.Location !== '' && Info?.Location !== null">
+                       <div class="row">
+                        <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">Cluster Type:</label>
+                        <div class="col-sm-12 col-md-8">
+                          {{Info?.Cluster_Type | titlecase}}
+                        </div>
+                       </div>
+                    </div>
+                    <div class="form-group form-group-sm col-md-12" *ngIf="Info?.Location !== '' && Info?.Location !== null">
+                        <div class="row">
+                         <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">Cluster Code:</label>
+                         <div class="col-sm-12 col-md-8">
+                           {{Info?.Cluster_Code | number:'2.0'}}
+                         </div>
+                        </div>
+                     </div>
+                    <div class="form-group form-group-sm col-md-12" *ngIf="Info?.Cluster_Type === 'single' || Info?.Cluster_Type === 'multiple'">
+                       <div class="row">
+                        <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">
+                           <ng-container *ngIf="Info?.Cluster_Type === 'multiple'">
+                              Primary  
+                           </ng-container>
+                           Hospital:
+                        </label>
+                        <div class="col-sm-12 col-md-8">
+                          {{Info?.Hospital?.Hospital_Name | titlecase}}
+                        </div>
+                       </div>
+                    </div>
+
+                    <div class="form-group form-group-sm col-md-12" *ngIf="Info?.Cluster_Type === 'multiple' || Info?.Cluster_Type === 'advanced'">
+                       <div class="row">
+                        <label class="col-sm-12 col-md-4 col-form-label text-lg-right lbl">
+                           <ng-container *ngIf="Info?.Cluster_Type === 'multiple'">
+                              Secondary 
+                           </ng-container>
+                           Hospitals:
+                        </label>
+                        <div class="col-sm-12 col-md-8">
+                           <p *ngFor="let Hospitals of Info?.HospitalsArray; let i=index">
+                              {{i+1}}.{{Hospitals?.Hospital_Name | titlecase}}
+                           </p>
+                        </div>
+                       </div>
+                    </div>
+                 </div>
+           </div>               
+        </div>
+        <div class="modal-actions">          
+           <button type="submit" (click)="modalRef.hide()" class="modal-confirm btns-modal-action fill-left-to-right" aria-label="">
+             Close
+           </button>
+        </div>
+     </form>   
+  </div>
+</section>

@@ -1,0 +1,42 @@
+<section *ngIf="Type && ( Type === 'Create' || Type === 'Edit')">
+   <div class="modal-body">
+      <form [formGroup]="Form" (ngSubmit)="onSubmit()">
+         <div class="modal-header-title">
+            <h5> {{Type}} Location </h5>
+            <span *ngIf="!Uploading" class="modal-container-close" (click)="bsModalRef.hide();">
+               <i class="fa fa-times-circle"aria-hidden="true"></i>
+            </span>
+         </div>
+         <div class="container modal-content-body">
+            <div class="col-sm-12">
+               <div class="row no-margin">
+                     <div class="form-group col-md-12">
+                     <div class="row">
+                           <label class="col-md-12 col-lg-4 col-form-label text-lg-right">Location Name</label>
+                           <div class="col-md-12 col-lg-8">
+                           <mat-form-field class="full-width" [floatLabel]="'never'" appearance="fill">
+                              <input matInput formControlName="Location_Name" placeholder="Location Name">
+                              <mat-error *ngIf="Form.controls['Location_Name'].errors && !Form.controls['Location_Name'].pristine">
+                                 <span *ngIf="Form.controls['Location_Name'].errors.required">Location Name is required</span>
+                                 <ng-container *ngIf="!Form.controls['Location_Name'].errors.required">
+                                    <span *ngIf="Form.controls['Location_Name'].errors.LocationName_NotAvailable">Location Name Already Exist</span>
+                                    <span *ngIf="Form.controls['Location_Name'].errors.AlphabetsSpaceHyphenError">Enter the valid Location Name</span>
+                                 </ng-container>
+                              </mat-error>
+                           </mat-form-field>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="modal-actions">
+            <button type="submit" [disabled]="Form.status !== 'VALID' || Uploading" class="modal-confirm btns-modal-action fill-left-to-right" >
+               <span *ngIf="Type === 'Create' && !Uploading">Submit</span>
+               <span *ngIf="Type === 'Edit' && !Uploading">Update</span>
+               <span *ngIf="Uploading"> Loading... </span>
+            </button>
+         </div>
+      </form>
+   </div>
+</section>

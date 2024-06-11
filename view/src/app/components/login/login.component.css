@@ -1,0 +1,171 @@
+
+input.us-name, .us-password{
+   font-family: sans-serif;
+   font-size: 15px;
+   color: #333;
+   display: block;
+   width: 100%;
+   background: #fff;
+   height: 50px;
+   border-radius: 25px;
+   padding: 0 30px 0 65px;
+   border: none;
+}
+
+
+
+.login-wrapper {
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   text-align: center;
+   min-height: 100vh;
+   margin: 0;
+   padding: 0;
+   background: url(./../../../assets/images/bg.jpg);
+   background-size: cover;
+   background-repeat: no-repeat;
+}
+.login-box {
+   padding: 20px;
+   width: 30%;
+   background: #319bd94d;
+   border-radius: 15px;
+   border: 1px solid #73b1df8a;
+   margin: 10px;
+}
+.logo {
+   margin-bottom: 1.5rem;
+}
+
+.btn-login{
+   margin: 6px;
+   box-shadow: none;
+   font-weight: 500;
+   background: transparent;
+   border: 3px solid #efefef;
+   border-radius: 50px;
+   padding: 0.4rem 1.5rem;
+   font-size: 15px;
+   outline: none;
+   position: relative;
+   letter-spacing: 0.8px;
+   z-index: 0;
+   padding: 15px 25px;
+   transition: all .2s ease-in-out;
+   font-weight: 500;
+   box-shadow: rgba(0,0,0,0.15) 0 7px 20px;
+   text-align: center;
+   margin: 20px 0;
+   width: 160px;
+   cursor: pointer;
+   text-transform: uppercase;
+   color: #fff;
+}
+
+button.btn-login:before {
+   position: absolute;
+   content: "";
+   transition-duration: 0.3s;
+   z-index: -1;
+   top: 0;
+   bottom: auto;
+   width: 0;
+   height: 100%;
+   opacity: 1;
+   border-radius: 50px;
+   background-image: linear-gradient(to right, #2f81d4 0%, #59c5ef 100%);
+   left: 0;
+}
+
+button.btn-login:hover,
+button.btn-login:focus {
+   color: #ffffff;
+   transition: color 0.3s ease, background 0s 0.3s ease;
+   z-index: 2;
+}
+button.btn-login:hover:before,
+button.btn-login:focus:before {
+   width: 100%;
+   height: 100%;
+   opacity: 1;
+   z-index: -1;
+}
+
+.input-error-notify{display: flex;
+   position: absolute;
+   z-index: 1;
+   background: #fd271d;
+   color: #fff;
+   right: 5px;
+   padding: 4px 5px;
+   margin: 5px;
+}
+.input-error-notify::after{
+   content: '';
+	display: block;  
+	position: absolute;
+	left: 20px;
+	bottom: 100%;
+	width: 0;
+	height: 0;
+	border-bottom: 10px solid #fd271d;
+	border-top: 10px solid transparent;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+}
+
+
+
+
+.limiter{width: 100%;margin: 0}
+.container-login{background-image:url(./../../../assets/images/bg.jpg);width:100%;min-height:100vh;display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;padding:15px;background-repeat:no-repeat;background-position:center;background-size:cover;position:relative;z-index:1;text-align: center;}
+.login-box{
+   width: 500px;
+   overflow: hidden;
+}
+.login-box form{
+   padding: 20px;
+}
+input.us-name:focus, .us-password:focus {
+   outline: none;
+}
+input.us-name:focus+.us-icon>.fa.fa-user, input.us-password:focus+.us-icon>.fa.fa-lock{
+   color: #128cd8 !important;margin-left: -10px;
+}
+span.us-icon {
+   color: #9E9E9E;
+   position: absolute;
+   left: 35px;
+   top: 12px;
+   transition: 0.3s;
+}
+
+span.us-icon .fa.fa-user,span.us-icon .fa.fa-lock { transition: 0.3s; }
+
+.form-horizontal .form-group{
+   position: relative;
+}
+
+a.applyBtn {
+   position: absolute;
+   bottom: 5px;
+   right: 5px;
+   background: #ffffff;
+   padding: 5px 15px;
+   border-radius: 29px;
+   font-weight: 500;
+   letter-spacing: 0.5px;
+   color: #f44336;
+   text-decoration: none;
+}
+a.applyBtn:hover {
+   color: #0d579a;
+}
+
+.stemi-india-logo {
+	position: absolute;
+   bottom: 10px;
+   right: 10px;
+}
